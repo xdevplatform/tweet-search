@@ -1,0 +1,14 @@
+.DS_Store
+*.pyc
+*.swp
+venv
+sessions
+logs
+*/settings_local.py
+*/*/settings_local.py
+process.sh
+project/server/logging.conf
+project/server/settings.py
+project/media/*/*
+output.txt
+.twitter
