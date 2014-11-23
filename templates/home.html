@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Tweet:
+
+<br><br>
+
+<form action="/home" method="post">{% csrf_token %}
+  <input name="status" type="text">
+  <input type="submit" value="tweet">
+</form>
+
+{% if statuses and statuses.0 %}
+
+  Statuses:
+  
+  <br>
+  
+  {% for s in statuses %}
+  <br>
+  <a href="http://twitter.com/{{s.user.screen_name}}/status/{{s.id}}" target="_target">{{s.id}}</a> {{s.text}}
+  {% endfor %}
+  
+{% else %}
+
+  No statuses.
+
+{% endif %}
+
+<br><br>
+
+
+
+{% endblock %}

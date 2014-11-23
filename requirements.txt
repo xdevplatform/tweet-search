@@ -1,0 +1,5 @@
+django>=1.4
+python-social-auth
+python-twitter
+south
+fabric

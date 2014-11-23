@@ -1,0 +1,16 @@
+body {
+  padding-top: 30px;
+}
+
+.starter-template {
+  padding: 40px 15px;
+  text-align: left;
+}
+
+.full-screen {
+    width: 90%;
+    height: 100%;
+    margin-left: 5%;
+    top: 0;
+    left: 0;
+}

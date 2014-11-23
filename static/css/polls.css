@@ -1,0 +1,64 @@
+
+#poll-container .list-group img {
+	width: 65px;
+}
+
+#poll-container .list-group .media {
+	padding: 0;
+}
+
+#poll-container .list-group .vote-btn {
+	margin-top: 17px;
+}
+
+.count {
+	line-height: 75px;
+	font-size: 36px;
+}
+
+h2 a, h2 a:hover {
+	color: #000;
+	text-decoration: none;
+}
+
+.action-icon {
+	font-size: 16px;
+	margin: -4px 10px 0 0;
+	cursor: pointer;
+}
+
+.action-icon:hover {
+	text-decoration: none;
+}
+
+.poll-info-modal-link {
+  cursor: pointer;
+}
+
+.modal-lg {
+	width: 800px;
+	margin: 30px auto;
+}
+
+.tweet-flag {
+	color: #CCC;
+}
+
+.tweet-flag.flagged {
+	color: #F00;
+}
+
+.pagination {
+	text-align: right;
+	width: 100%;
+	color: #000;
+}
+
+.current-page {
+	font-size: 12px;
+	margin: 0px 20px;
+}
+
+.page-btn {
+	min-width: 90px;
+}
