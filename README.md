@@ -9,15 +9,24 @@ REQUIREMENTS
 
 To run this sample code, you'll need to install the following libraries:
 
+- Fabric (http://www.fabfile.org/)
+- Gnip Search (https://github.com/DrSkippy/Gnip-Python-Search-API-Utilities)
+
+- south (http://south.aeracode.org/)
 - Python Social Auth (https://github.com/omab/python-social-auth)
 - Python Twitter (https://github.com/bear/python-twitter)
-- south (http://south.aeracode.org/)
-- Fabric (http://www.fabfile.org/)
 
 GETTING STARTED
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
+
+- Specify your GNIP credentials in app/settings.py under the following section:
+
+    GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
+    GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
+    GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
+
 - Specify your Twitter App tokens in app/settings.py under the following section:
 
     SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_API_KEY'

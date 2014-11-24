@@ -3,7 +3,7 @@ from __future__ import with_statement
 from fabric.api import *
 from fabric.contrib import django
 
-SETTINGS_FILE = "app.settings"
+SETTINGS_FILE = "app.settings_my"
 django.settings_module(SETTINGS_FILE)
 
 

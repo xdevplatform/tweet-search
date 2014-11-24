@@ -2,33 +2,27 @@
 
 {% block content %}
 
-Tweet:
+<h1>Ratings Everywhere</h1>
 
-<br><br>
+<h3>Step 1: Enter a topic</h3>
 
-<form action="/home" method="post">{% csrf_token %}
-  <input name="status" type="text">
-  <input type="submit" value="tweet">
+<p>Enter a few keywords about the subject to rate.</p>
+
+<form class="form-inline" role="form" method="GET" action="/">
+  <div class="form-group">
+    <label class="sr-only" for="query">Password</label>
+    <input type="text" class="form-control" name="query" id="query" placeholder="Search Term" value="{{query}}">
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
-{% if statuses and statuses.0 %}
+<h4>Choose related terms</h4>
 
-  Statuses:
-  
-  <br>
-  
-  {% for s in statuses %}
-  <br>
-  <a href="http://twitter.com/{{s.user.screen_name}}/status/{{s.id}}" target="_target">{{s.id}}</a> {{s.text}}
-  {% endfor %}
-  
-{% else %}
+<p>Choose relevant search terms to expand or refine your ratings, and re-run your search.</p>
 
-  No statuses.
+<h3>Step 2: Save top Tweets</h3>
 
-{% endif %}
-
-<br><br>
+JSON endpoint: {{ something }}
 
 
 

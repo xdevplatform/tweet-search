@@ -3,7 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
+
 import twitter
+import gnip_search
+from gnip_search import gnip_search_api
 
 def login(request):
     context = {"request": request}
@@ -12,15 +15,41 @@ def login(request):
 @login_required
 def home(request):
     
-    status = request.REQUEST.get("status", None)
+    query = request.REQUEST.get("query", "")
     
-    api = get_twitter(request.user)
-    if status:
-        api.PostUpdates(status)
+    if query:
+        
+        g = get_gnip(request.user)
+
+        g.get_repr(query)
+        frequency = g.get_frequency_list(25)
+        
+#         print g.get_repr(query, 100, "rate")
+#         print g.get_rate()
+#         print g.get_repr(query, 50)
+#         print g.query_api(query, 10, "json")
+#         print g.get_frequency_list(10)
+#         print g.query_api(query, use_case = "timeline")
+#         print g.get_repr(query, 10, "users")
+#         print g.get_rate()
+#         print g.get_repr(query, 10, "links")
+#         print g.query_api(query, query=True)
     
-    statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
+        # last N tweets
+        tweets = g.query_api(query, 10)
+
+        # counts over time
+        timeline = g.query_api(query, 0, "timeline")
+        
+        # common phrases
+        
+#     api = get_twitter(request.user)
+#     if status:
+#         api.PostUpdates(status)
+#     
+#     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
     
-    context = {"request": request, 'statuses': statuses}
+    context = {"request": request, 'query': query}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout
@@ -28,6 +57,14 @@ def logout(request):
     """Logs out user"""
     auth_logout(request)
     return HttpResponseRedirect('/')
+
+def get_gnip(user):
+    
+    g = gnip_search_api.GnipSearchAPI(settings.GNIP_USERNAME,
+        settings.GNIP_PASSWORD,
+        settings.GNIP_SEARCH_ENDPOINT)
+
+    return g
 
 def get_twitter(user):
 
