@@ -70,23 +70,27 @@
 
 {% endif %}
 
+{% if query %}
+
 <h3>Step 2: Review Results</h3>
 
 <p>Based on the sentiment around Tweets, here is your rating for <em>{{query}}</em>.</p>
 
 <div class="row jumbotron rating">
 
-<div class="col-md-4">
-	<span class="rating_score">
-		<img src="{{STATIC_URL}}images/bird.png" class="rating_img">
-		55%
-	</span>
+	<div class="col-md-4">
+		<span class="rating_score">
+			<img src="{{STATIC_URL}}images/bird.png" class="rating_img">
+			55%
+		</span>
+	</div>
+	
+	<div class="col-md-6">
+	</div>
+
 </div>
 
-<div class="col-md-6">
-</div>
-
-</div>
+{% endif %}
 
 {% if tweets %}
 
@@ -110,9 +114,35 @@
 
 {% endif %}
 
-<h3>Step 3: Integrate with iOS/Android</h3>
+{% if query %}
 
-JSON endpoint: {{ something }}
+<h3>Step 4: Integrate</h3>
+
+<h5>JSON</h5>
+
+{{ integration.json }}
+
+<h5>Ratings Endpoint</h5>
+
+{{ integration.endpoint }}
+
+<h5>Web Plugin</h5>
+
+<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev
+" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+<pre class="code">https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev
+</pre>
+
+<a href="#">Click here</a> to view
+
+<h5>iOS Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h5>
+
+<h5>Android Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h5>
+
+
+{% endif %}
 
 
 
