@@ -62,6 +62,13 @@ def home(request):
 #         api.PostUpdates(status)
 #     
 #     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
+
+    integration = {
+        "endpoint": "http://localhost:9000/aQ13s4/rating",
+        "json": "{rating: 55%}",
+    }
+    context["integration"] = integration
+    print context["integration"]
     
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
