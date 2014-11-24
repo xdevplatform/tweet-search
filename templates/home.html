@@ -13,20 +13,32 @@
 
 <form class="form-inline" role="form" method="GET" action="/">
   <div class="form-group">
-    <label class="sr-only" for="query">Password</label>
+    <label class="sr-only" for="query">Search Term</label>
     <input type="text" class="form-control" name="query" id="query" placeholder="Search Term" value="{{query}}">
   </div>
   <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
-<h4>Choose related terms</h4>
+{% if frequency %}
+
+<h4>Choose related terms (Optional)</h4>
 
 <p>Choose relevant search terms to expand or refine your ratings, and re-run your search.</p>
 
-{% if frequency %}
+<button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapseOne">
+  See Related Terms
+</button>
+
+<div class="accordion" id="accordion2">
+  <div class="accordion-group">
+    <div id="collapseOne" class="accordion-body collapse">
+      <div class="accordion-inner">
+
+<br>
 
 <table class="table table-striped table-condensed">
 <tr>
+<th></th>
 <th>Term</th>
 <th>Mentions (100)</th>
 <th>Mentions %</th>
@@ -36,6 +48,7 @@
 
 {% for f in frequency %}
 <tr>
+<td><input type="checkbox" data-value="{{f.4}}" class="term"></td>
 <td>{{f.4}}</td>
 <td>{{f.0}}</td>
 <td>{{f.1|percentage}}</td>
@@ -46,11 +59,20 @@
 
 </table>
 
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endif %}
+
+<h3>Step 2: Review Results</h3>
+
+<p>Based on the sentiment around Tweets, here is your rating for "{{query}}".</p>
 
 {% if tweets %}
 
-<h3>Step 2: Save top Tweets</h3>
+<h3>Step 3: Save top Tweets</h3>
 
 {% for t in tweets %}
 
