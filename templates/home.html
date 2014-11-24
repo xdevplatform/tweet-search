@@ -98,10 +98,10 @@
 
 {% for t in tweets %}
 
-<blockquote class="col-md-4">
+<blockquote class="tweet col-md-4">
   <img src="{{t.actor.image}}" class="pull-left">
+  <footer>{{t.actor.displayName}} <cite title="">(<a href="{{t.actor.link}}" target="_target">@{{t.actor.preferredUsername}})</a></cite></footer>
   <p>{{ t.body }}</p>
-  <footer>{{t.actor.displayName}} <cite title="">(@{{t.actor.preferredUsername}})</cite></footer>
 </blockquote>
 
 {% endfor %}
