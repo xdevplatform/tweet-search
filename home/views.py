@@ -8,6 +8,8 @@ import json
 import twitter
 from gnip_search import gnip_search_api
 
+FREQUENCY_THRESHOLD = .1
+
 def login(request):
     context = {"request": request}
     return render_to_response('login.html', context, context_instance=RequestContext(request))
@@ -25,7 +27,12 @@ def home(request):
         g = get_gnip(request.user)
 
         g.get_repr(query)
-        frequency = g.get_frequency_list(25)
+        result = g.get_frequency_list(25)
+        frequency = []
+        for f in result:
+            if float(f[3]) >= FREQUENCY_THRESHOLD:
+                frequency.append(f)
+        frequency = sorted(frequency, key=lambda f: -f[3]) 
         context["frequency"] = frequency
         
 #         print g.get_repr(query, 100, "rate")

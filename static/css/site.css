@@ -1,3 +1,38 @@
+body {
+  padding-top: 30px;
+}
+
+.starter-template {
+  padding: 40px 15px;
+  text-align: left;
+}
+
+.full-screen {
+    width: 90%;
+    height: 100%;
+    margin-left: 5%;
+    top: 0;
+    left: 0;
+}
+
 blockquote img {
   margin-right: 15px;
+}
+
+.rating {
+	padding: 0px 20px;
+}
+
+.rating_img {
+	margin-top: -12px;
+	width: 100px;
+	vertical-align: none;
+}
+
+.rating_score {
+	width: 100%;
+	text-align: center;
+	color: #55ACEE;
+	font-size: 4em;
+	font-weight: bold;
 }

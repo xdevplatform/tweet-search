@@ -12,23 +12,27 @@
 <p>Enter a few keywords about the subject to rate.</p>
 
 <form class="form-inline" role="form" method="GET" action="/">
-  <div class="form-group">
-    <label class="sr-only" for="query">Search Term</label>
-    <input type="text" class="form-control" name="query" id="query" placeholder="Search Term" value="{{query}}">
+
+<div class="row">
+  <div class="col-xs-4">
+    <input type="text" class="form-control col-xs-6" name="query" id="query" placeholder="Search Term" value="{{query}}">
   </div>
-  <button type="submit" class="btn btn-primary">Search</button>
-</form>
+  <div class="col-xs-3">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</div>
 
 {% if frequency %}
 
-<h4>Choose related terms (Optional)</h4>
+<h5>Add related terms (Optional)</h5>
 
-<p>Choose relevant search terms to expand or refine your ratings, and re-run your search.</p>
+<p>Add relevant search terms to expand or refine your ratings, and re-run your search.
 
-<button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#collapseOne">
+<a href="#" data-toggle="collapse" data-target="#collapseOne">
   See Related Terms
-</button>
+</a>
 
+</p>
 <div class="accordion" id="accordion2">
   <div class="accordion-group">
     <div id="collapseOne" class="accordion-body collapse">
@@ -48,7 +52,7 @@
 
 {% for f in frequency %}
 <tr>
-<td><input type="checkbox" data-value="{{f.4}}" class="term"></td>
+<td><input type="checkbox" value="{{f.4}}" class="term"></td>
 <td>{{f.4}}</td>
 <td>{{f.0}}</td>
 <td>{{f.1|percentage}}</td>
@@ -68,24 +72,41 @@
 
 <h3>Step 2: Review Results</h3>
 
-<p>Based on the sentiment around Tweets, here is your rating for "{{query}}".</p>
+<p>Based on the sentiment around Tweets, here is your rating for <em>{{query}}</em>.</p>
+
+<div class="row jumbotron rating">
+
+<div class="col-md-4">
+	<span class="rating_score">
+		<img src="{{STATIC_URL}}images/bird.png" class="rating_img">
+		55%
+	</span>
+</div>
+
+<div class="col-md-6">
+</div>
+
+</div>
 
 {% if tweets %}
 
 <h3>Step 3: Save top Tweets</h3>
 
+<p>Highlight key Tweets to appear in your integration.</p>
+
+<div class="row">
+
 {% for t in tweets %}
 
-<blockquote>
+<blockquote class="col-md-4">
   <img src="{{t.actor.image}}" class="pull-left">
   <p>{{ t.body }}</p>
   <footer>{{t.actor.displayName}} <cite title="">(@{{t.actor.preferredUsername}})</cite></footer>
 </blockquote>
 
-</blockquote>
-
-
 {% endfor %}
+
+</div>
 
 {% endif %}
 
