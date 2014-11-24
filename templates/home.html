@@ -120,52 +120,50 @@
 
 <h4>JSON</h4>
 
-<div class="zero-clipboard">
-	<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.json }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+<div>
+	<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.json }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+	<pre class="code">{{ integration.json }}</pre>
 </div>
-<pre class="code">
-	{{ integration.json }}
-</pre>
 
 <h4>Ratings Endpoint</h4>
 
-<div class="zero-clipboard">
-	<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.endpoint }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+<div>
+	<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.endpoint }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+	<pre class="code">{{ integration.endpoint }}</pre>
 </div>
-<pre class="code">
-	{{ integration.endpoint }}
-</pre>
-
 
 <h4>Web Plugin</h4>
 
-<div class="zero-clipboard">
-	<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-</div>
-<pre class="code">
-	https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev
-</pre>
+<div>
+	<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.web }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+	<pre class="code">{{ integration.web|escape }}</pre>
+	<a href="#">Click here</a> to view
 
-<a href="#">Click here</a> to view
+</div>
 
 <h4>iOS Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h4>
 
-<div class="zero-clipboard">
-	<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+<div>
+	<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+	<pre class="code">{{ integration.ios|escape }}</pre>
 </div>
-<pre class="code">
-	https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev
-</pre>
 
 <h4>Android Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h4>
 
-<div class="zero-clipboard">
-	<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-</div>
-<pre class="code">
-	https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev
-</pre>
-
+<div>
+	<div class="zero-clipboard">
+		<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
+	</div>
+	<pre class="code">{{ integration.android|escape }}</pre>
+</div>	
 
 {% endif %}
 

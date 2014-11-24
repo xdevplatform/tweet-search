@@ -66,6 +66,9 @@ def home(request):
     integration = {
         "endpoint": "http://localhost:9000/aQ13s4/rating",
         "json": "{rating: 55%}",
+        "web" : "<iframe></iframe>",
+        "ios" : "<SOME IOS CODE>",
+        "android" : "<SOME ANDROID CODE>",
     }
     context["integration"] = integration
     print context["integration"]
