@@ -4,8 +4,8 @@ from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
 
+import json
 import twitter
-import gnip_search
 from gnip_search import gnip_search_api
 
 def login(request):
@@ -15,7 +15,10 @@ def login(request):
 @login_required
 def home(request):
     
+    context = {"request": request}
+
     query = request.REQUEST.get("query", "")
+    context["query"] = query
     
     if query:
         
@@ -23,6 +26,7 @@ def home(request):
 
         g.get_repr(query)
         frequency = g.get_frequency_list(25)
+        context["frequency"] = frequency
         
 #         print g.get_repr(query, 100, "rate")
 #         print g.get_rate()
@@ -34,22 +38,24 @@ def home(request):
 #         print g.get_rate()
 #         print g.get_repr(query, 10, "links")
 #         print g.query_api(query, query=True)
-    
-        # last N tweets
-        tweets = g.query_api(query, 10)
 
         # counts over time
         timeline = g.query_api(query, 0, "timeline")
+        context["timeline"] = timeline
         
-        # common phrases
+        # last N tweets
+        tweets = g.query_api(query, 10)
+        context["tweets"] = tweets
         
+        for i in range(len(tweets)):
+            tweets[i] = json.loads(tweets[i])
+
 #     api = get_twitter(request.user)
 #     if status:
 #         api.PostUpdates(status)
 #     
 #     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
     
-    context = {"request": request, 'query': query}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

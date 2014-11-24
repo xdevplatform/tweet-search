@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load tags %}
+
+{% block title %}Ratings Everywhere{% endblock %}
 
 {% block content %}
 
@@ -20,7 +23,51 @@
 
 <p>Choose relevant search terms to expand or refine your ratings, and re-run your search.</p>
 
+{% if frequency %}
+
+<table class="table table-striped table-condensed">
+<tr>
+<th>Term</th>
+<th>Mentions (100)</th>
+<th>Mentions %</th>
+<th>Activities (100)</th>
+<th>Activities %</th>
+</tr>
+
+{% for f in frequency %}
+<tr>
+<td>{{f.4}}</td>
+<td>{{f.0}}</td>
+<td>{{f.1|percentage}}</td>
+<td>{{f.2}}</td>
+<td>{{f.3|percentage}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+{% if tweets %}
+
 <h3>Step 2: Save top Tweets</h3>
+
+{% for t in tweets %}
+
+<blockquote>
+  <img src="{{t.actor.image}}" class="pull-left">
+  <p>{{ t.body }}</p>
+  <footer>{{t.actor.displayName}} <cite title="">(@{{t.actor.preferredUsername}})</cite></footer>
+</blockquote>
+
+</blockquote>
+
+
+{% endfor %}
+
+{% endif %}
+
+<h3>Step 3: Integrate with iOS/Android</h3>
 
 JSON endpoint: {{ something }}
 
