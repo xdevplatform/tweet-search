@@ -9,30 +9,35 @@
 
 <h3>Step 1: Enter a topic</h3>
 
-<p>Enter a few keywords about the subject to rate.</p>
+<p>Enter a few keywords about the subject to show reviews for.</p>
 
 <form class="form-inline" role="form" method="GET" action="/">
 
 <div class="row">
-  <div class="col-xs-4">
+  <div class="col-md-4">
     <input type="text" class="form-control col-xs-6" name="query" id="query" placeholder="Search Term" value="{{query}}">
   </div>
-  <div class="col-xs-3">
+  <div class="col-md-3">
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
 </div>
 
 {% if frequency %}
 
-<h4>Add related terms (Optional)</h4>
+<br>
 
-<p>Add relevant search terms to expand or refine your ratings, and re-run your search.
+<div class="row">
+  <div class="col-md-12">
 
-<a href="#" data-toggle="collapse" data-target="#collapseOne">
-  See Related Terms
-</a>
+	<p>Add relevant search terms to expand or refine your sentiments, and re-run your search.
+		<a href="#" data-toggle="collapse" data-target="#collapseOne">
+		  See Related Terms.
+		</a>
+	</p>
 
-</p>
+  </div>
+</div>
+
 <div class="accordion" id="accordion2">
   <div class="accordion-group">
     <div id="collapseOne" class="accordion-body collapse">
@@ -76,11 +81,11 @@
 
 <p>Based on {{results.count}} Tweets, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
 
-<div class="row jumbotron rating">
+<div class="row jumbotron sentiment">
 
 	<div class="col-md-12">
-		<span class="rating_score">
-			<img src="{{STATIC_URL}}images/bird.png" class="rating_img">
+		<span class="sentiment_score">
+			<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
 			55%
 		</span>
 	</div>
@@ -104,8 +109,8 @@
 {% for t in tweets.top %}
 
 <div class="row">
-	<div class="col-md-3 tweet_rating_score">
-		{{t.rating|percentage}}
+	<div class="col-md-3 tweet_sentiment_score">
+		{{t.sentiment|percentage}}
 		<br>
 		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
 	</div>
@@ -127,10 +132,10 @@
 {% for t in tweets.bottom %}
 
 <div class="row">
-	<div class="col-md-3 tweet_rating_score">
-		{{t.rating|percentage}}
+	<div class="col-md-3 tweet_sentiment_score">
+		{{t.sentiment|percentage}}
 		<br>
-		<button type="submit" class="btn btn-default btn-xs tweet-save">Save</button>
+		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
 	</div>
 	<blockquote class="tweet col-md-8">
 	  <img src="{{t.actor.image}}" class="pull-left">
@@ -151,7 +156,7 @@
 
 <h3>Step 4: Integrate</h3>
 
-<p>After selecting key Tweets above, click on the button below to generate endpoints and code samples to save your ratings.</p>
+<p>After selecting key Tweets above, click on the button below to generate endpoints and code samples to save your sentiments.</p>
 
 <button type="submit" class="btn btn-primary btn-small" id="generate_endpoints">Generate Endpoints</button>
 

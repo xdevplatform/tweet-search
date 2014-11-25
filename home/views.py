@@ -63,21 +63,21 @@ def home(request):
             tweet = json.loads(tweets[i])
             tweets[i] = tweet
             
-            tweet["rating"] = random.random()
+            tweet["sentiment"] = random.random()
              
-            if tweet["rating"] > .5:
+            if tweet["sentiment"] > .5:
                 top.append(tweet)
             else:
                 bottom.append(tweet)
             
         context["tweets"] = {
-             "top" : sorted(top, key=lambda t: -t["rating"]),
-             "bottom": sorted(bottom, key=lambda t: t["rating"])
+             "top" : sorted(top, key=lambda t: -t["sentiment"]),
+             "bottom": sorted(bottom, key=lambda t: t["sentiment"])
          }
         
     integration = {
-        "endpoint": "http://localhost:9000/aQ13s4/rating",
-        "json": "{rating: 55%}",
+        "endpoint": "http://localhost:9000/aQ13s4/sentiment",
+        "json": "{sentiment: 55%}",
         "web" : "<iframe></iframe>",
         "ios" : "<SOME IOS CODE>",
         "android" : "<SOME ANDROID CODE>",

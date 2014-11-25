@@ -25,17 +25,17 @@ blockquote img {
   margin-right: 15px;
 }
 
-.rating {
+.sentiment {
 	padding: 0px 20px;
 }
 
-.rating_img {
+.sentiment_img {
 	margin-top: -12px;
 	width: 100px;
 	vertical-align: none;
 }
 
-.rating_score {
+.sentiment_score {
 	width: 100%;
 	text-align: center;
 	color: #55ACEE;
@@ -43,7 +43,7 @@ blockquote img {
 	font-weight: bold;
 }
 
-.tweet_rating_score {
+.tweet_sentiment_score {
 	text-align: center;
 	color: #55ACEE;
 	font-size: 2em;
