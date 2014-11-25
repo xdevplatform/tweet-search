@@ -68,7 +68,7 @@ def home(request):
             count = count + t["count"]
         timeline = {
             "count": count,
-            "series": timeline
+            "series": json.dumps(timeline)
         }
         context["timeline"] = timeline
         

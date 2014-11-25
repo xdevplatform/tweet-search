@@ -5,6 +5,20 @@
 
 {% block content %}
 
+<script language="JavaScript1.2">
+
+$(document).ready(function(){
+
+{% if timeline.series %}
+{% autoescape off %}
+	var lineData = {{timeline.series}};
+	Graph.init(lineData);
+{% endautoescape %}
+{% endif %} 
+	
+});
+</script>
+
 <h1>Twitter Reviews</h1>
 
 <h3>Step 1: Enter a topic</h3>
@@ -98,7 +112,7 @@
 
 	<div class="col-md-9">
 		<div>
-			<svg id="visualisation" width="500" height="250"></svg>
+			<svg id="visualisation" width="800" height="250"></svg>
 		</div>
 	</div>
 
