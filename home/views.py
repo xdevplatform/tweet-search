@@ -66,6 +66,7 @@ def home(request):
         count = 0
         for t in timeline:
             count = count + t["count"]
+            t["timePeriod"] = t["timePeriod"][0:8]
         timeline = {
             "count": count,
             "series": json.dumps(timeline)

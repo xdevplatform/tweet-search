@@ -61,25 +61,29 @@ Graph = {
 		
 	init: function(lineData){
 		
-		var vis = d3.select('#visualisation'),
+		var parseDate = d3.time.format("%Y%m%d").parse;
+		
+		var svg = d3.select('#visualisation'),
 	    WIDTH = 800,
 	    HEIGHT = 250,
 	    MARGINS = {
 	      top: 20,
 	      right: 20,
 	      bottom: 20,
-	      left: 50
+	      left: 80
 	    },
-	    xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function(d) {
-	      return d.timePeriod;
+	    
+	    xRange = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function(d) {
+	      return parseDate(d.timePeriod);
 	    }), d3.max(lineData, function(d) {
-	      return d.timePeriod;
+	      return parseDate(d.timePeriod);
 	    })]),
 	    yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function(d) {
 	      return d.count;
 	    }), d3.max(lineData, function(d) {
 	      return d.count;
 	    })]),
+	    
 	    xAxis = d3.svg.axis()
 	      .scale(xRange)
 	      .tickSize(5)
@@ -90,30 +94,60 @@ Graph = {
 	      .orient('left')
 	      .tickSubdivide(true);
 	 
-		vis.append('svg:g')
+		svg.append('svg:g')
 		  .attr('class', 'x axis')
 		  .attr('transform', 'translate(0,' + (HEIGHT - MARGINS.bottom) + ')')
-		  .call(xAxis);
+		  .call(xAxis)
+		  .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", function(d) {
+                return "rotate(-45)" 
+                });
 		 
-		vis.append('svg:g')
+		svg.append('svg:g')
 		  .attr('class', 'y axis')
-		  .attr('transform', 'translate(' + (MARGINS.left) + ',0)')
+		  .attr('transform', 'translate(' + (MARGINS.left) + ')')
 		  .call(yAxis);
 
 		var lineFunc = d3.svg.line()
 		  .x(function(d) {
-		    return xRange(d.timePeriod);
+		    return xRange(parseDate(d.timePeriod));
 		  })
 		  .y(function(d) {
 		    return yRange(d.count);
 		  })
 		  .interpolate('linear');
 		
-		vis.append('svg:path')
+		svg.append('svg:path')
 		  .attr('d', lineFunc(lineData))
 		  .attr('stroke', 'blue')
 		  .attr('stroke-width', 2)
 		  .attr('fill', 'none');
+		
+	    //Mouseover tip
+	    var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([120, 40])
+		.html(function(d) {
+		    return "<strong>" + d + "</strong>"
+		});
+
+	    svg.call(tip);
+	    
+//	    svg.selectAll(".dot")
+//		  .data(csvdata)
+//		  .enter().append("circle")
+//		  .attr('class', 'datapoint')
+//		  .attr('cx', function(d) { return x(d.timePeriod); })
+//		  .attr('cy', function(d) { return y(d.count); })
+//		  .attr('r', 6)
+//		  .attr('fill', 'white')
+//		  .attr('stroke', 'steelblue')
+//		  .attr('stroke-width', '3')
+//		  .on('mouseover', tip.show)
+//		  .on('mouseout', tip.hide);
 		
 	}	
 	

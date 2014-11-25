@@ -89,3 +89,29 @@ h4 .alert {
 	border: 1px solid #e1e1e8;
 	border-radius: 0 4px 0 4px;
 }
+
+      .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+      }
+      path {
+        stroke: steelblue;
+        stroke-width: 3;
+        fill: none;
+      }
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .datapoint:hover{
+	fill: steelblue;
+      }
+      .xlabel, .ylabel {
+        font-weight:bold;
+	font-size:20px;
+      }

@@ -19,13 +19,13 @@ $(document).ready(function(){
 });
 </script>
 
+<form method="GET" action="/">
+
 <h1>Twitter Reviews</h1>
 
 <h3>Step 1: Enter a topic</h3>
 
 <p>Enter 2 or 3 keywords about the topic you want to show Twitter reviews for.</p>
-
-<form class="form-inline" role="form" method="GET" action="/">
 
 <div class="row">
   <div class="col-md-4">
@@ -35,6 +35,8 @@ $(document).ready(function(){
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
 </div>
+
+</form>
 
 {% if frequency %}
 
@@ -93,7 +95,7 @@ $(document).ready(function(){
 
 {% if not query %}
 
-<p>The sentiment for your topic over the last 30 days will appear here.</p>
+<p>After you search on a topic, the sentiment for that topic over the last 30 days will appear here.</p>
 
 {% else %}
 
@@ -112,7 +114,7 @@ $(document).ready(function(){
 
 	<div class="col-md-9">
 		<div>
-			<svg id="visualisation" width="800" height="250"></svg>
+			<svg id="visualisation" width="800" height="300"></svg>
 		</div>
 	</div>
 
@@ -130,9 +132,37 @@ $(document).ready(function(){
 
 {% else %}
 
-<p>Click the button below to curate Tweets for your integration.</p>
+<p>Choose criteria to filter the best/worst Tweets to show and curate.</p>
 
-<button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">Show Tweets</button>
+<form class="form-horizontal" role="form">
+  <input type="hidden" name="query" value="{{query}}">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"> Remember me
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">Show Tweets</button>
+    </div>
+  </div>
+</form>
 
 {% endif %}
 
@@ -264,7 +294,5 @@ $(document).ready(function(){
 </div>
 
 {% endif %}
-
-
 
 {% endblock %}
