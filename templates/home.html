@@ -95,7 +95,7 @@ $(document).ready(function(){
 
 {% if not query %}
 
-<p>After you search on a topic, the sentiment for that topic over the last 30 days will appear here.</p>
+<p>After searching on a topic, the sentiment for that topic over the last 30 days will appear here.</p>
 
 {% else %}
 
@@ -128,7 +128,7 @@ $(document).ready(function(){
 
 {% if not query %}
 
-<p>After you search on a topic, you will be given the option to curate top Tweets about that topic.</p>
+<p>After searching on a topic, you can curate top Tweets to display in Web, iOS and Android.</p>
 
 {% else %}
 
@@ -277,7 +277,7 @@ $(document).ready(function(){
 		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.web }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
 	</div>
 	<pre class="code">{{ integration.web|escape }}</pre>
-	<a href="#">Click here</a> to view
+	<a href="#">Click here</a> to view.
 
 </div>
 

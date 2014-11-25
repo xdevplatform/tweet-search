@@ -1,4 +1,3 @@
-import requests
 import random
 import json
 
@@ -9,14 +8,13 @@ from django.conf import settings
 from social.apps.django_app.default.models import UserSocialAuth
 
 from gnip_search import gnip_search_api
+from engine.models import Classifier
 
 # import twitter
 
 FREQUENCY_THRESHOLD = .1    # Only show related terms if > 10%
 QUERY_SIZE = 10             # For real identification, > 100
 SENTIMENT_THRESHOLD = .4    # .7 is ideal
-CLASSIFIER_TYPE = None
-CLASSIFIER = None
 
 def login(request):
     
@@ -26,8 +24,8 @@ def login(request):
 @login_required
 def home(request):
     
-#     global CLASSIFIER_TYPE
-#     if not CLASSIFIER_TYPE:
+#     global Classifier.CLASSIFIER_TYPE
+#     if not Classifier.CLASSIFIER_TYPE:
 #         return redirect("/learning")
     
     context = {"request": request}
@@ -143,7 +141,7 @@ def home(request):
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 def get_sentiment(query, body):
-    
+
     query = query.lower()
     body = body.lower()
     
@@ -155,71 +153,18 @@ def get_sentiment(query, body):
     
     for q in query:
         body = body.replace(q, "")
-    
-    url = "https://japerk-text-processing.p.mashape.com/sentiment/"
-    headers={
-      "X-Mashape-Key": settings.MASHAPE_KEY,
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-    params={
-      "language": "english",
-      "text": body
-    }
 
-    r = requests.post(url, data=params, headers=headers)
-    
-    result = None
-    if r and r.text:
-        result = json.loads(r.text)
-        
-    return result
+    return Classifier.get_sentiment(body)
 
 from django.contrib.auth import logout as auth_logout
 def learning(request):
 
-    global CLASSIFIER_TYPE
-    CLASSIFIER_TYPE = request.REQUEST.get("corpus", CLASSIFIER_TYPE)
+    type = request.REQUEST.get("corpus", None)
+    if type:
+        Classifier.set_classifier(type)
     
-    if CLASSIFIER_TYPE == "movies":
-        
-        import nltk.classify.util
-        from nltk.classify import NaiveBayesClassifier
-        from nltk.corpus import movie_reviews
-         
-        def word_feats(words):
-            return dict([(word, True) for word in words])
-         
-        negids = movie_reviews.fileids('neg')
-        posids = movie_reviews.fileids('pos')
-         
-        negfeats = [(word_feats(movie_reviews.words(fileids=[f])), 'neg') for f in negids]
-        posfeats = [(word_feats(movie_reviews.words(fileids=[f])), 'pos') for f in posids]
-         
-        negcutoff = len(negfeats)*3/4
-        poscutoff = len(posfeats)*3/4
-         
-        trainfeats = negfeats[:negcutoff] + posfeats[:poscutoff]
-        testfeats = negfeats[negcutoff:] + posfeats[poscutoff:]
-        print 'train on %d instances, test on %d instances' % (len(trainfeats), len(testfeats))
-        
-        global CLASSIFIER 
-        CLASSIFIER = NaiveBayesClassifier.train(trainfeats)
-        
-#         print 'accuracy:', nltk.classify.util.accuracy(CLASSIFIER, testfeats)
-#         CLASSIFIER.show_most_informative_features()
-
-        print CLASSIFIER.classify(word_feats('This is the best thing ever'))
-        print CLASSIFIER.classify(word_feats('I hate the world'))
-
-    context = {"request": request, "classifier": CLASSIFIER_TYPE}
+    context = {"request": request, "classifier": Classifier.CLASSIFIER_TYPE}
     return render_to_response('learning.html', context, context_instance=RequestContext(request))
-
-def document_features(document, word_features):
-    document_words = set(document)
-    features = {}
-    for word in word_features:
-        features['contains(%s)' % word] = (word in document_words)
-    return features
 
 from django.contrib.auth import logout as auth_logout
 def logout(request):
@@ -235,6 +180,3 @@ def get_gnip(user):
         settings.GNIP_SEARCH_ENDPOINT)
 
     return g
-
-
-    return api
