@@ -105,34 +105,5 @@ def get_gnip(user):
 
     return g
 
-#     api = get_twitter(request.user)
-#     if status:
-#         api.PostUpdates(status)
-#     
-#     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
-
-
-def get_twitter(user):
-
-    access_token_key=settings.TWITTER_ACCESS_TOKEN
-    access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET
-
-    usa = UserSocialAuth.objects.get(user=user, provider='twitter')
-    if usa:
-        access_token = usa.extra_data['access_token']
-        if access_token:
-            access_token_key = access_token['oauth_token']
-            access_token_secret = access_token['oauth_token_secret']
-
-    if not access_token_key or not access_token_secret:
-        raise Exception('No user for twitter API call')
-
-    api = twitter.Api(
-        # base_url='https://api.twitter.com/1.1?include_cards=1&include_entities=1',
-        base_url='https://api.twitter.com/1.1',
-        consumer_key=settings.SOCIAL_AUTH_TWITTER_KEY,
-        consumer_secret=settings.SOCIAL_AUTH_TWITTER_SECRET,
-        access_token_key=access_token_key,
-        access_token_secret=access_token_secret)
 
     return api

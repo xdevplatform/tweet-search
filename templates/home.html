@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load tags %}
 
-{% block title %}Reviews Everywhere{% endblock %}
+{% block title %}Twitter Reviews{% endblock %}
 
 {% block content %}
 
-<h1>Reviews Everywhere</h1>
+<h1>Twitter Reviews</h1>
 
 <h3>Step 1: Enter a topic</h3>
 
@@ -104,7 +104,7 @@
 
 <div class="col-md-6">
 
-<h4 class="alert alert-success">Top</h4>
+<h4 class="alert alert-success">Positive Tweets</h4>
 
 {% for t in tweets.top %}
 
@@ -127,7 +127,7 @@
 
 <div class="col-md-6">
 
-<h4 class="alert alert-danger">Bottom</h4>
+<h4 class="alert alert-danger">Negative Tweets</h4>
 
 {% for t in tweets.bottom %}
 

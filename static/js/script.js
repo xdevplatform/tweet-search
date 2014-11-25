@@ -30,6 +30,7 @@ $(document).ready(function(){
 			$(this).addClass("btn-default");
 			$(this).html("Save Tweet");
 		}
+		return false;
 	})
 	
 	$("#generate_endpoints").click(function(){

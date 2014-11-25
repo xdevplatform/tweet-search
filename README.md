@@ -7,19 +7,23 @@ Large portions of this sample code are based on Laurent Luce's great
 Twitter + NLTK blog here: http://www.laurentluce.com/posts/twitter-sentiment-analysis-using-python-and-nltk/
 
 
-REQUIREMENTS
+Requirements
 ============
 
 To run this sample code, you'll need to install the following libraries:
 
-- Fabric (http://www.fabfile.org/)
-- Gnip Search (https://github.com/DrSkippy/Gnip-Python-Search-API-Utilities)
+- `pip install south` (http://south.aeracode.org/)
+- `pip install fabric` (http://www.fabfile.org/)
+- `pip install gapi` (https://github.com/DrSkippy/Gnip-Python-Search-API-Utilities)
+` `pip install nltk` (http://www.nltk.org/)
 
-- south (http://south.aeracode.org/)
-- Python Social Auth (https://github.com/omab/python-social-auth)
-- Python Twitter (https://github.com/bear/python-twitter)
+After installing nltk, run the following in the command line
 
-GETTING STARTED
+	import nltk
+	nltk.download()
+	d movie_reviews
+
+Getting Started
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
@@ -29,14 +33,6 @@ GETTING STARTED
     GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
     GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
     GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
-
-- Specify your Twitter App tokens in app/settings.py under the following section:
-
-    SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_API_KEY'
-    SOCIAL_AUTH_TWITTER_SECRET = 'YOUR_TWITTER_API_SECRET'
-    
-    TWITTER_ACCESS_TOKEN = 'YOUR_TWITTER_ACCESS_TOKEN'
-    TWITTER_ACCESS_TOKEN_SECRET = 'YOUR_TWITTER_ACCESS_TOKEN_SECRET'
 
 - To initialize your database, run the from the `reviews-everywhere` directory:
 
@@ -48,7 +44,7 @@ GETTING STARTED
   
 - Open a browser and go to http://localhost:9000
 
-NOTES
+Notes
 ============
 If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the requst and the Twitter server.
 
