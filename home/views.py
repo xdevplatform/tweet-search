@@ -76,7 +76,7 @@ def home(request):
     tweets = request.REQUEST.get("tweets", "")
     if query and tweets: 
     
-        klout_score = request.REQUEST.get("tweets", 0)
+        klout_score = request.REQUEST.get("klout_score", 0)
         if klout_score:
             query_nrt = query_nrt + " klout_score:%s" % klout_score
             
