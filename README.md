@@ -1,8 +1,12 @@
-ratings-everywhere
+reviews-everywhere
 
 =================
 
-Sample Django App using GNIP to power Twitter ratings for anything via GNIP.
+Sample Django App using GNIP to power Twitter reviews for anything via GNIP.
+
+Large portions of this sample code are based on Laurent Luce's great
+Twitter + NLTK blog here: http://www.laurentluce.com/posts/twitter-sentiment-analysis-using-python-and-nltk/
+
 
 REQUIREMENTS
 ============
@@ -35,11 +39,11 @@ GETTING STARTED
     TWITTER_ACCESS_TOKEN = 'YOUR_TWITTER_ACCESS_TOKEN'
     TWITTER_ACCESS_TOKEN_SECRET = 'YOUR_TWITTER_ACCESS_TOKEN_SECRET'
 
-- To initialize your database, run the from the `ratings-everywhere` directory:
+- To initialize your database, run the from the `reviews-everywhere` directory:
 
   python manage.py syncdb
 
-- To start the server, run the following from the `ratings-everywhere` directory:
+- To start the server, run the following from the `reviews-everywhere` directory:
 
   fab start
   
