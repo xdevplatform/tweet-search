@@ -1,3 +1,4 @@
+import requests
 import random
 import json
 
@@ -11,7 +12,10 @@ from gnip_search import gnip_search_api
 
 # import twitter
 
-FREQUENCY_THRESHOLD = .1
+FREQUENCY_THRESHOLD = .1    # Only show related terms if > 10%
+QUERY_SIZE = 10             # For real identification, > 100
+SENTIMENT_THRESHOLD = .4    # .7 is ideal
+CLASSIFIER_TYPE = None
 CLASSIFIER = None
 
 def login(request):
@@ -22,17 +26,17 @@ def login(request):
 @login_required
 def home(request):
     
-    global CLASSIFIER
-    if not CLASSIFIER:
-        return redirect("/learning")
+#     global CLASSIFIER_TYPE
+#     if not CLASSIFIER_TYPE:
+#         return redirect("/learning")
     
     context = {"request": request}
     tweets = []
 
     query = request.REQUEST.get("query", "")
-    context["query"] = query
-    
     if query:
+
+        context["query"] = query
         
         g = get_gnip(request.user)
 
@@ -57,32 +61,50 @@ def home(request):
 #         print g.query_api(query, query=True)
 
         # counts over time
-        timeline = g.query_api(query, 0, "timeline")
+        query_nrt = query + " -(is:retweet)"
+        timeline = g.query_api(query_nrt, 0, "timeline")
+        count = 0
+        for t in timeline:
+            count = count + t["count"]
+        timeline = {
+            "count": count,
+            "series": timeline
+        }
         context["timeline"] = timeline
         
+    tweets = request.REQUEST.get("tweets", "")
+    if query and tweets: 
+    
         # last N tweets, categorized by sentiment
         top = []
         bottom = []
-        tweets = g.query_api(query, 100)
+        tweets = g.query_api(query_nrt, QUERY_SIZE)
 
         for i in range(len(tweets)):
             
             tweet = json.loads(tweets[i])
             tweets[i] = tweet
             
-            sentiment = random.random()
-            tweet["sentiment"] = sentiment
-             
-            if tweet["sentiment"] > .5:
-                top.append(tweet)
-            else:
-                bottom.append(tweet)
+            body = tweet["body"]
+            response = get_sentiment(query, body)
+            if response:
+                
+                label = response["label"]
+                sentiment = response["probability"][label]
+                
+                if sentiment >= SENTIMENT_THRESHOLD:
+                    tweet["sentiment"] = sentiment
+                    if label == "pos":
+                        top.append(tweet)
+                    elif label == "neg":
+                        bottom.append(tweet)
+                    print label, tweet["sentiment"], body
             
         top = sorted(top, key=lambda t: -t["sentiment"])
         if len(top) > 10:
             top = top[0:10]
             
-        bottom = sorted(bottom, key=lambda t: t["sentiment"])
+        bottom = sorted(bottom, key=lambda t: -t["sentiment"])
         if len(bottom) > 10:
             bottom = bottom[0:10]
         
@@ -107,10 +129,45 @@ def home(request):
     
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
+def get_sentiment(query, body):
+    
+    query = query.lower()
+    body = body.lower()
+    
+    # scrub query from body
+    query = query.replace("(", "")
+    query = query.replace(")", "")
+    query = query.replace(" or ", " ")
+    query = query.split(" ")
+    
+    for q in query:
+        body = body.replace(q, "")
+    
+    url = "https://japerk-text-processing.p.mashape.com/sentiment/"
+    headers={
+      "X-Mashape-Key": settings.MASHAPE_KEY,
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+    params={
+      "language": "english",
+      "text": body
+    }
+
+    r = requests.post(url, data=params, headers=headers)
+    
+    result = None
+    if r and r.text:
+        result = json.loads(r.text)
+        
+    return result
+
 from django.contrib.auth import logout as auth_logout
 def learning(request):
 
-    if request.REQUEST.get("corpus", None) == 'movies':
+    global CLASSIFIER_TYPE
+    CLASSIFIER_TYPE = request.REQUEST.get("corpus", CLASSIFIER_TYPE)
+    
+    if CLASSIFIER_TYPE == "movies":
         
         import nltk.classify.util
         from nltk.classify import NaiveBayesClassifier
@@ -141,7 +198,7 @@ def learning(request):
         print CLASSIFIER.classify(word_feats('This is the best thing ever'))
         print CLASSIFIER.classify(word_feats('I hate the world'))
 
-    context = {"request": request}
+    context = {"request": request, "classifier": CLASSIFIER_TYPE}
     return render_to_response('learning.html', context, context_instance=RequestContext(request))
 
 def document_features(document, word_features):

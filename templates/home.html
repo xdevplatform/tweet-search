@@ -9,7 +9,7 @@
 
 <h3>Step 1: Enter a topic</h3>
 
-<p>Enter a few keywords about the subject to show reviews for.</p>
+<p>Enter 2 or 3 keywords about the topic you want to show Twitter reviews for.</p>
 
 <form class="form-inline" role="form" method="GET" action="/">
 
@@ -75,30 +75,56 @@
 
 {% endif %}
 
-{% if query %}
-
 <h3>Step 2: Review Sentiment</h3>
 
-<p>Based on {{results.count}} Tweets, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
+{% if not query %}
 
-<div class="row jumbotron sentiment">
+<p>The sentiment for your topic over the last 30 days will appear here.</p>
 
-	<div class="col-md-12">
-		<span class="sentiment_score">
-			<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
-			55%
-		</span>
+{% else %}
+
+<p>Based on {{timeline.count}} Tweets over the last 30 days, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
+
+<div class="row sentiment">
+
+	<div class="col-md-3">
+		<div>
+			<span class="sentiment_score">
+				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
+				55%
+			</span>
+		</div>
+	</div>
+
+	<div class="col-md-9">
+		<div>
+			Something else.
+		</div>
 	</div>
 
 </div>
 
 {% endif %}
 
-{% if tweets %}
-
 <h3>Step 3: Save top Tweets</h3>
 
-<p>Click on the tweets below to highlight key Tweets to appear in your integration.</p>
+{% if not tweets %}
+
+{% if not query %}
+
+<p>After you search on a topic, you will be given the option to curate top Tweets about that topic.</p>
+
+{% else %}
+
+<p>Click the button below to curate Tweets for your integration.</p>
+
+<button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">Show Tweets</button>
+
+{% endif %}
+
+{% else %}
+
+<p>Save Tweets to show in your integration.</p>
 
 <div class="row">
 
@@ -114,11 +140,13 @@
 		<br>
 		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
 	</div>
-	<blockquote class="tweet col-md-8">
-	  <img src="{{t.actor.image}}" class="pull-left">
-	  <footer>{{t.actor.displayName}} <cite title="">(<a href="{{t.actor.link}}" target="_target">@{{t.actor.preferredUsername}})</a></cite></footer>
-	  <p>{{ t.body }}</p>
-	</blockquote>
+	<div class="col-md-9">
+		<blockquote class="tweet">
+		  <img src="{{t.actor.image}}" class="pull-left">
+		  <footer>{{t.actor.displayName}} <cite title="">(<a href="{{t.actor.link}}" target="_target">@{{t.actor.preferredUsername}})</a></cite></footer>
+		  <p>{{ t.body }}</p>
+		</blockquote>
+	</div>
 </div>
 
 {% endfor %}
@@ -152,13 +180,21 @@
 
 {% endif %}
 
-{% if query %}
+{% if integration %}
 
 <h3>Step 4: Integrate</h3>
+
+{% if not tweets %}
+
+<p>After selecting key Tweets above, you will be given the option to integrate the sentiment and reviews into your website, iOS and Android apps.</p>
+
+{% else %}
 
 <p>After selecting key Tweets above, click on the button below to generate endpoints and code samples to save your sentiments.</p>
 
 <button type="submit" class="btn btn-primary btn-small" id="generate_endpoints">Generate Endpoints</button>
+
+{% endif %}
 
 <br><br>
 

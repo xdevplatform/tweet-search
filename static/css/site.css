@@ -26,7 +26,13 @@ blockquote img {
 }
 
 .sentiment {
-	padding: 0px 20px;
+}
+
+.sentiment div div {
+	border-radius: 5px;
+	background-color: #eee;
+	padding: 20px 10px;
+	text-align: center;
 }
 
 .sentiment_img {
