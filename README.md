@@ -3,8 +3,8 @@ Twitter Reviews Everywhere
 
 Sample Django App using GNIP to power Twitter reviews for anything via GNIP.
 
-Large portions of this sample code are based on Laurent Luce's great
-Twitter + NLTK blog here: http://www.laurentluce.com/posts/twitter-sentiment-analysis-using-python-and-nltk/
+Large portions of this sample code are based on this great starter on 
+Twitter + NLTK: http://ravikiranj.net/drupal/201205/code/machine-learning/how-build-twitter-sentiment-analyzer
 
 
 Requirements
@@ -17,7 +17,8 @@ To run this sample code, you'll need to install the following libraries:
 - `pip install gapi` (https://github.com/DrSkippy/Gnip-Python-Search-API-Utilities)
 ` `pip install nltk` (http://www.nltk.org/)
 
-After installing nltk, run the following in the command line
+After installing nltk, run the following in the command line to download the test
+corpus of movie reviews (used for sentiment analysis of Tweets):
 
 	import nltk
 	nltk.download()
@@ -51,3 +52,11 @@ If you receive a 401 at login/twitter it is most likely caused by a datetime dis
 Use NTP to sync time on your server to compensate for the drift.
 
 If you are getting this error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
+
+Additional Reading
+============
+
+http://streamhacker.com/2010/05/10/text-classification-sentiment-analysis-naive-bayes-classifier/
+http://streamhacker.com/2010/05/17/text-classification-sentiment-analysis-precision-recall/
+https://snippetsofcode.wordpress.com/2014/04/28/fast-tutorial-to-nltk-using-python/
+http://andybromberg.com/sentiment-analysis-python/

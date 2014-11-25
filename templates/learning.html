@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}Twitter Learning{% endblock %}
+
+{% block content %}
+
+<h1>Twitter Learning</h1>
+
+<p>Use this page to decide how the sentiment algorithm works.</p>
+
+<form class="form-inline" role="form" method="GET" action="/learning">
+
+<div class="row">
+  <div class="col-md-3">
+    <button type="submit" class="btn btn-primary" name="corpus" value="movies">NLTK Movie Corpus</button>
+  </div>
+  <div class="col-md-3">
+    <button type="submit" class="btn btn-primary" name="corpus" value="tweets">Trained Tweet Corpus</button>
+  </div>
+</div>
+
+</form>
+
+{% endblock %}

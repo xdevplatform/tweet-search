@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'south',
     'gnip_search',
+    'nltk',
     'tags',
     'app',
     'home'
