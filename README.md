@@ -1,5 +1,4 @@
-reviews-everywhere
-
+Twitter Reviews Everywhere
 =================
 
 Sample Django App using GNIP to power Twitter reviews for anything via GNIP.
