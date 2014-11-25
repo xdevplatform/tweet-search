@@ -76,6 +76,18 @@ def home(request):
     tweets = request.REQUEST.get("tweets", "")
     if query and tweets: 
     
+        klout_score = request.REQUEST.get("tweets", 0)
+        if klout_score:
+            query_nrt = query_nrt + " klout_score:%s" % klout_score
+            
+        followers_count = request.REQUEST.get("followers_count", 0)
+        if followers_count:
+            query_nrt = query_nrt + " followers_count:%s" % followers_count
+            
+        friends_count = request.REQUEST.get("friends_count", 0)
+        if friends_count:
+            query_nrt = query_nrt + " friends_count:%s" % friends_count
+    
         # last N tweets, categorized by sentiment
         top = []
         bottom = []

@@ -25,7 +25,7 @@ $(document).ready(function(){
 
 <h3>Step 1: Enter a topic</h3>
 
-<p>Enter 2 or 3 keywords about the topic you want to show Twitter reviews for.</p>
+<p>Enter 2 or 3 keywords about a topic you want reviews for.</p>
 
 <div class="row">
   <div class="col-md-4">
@@ -91,7 +91,7 @@ $(document).ready(function(){
 
 {% endif %}
 
-<h3>Step 2: Review Sentiment</h3>
+<h3>Step 2: Review Sentiment &amp; Volume</h3>
 
 {% if not query %}
 
@@ -132,31 +132,39 @@ $(document).ready(function(){
 
 {% else %}
 
-<p>Choose criteria to filter the best/worst Tweets to show and curate.</p>
+<p>Choose criteria to display the best/worst Tweets to show and curate.</p>
 
-<form class="form-horizontal" role="form">
+<form class="form-horizontal" role="form" method="GET" action="/">
   <input type="hidden" name="query" value="{{query}}">
+<!--
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+    <label for="klout_score" class="col-sm-2 control-label">Klout Score</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="klout_score" id="klout_score" placeholder="50..100">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+    <label for="followers_count" class="col-sm-2 control-label">Followers</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="followers_count" id="followers_count" placeholder="50">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="friends_count" class="col-sm-2 control-label">Friends</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="friends_count" id="friends_count" placeholder="50">
     </div>
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <div class="checkbox">
         <label>
-          <input type="checkbox"> Remember me
+          <input type="checkbox" name="verified" id="verified" value="is:verified"> Verified only
         </label>
       </div>
     </div>
   </div>
+-->
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">Show Tweets</button>
