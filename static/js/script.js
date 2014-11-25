@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+	$("#endpoints").hide();
+	
 	$(".term").click(function(){
 		var query = $("#query").val();
 		var val = $(this).val();
@@ -17,7 +19,11 @@ $(document).ready(function(){
 		}
 		$("#query").val(finalTerm);
 	});
-
+	
+	$("#generate_endpoints").click(function(){
+		$("#endpoints").fadeIn();
+		return false;
+	});
 
 	var client = new ZeroClipboard($(".copy-button"));
 

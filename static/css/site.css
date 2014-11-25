@@ -43,6 +43,17 @@ blockquote img {
 	font-weight: bold;
 }
 
+.tweet_rating_score {
+	text-align: center;
+	color: #55ACEE;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+h4 .alert {
+	text-align: center;
+} 
+
 .code {
 	padding: 10px 70px 10px 10px;
 }

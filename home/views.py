@@ -1,12 +1,14 @@
+import random
+import json
+
 from django.shortcuts import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
 
-import json
-import twitter
 from gnip_search import gnip_search_api
+# import twitter
 
 FREQUENCY_THRESHOLD = .1
 
@@ -18,6 +20,7 @@ def login(request):
 def home(request):
     
     context = {"request": request}
+    tweets = []
 
     query = request.REQUEST.get("query", "")
     context["query"] = query
@@ -50,19 +53,28 @@ def home(request):
         timeline = g.query_api(query, 0, "timeline")
         context["timeline"] = timeline
         
-        # last N tweets
+        # last N tweets, categorized by sentiment
+        top = []
+        bottom = []
         tweets = g.query_api(query, 10)
-        context["tweets"] = tweets
-        
+
         for i in range(len(tweets)):
-            tweets[i] = json.loads(tweets[i])
-
-#     api = get_twitter(request.user)
-#     if status:
-#         api.PostUpdates(status)
-#     
-#     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
-
+            
+            tweet = json.loads(tweets[i])
+            tweets[i] = tweet
+            
+            tweet["rating"] = random.random()
+             
+            if tweet["rating"] > .5:
+                top.append(tweet)
+            else:
+                bottom.append(tweet)
+            
+        context["tweets"] = {
+             "top" : sorted(top, key=lambda t: -t["rating"]),
+             "bottom": sorted(bottom, key=lambda t: t["rating"])
+         }
+        
     integration = {
         "endpoint": "http://localhost:9000/aQ13s4/rating",
         "json": "{rating: 55%}",
@@ -71,7 +83,11 @@ def home(request):
         "android" : "<SOME ANDROID CODE>",
     }
     context["integration"] = integration
-    print context["integration"]
+
+    results = {
+       "count" : len(tweets)
+    }
+    context["results"] = results
     
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
@@ -88,6 +104,13 @@ def get_gnip(user):
         settings.GNIP_SEARCH_ENDPOINT)
 
     return g
+
+#     api = get_twitter(request.user)
+#     if status:
+#         api.PostUpdates(status)
+#     
+#     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
+
 
 def get_twitter(user):
 
