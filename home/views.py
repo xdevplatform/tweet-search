@@ -26,7 +26,7 @@ def home(request):
     
 #     global Classifier.CLASSIFIER_TYPE
 #     if not Classifier.CLASSIFIER_TYPE:
-#         return redirect("/learning")
+#         return redirect("/settings")
     
     context = {"request": request}
     tweets = []
@@ -157,14 +157,14 @@ def get_sentiment(query, body):
     return Classifier.get_sentiment(body)
 
 from django.contrib.auth import logout as auth_logout
-def learning(request):
+def settingsp(request):
 
     type = request.REQUEST.get("corpus", None)
     if type:
         Classifier.set_classifier(type)
     
     context = {"request": request, "classifier": Classifier.CLASSIFIER_TYPE}
-    return render_to_response('learning.html', context, context_instance=RequestContext(request))
+    return render_to_response('settings.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout
 def logout(request):

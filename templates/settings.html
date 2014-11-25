@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load tags %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<h1>Settings</h1>
+
+<p>Use this page to determine how the sentiment analysis is done.</p>
+
+<form class="form-inline" role="form" method="GET" action="/settings">
+
+
+<h3>Sentiment Engine</h3>
+
+<div class="row">
+  <div class="col-md-4">
+	<h4>Text Processing</h4>
+	<p>Calculate sentiment through <a href="http://text-processing.com/demo/sentiment/" target="_target">text-processing.com</a>, an API for hosted sentiment analysis. Note that some <a href="https://www.mashape.com/japerk/text-processing/Pricing" target="_target">fees may apply</a>.</p>
+    <button type="submit" class="btn {% if classifier == "tp"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="tp">{% if classifier == "tp"%}In Use{% else %}Use This{% endif %}</button>
+  </div>
+  <div class="col-md-4">
+	<h4>NLTK Movie Corpus</h4>
+	<p>Implement the NLTK library's default Movie Corpus example to experiment with sentiment analysis locally.</p>
+    <button type="submit" class="btn {% if classifier == "movies"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="movies">{% if classifier == "movies"%}In Use{% else %}Use This{% endif %}</button>
+  </div>
+  <div class="col-md-4">
+	<h4>Trained Tweet Corpus</h4>
+	<p>Classify tweets through this tool, and use this as the corpus for calculating sentiment analysis.</p>
+    <button type="submit" class="btn btn-default" name="corpus" value="xtweets">Coming Soon</button>
+  </div>
+</div>
+
+</form>
+
+{% endblock %}
