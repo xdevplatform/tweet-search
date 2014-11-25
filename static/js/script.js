@@ -20,6 +20,18 @@ $(document).ready(function(){
 		$("#query").val(finalTerm);
 	});
 	
+	$(".tweet-save").click(function(){
+		if ($(this).hasClass("btn-default")){
+			$(this).removeClass("btn-default");
+			$(this).addClass("btn-danger");
+			$(this).html("Remove");
+		} else {
+			$(this).removeClass("btn-danger");
+			$(this).addClass("btn-default");
+			$(this).html("Save Tweet");
+		}
+	})
+	
 	$("#generate_endpoints").click(function(){
 		$("#endpoints").fadeIn();
 		return false;

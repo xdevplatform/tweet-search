@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load tags %}
 
-{% block title %}Ratings Everywhere{% endblock %}
+{% block title %}Reviews Everywhere{% endblock %}
 
 {% block content %}
 
-<h1>Ratings Everywhere</h1>
+<h1>Reviews Everywhere</h1>
 
 <h3>Step 1: Enter a topic</h3>
 
@@ -72,9 +72,9 @@
 
 {% if query %}
 
-<h3>Step 2: Review Results</h3>
+<h3>Step 2: Review Sentiment</h3>
 
-<p>Based on {{results.count}} Tweets with strong positive/negative sentiment, here is your rating for <em>{{query}}</em>.</p>
+<p>Based on {{results.count}} Tweets, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
 
 <div class="row jumbotron rating">
 
@@ -106,6 +106,8 @@
 <div class="row">
 	<div class="col-md-3 tweet_rating_score">
 		{{t.rating|percentage}}
+		<br>
+		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
 	</div>
 	<blockquote class="tweet col-md-8">
 	  <img src="{{t.actor.image}}" class="pull-left">
@@ -127,6 +129,8 @@
 <div class="row">
 	<div class="col-md-3 tweet_rating_score">
 		{{t.rating|percentage}}
+		<br>
+		<button type="submit" class="btn btn-default btn-xs tweet-save">Save</button>
 	</div>
 	<blockquote class="tweet col-md-8">
 	  <img src="{{t.actor.image}}" class="pull-left">
@@ -164,7 +168,7 @@
 	<pre class="code">{{ integration.json }}</pre>
 </div>
 
-<h4>Ratings Endpoint</h4>
+<h4>Reviews Endpoint</h4>
 
 <div>
 	<div class="zero-clipboard">
