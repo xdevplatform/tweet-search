@@ -1,4 +1,7 @@
 import requests
+import json
+
+from django.conf import settings
 
 import nltk.classify.util
 from nltk.classify import NaiveBayesClassifier
@@ -6,7 +9,8 @@ from nltk.corpus import movie_reviews
 
 class Classifier:
 
-    CLASSIFIER_TYPE = None
+    # default to text-processing
+    CLASSIFIER_TYPE = "tp"
     CLASSIFIER = None
 
     @staticmethod
@@ -15,8 +19,6 @@ class Classifier:
         
     @staticmethod
     def get_sentiment(text):        
-        
-        print Classifier.CLASSIFIER_TYPE
         
         if Classifier.CLASSIFIER_TYPE == "tp":
             return Classifier.get_sentiment_tp(text)

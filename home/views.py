@@ -12,9 +12,9 @@ from engine.models import Classifier
 
 # import twitter
 
-FREQUENCY_THRESHOLD = .1    # Only show related terms if > 10%
-QUERY_SIZE = 10             # For real identification, > 100
-SENTIMENT_THRESHOLD = .4    # .7 is ideal
+KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
+TWEET_QUERY_COUNT = 100             # For real identification, > 100
+SENTIMENT_THRESHOLD = .6            # .7 is ideal
 
 def login(request):
     
@@ -42,7 +42,7 @@ def home(request):
         result = g.get_frequency_list(25)
         frequency = []
         for f in result:
-            if float(f[3]) >= FREQUENCY_THRESHOLD:
+            if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
                 frequency.append(f)
         frequency = sorted(frequency, key=lambda f: -f[3]) 
         context["frequency"] = frequency
@@ -89,7 +89,7 @@ def home(request):
         # last N tweets, categorized by sentiment
         top = []
         bottom = []
-        tweets = g.query_api(query_nrt, QUERY_SIZE)
+        tweets = g.query_api(query_nrt, TWEET_QUERY_COUNT)
 
         for i in range(len(tweets)):
             
@@ -109,7 +109,7 @@ def home(request):
                         top.append(tweet)
                     elif label == "neg":
                         bottom.append(tweet)
-                    print label, tweet["sentiment"], body
+#                     print label, tweet["sentiment"], body
             
         top = sorted(top, key=lambda t: -t["sentiment"])
         if len(top) > 10:

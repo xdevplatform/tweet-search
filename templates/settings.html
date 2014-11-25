@@ -7,17 +7,16 @@
 
 <h1>Settings</h1>
 
-<p>Use this page to determine how the sentiment analysis is done.</p>
+<p>Use this page to determine how the reviews are generated and sentiment analysis is performed.</p>
 
 <form class="form-inline" role="form" method="GET" action="/settings">
-
 
 <h3>Sentiment Engine</h3>
 
 <div class="row">
   <div class="col-md-4">
 	<h4>Text Processing</h4>
-	<p>Calculate sentiment through <a href="http://text-processing.com/demo/sentiment/" target="_target">text-processing.com</a>, an API for hosted sentiment analysis. Note that some <a href="https://www.mashape.com/japerk/text-processing/Pricing" target="_target">fees may apply</a>.</p>
+	<p>Calculate sentiment through <a href="http://text-processing.com/demo/sentiment/" target="_target">text-processing.com</a>, an API for hosted sentiment analysis. Fees <a href="https://www.mashape.com/japerk/text-processing/Pricing" target="_target">may apply</a>.</p>
     <button type="submit" class="btn {% if classifier == "tp"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="tp">{% if classifier == "tp"%}In Use{% else %}Use This{% endif %}</button>
   </div>
   <div class="col-md-4">
