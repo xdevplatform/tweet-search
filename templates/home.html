@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load tags %}
+{% load humanize %}
 
 {% block title %}Twitter Reviews{% endblock %}
 
@@ -99,7 +100,7 @@ $(document).ready(function(){
 
 {% else %}
 
-<p>Based on {{timeline.count}} Tweets over the last 30 days, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
+<p>Based on {{timeline.count|intcomma}} Tweets over the last 30 days, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
 
 <div class="row sentiment">
 
@@ -187,7 +188,7 @@ $(document).ready(function(){
 {% for t in tweets.top %}
 
 <div class="row">
-	<div class="col-md-3 tweet_sentiment_score">
+	<div class="col-md-3 tweet_sentiment_score tweet_sentiment_positive">
 		{{t.sentiment|percentage}}
 		<br>
 		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
@@ -212,7 +213,7 @@ $(document).ready(function(){
 {% for t in tweets.bottom %}
 
 <div class="row">
-	<div class="col-md-3 tweet_sentiment_score">
+	<div class="col-md-3 tweet_sentiment_score tweet_sentiment_negative">
 		{{t.sentiment|percentage}}
 		<br>
 		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>

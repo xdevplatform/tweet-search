@@ -56,6 +56,14 @@ blockquote img {
 	font-weight: bold;
 }
 
+.tweet_sentiment_positive {
+	color: #55ACEE;
+}
+
+.tweet_sentiment_negative {
+	color: #ebccd1;
+}
+
 h4 .alert {
 	text-align: center;
 } 
