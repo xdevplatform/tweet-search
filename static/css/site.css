@@ -44,23 +44,34 @@ blockquote img {
 .sentiment_score {
 	width: 100%;
 	text-align: center;
-	color: #55ACEE;
 	font-size: 4em;
 	font-weight: bold;
 }
 
-.tweet_sentiment_score {
+.sentiment_score_positive {
+	color: #55ACEE;
+}
+
+.sentiment_score_neutral {
+	color: #999999;
+}
+
+.sentiment_score_negative {
+	color: #a94442;
+}
+
+.tweet_label {
 	text-align: center;
 	color: #55ACEE;
 	font-size: 2em;
 	font-weight: bold;
 }
 
-.tweet_sentiment_positive {
+.tweet_label_positive {
 	color: #55ACEE;
 }
 
-.tweet_sentiment_negative {
+.tweet_label_negative {
 	color: #a94442;
 }
 

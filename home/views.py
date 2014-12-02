@@ -13,7 +13,7 @@ from engine.models import Classifier
 # import twitter
 
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
-TWEET_QUERY_COUNT = 100             # For real identification, > 100
+TWEET_QUERY_COUNT = 10              # For real identification, > 100
 SENTIMENT_THRESHOLD = .6            # .7 is ideal
 
 def login(request):
@@ -73,6 +73,10 @@ def home(request):
         
     tweets = request.REQUEST.get("tweets", "")
     if query and tweets: 
+
+        english = request.REQUEST.get("english", 0)
+        if english:
+            query_nrt = query_nrt + " (lang:en)" 
     
         klout_score = request.REQUEST.get("klout_score", 0)
         if klout_score:
@@ -90,8 +94,12 @@ def home(request):
         top = []
         bottom = []
         tweets = g.query_api(query_nrt, TWEET_QUERY_COUNT)
+        positive = 0
+        neutral = 0
+        negative = 0
+        count = len(tweets)
 
-        for i in range(len(tweets)):
+        for i in range(count):
             
             tweet = json.loads(tweets[i])
             tweets[i] = tweet
@@ -106,9 +114,13 @@ def home(request):
                 if sentiment >= SENTIMENT_THRESHOLD:
                     tweet["sentiment"] = sentiment
                     if label == "pos":
+                        positive = positive + 1
                         top.append(tweet)
                     elif label == "neg":
                         bottom.append(tweet)
+                        negative = negative + 1
+                    else:
+                        neutral = neutral + 1
 #                     print label, tweet["sentiment"], body
             
         top = sorted(top, key=lambda t: -t["sentiment"])
@@ -119,7 +131,13 @@ def home(request):
         if len(bottom) > 10:
             bottom = bottom[0:10]
         
+        sentiment = int((positive / count) * 100)
+
         context["tweets"] = {
+             "count": count,
+             "positive": positive,
+             "neutral": neutral,
+             "negative": negative,
              "top" : top,
              "bottom": bottom
          }

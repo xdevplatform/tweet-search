@@ -1,7 +1,9 @@
 Twitter Reviews Everywhere
 =================
 
-Sample Django App using GNIP to power Twitter reviews for anything via GNIP.
+Sample Django App using Twitter to power reviews on almost any subject. Uses the GNIP API 
+for historical data, with a few options on sentiment analysis for discovery of best/worst 
+tweets about a subject.
 
 Large portions of this sample code are based on this great starter on 
 Twitter + NLTK: http://ravikiranj.net/drupal/201205/code/machine-learning/how-build-twitter-sentiment-analyzer

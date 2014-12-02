@@ -92,30 +92,21 @@ $(document).ready(function(){
 
 {% endif %}
 
-<h3>Step 2: Review Sentiment &amp; Volume</h3>
+<h3>Step 2: View Volume</h3>
 
 {% if not query %}
 
-<p>After searching on a topic, the sentiment for that topic over the last 30 days will appear here.</p>
+<p>After searching on a topic, the volume for that topic over the last 30 days will appear here.</p>
 
 {% else %}
 
-<p>Based on {{timeline.count|intcomma}} Tweets over the last 30 days, here is the sentiment for <em>{{query}}</em> on Twitter.</p>
+<p>Based on {{timeline.count|intcomma}} Tweets over the last 30 days, here is the volume for <em>{{query}}</em> on Twitter.</p>
 
-<div class="row sentiment">
+<div class="row volume">
 
-	<div class="col-md-3">
+	<div class="col-md-12">
 		<div>
-			<span class="sentiment_score">
-				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
-				55%
-			</span>
-		</div>
-	</div>
-
-	<div class="col-md-9">
-		<div>
-			<svg id="visualisation" width="800" height="300"></svg>
+			<svg id="visualisation" width="1000" height="300"></svg>
 		</div>
 	</div>
 
@@ -123,61 +114,67 @@ $(document).ready(function(){
 
 {% endif %}
 
-<h3>Step 3: Curate Tweets</h3>
+<h3>Step 3: View Sentiment and Top Tweets</h3>
 
 {% if not tweets %}
 
-{% if not query %}
+	<p>After searching on a topic, you can view overall sentiment and curate the top Tweets to display in your Web, iOS or Android integration.</p>
+	
+	{% if query %}
 
-<p>After searching on a topic, you can curate top Tweets to display in Web, iOS and Android.</p>
-
-{% else %}
-
-<p>Choose criteria to display the best/worst Tweets to show and curate.</p>
-
-<form class="form-horizontal" role="form" method="GET" action="/">
-  <input type="hidden" name="query" value="{{query}}">
-<!--
-  <div class="form-group">
-    <label for="klout_score" class="col-sm-2 control-label">Klout Score</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="klout_score" id="klout_score" placeholder="50..100">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="followers_count" class="col-sm-2 control-label">Followers</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="followers_count" id="followers_count" placeholder="50">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="friends_count" class="col-sm-2 control-label">Friends</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="friends_count" id="friends_count" placeholder="50">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" name="verified" id="verified" value="is:verified"> Verified only
-        </label>
-      </div>
-    </div>
-  </div>
--->
-  <div class="form-group">
-    <div class="xcol-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">Show Tweets</button>
-    </div>
-  </div>
-</form>
-
-{% endif %}
+	<form class="form-horizontal" role="form" method="GET" action="/">
+	  <input type="hidden" name="query" value="{{query}}">
+	  <div class="form-group">
+	    <label for="english" class="col-sm-2 control-label">English Only</label>
+	    <div class="col-sm-2">
+	      <input type="checkbox" class="form-control" name="english" id="english" CHECKED>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="xcol-sm-offset-2 col-sm-10">
+	      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">View Sentiment and Top Tweets</button>
+	    </div>
+	  </div>
+	</form>
+	
+	{% endif %}
 
 {% else %}
 
-<p>Save Tweets to show in your integration.</p>
+<h5>Based on the last {{tweets.count}} Tweets, the sentiment for <em>{{query}}</em> on Twitter is:</h5>
+
+<div class="row sentiment">
+
+	<div class="col-md-4">
+		<div>
+			<span class="sentiment_score sentiment_score_positive">
+				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
+				{{tweets.positive}}%
+			</span>
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div>
+			<span class="sentiment_score sentiment_score_neutral">
+				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
+				{{tweets.neutral}}%
+			</span>
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div>
+			<span class="sentiment_score sentiment_score_negative">
+				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
+				{{tweets.negative}}%
+			</span>
+		</div>
+	</div>
+
+</div>
+
+<h5>Now, select the top Tweets to show in your integration.</h5>
 
 <div class="row">
 
@@ -188,10 +185,10 @@ $(document).ready(function(){
 {% for t in tweets.top %}
 
 <div class="row">
-	<div class="col-md-3 tweet_sentiment_score tweet_sentiment_positive">
+	<div class="col-md-3 tweet_label tweet_label_positive">
 		{{t.sentiment|percentage}}
 		<br>
-		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
+		<button type="submit" class="btn btn-default btn-xs tweet-save">Select</button>
 	</div>
 	<div class="col-md-9">
 		<blockquote class="tweet">
@@ -213,10 +210,10 @@ $(document).ready(function(){
 {% for t in tweets.bottom %}
 
 <div class="row">
-	<div class="col-md-3 tweet_sentiment_score tweet_sentiment_negative">
+	<div class="col-md-3 tweet_label tweet_label_negative">
 		{{t.sentiment|percentage}}
 		<br>
-		<button type="submit" class="btn btn-default btn-xs tweet-save">Save Tweet</button>
+		<button type="submit" class="btn btn-default btn-xs tweet-save">Select</button>
 	</div>
 	<blockquote class="tweet col-md-8">
 	  <img src="{{t.actor.image}}" class="pull-left">
