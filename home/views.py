@@ -13,7 +13,7 @@ from engine.models import Classifier
 # import twitter
 
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
-TWEET_QUERY_COUNT = 10              # For real identification, > 100
+TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
 SENTIMENT_THRESHOLD = .6            # .7 is ideal
 
 def login(request):
@@ -107,21 +107,28 @@ def home(request):
             body = tweet["body"]
             response = get_sentiment(query, body)
             if response:
-                
+
+                # top-level sentiment                
                 label = response["label"]
+                if label == "pos":
+                    positive = positive + 1
+                elif label == "neg":
+                    negative = negative + 1
+                else:
+                    neutral = neutral + 1
+
+                # pre-curate best/worst tweets
                 sentiment = response["probability"][label]
-                
                 if sentiment >= SENTIMENT_THRESHOLD:
                     tweet["sentiment"] = sentiment
                     if label == "pos":
-                        positive = positive + 1
                         top.append(tweet)
                     elif label == "neg":
                         bottom.append(tweet)
-                        negative = negative + 1
-                    else:
-                        neutral = neutral + 1
-#                     print label, tweet["sentiment"], body
+#                     else:
+#                         neutral = neutral + 1
+                        
+                print label, sentiment, body
             
         top = sorted(top, key=lambda t: -t["sentiment"])
         if len(top) > 10:
@@ -131,13 +138,11 @@ def home(request):
         if len(bottom) > 10:
             bottom = bottom[0:10]
         
-        sentiment = int((positive / count) * 100)
-
         context["tweets"] = {
              "count": count,
-             "positive": positive,
-             "neutral": neutral,
-             "negative": negative,
+             "positive": int(positive*100/count),
+             "neutral": int(neutral*100/count),
+             "negative": int(negative*100/count),
              "top" : top,
              "bottom": bottom
          }

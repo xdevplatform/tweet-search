@@ -64,7 +64,7 @@ Graph = {
 		var parseDate = d3.time.format("%Y%m%d").parse;
 		
 		var svg = d3.select('#visualisation'),
-	    WIDTH = 800,
+	    WIDTH = 1000,
 	    HEIGHT = 250,
 	    MARGINS = {
 	      top: 20,
