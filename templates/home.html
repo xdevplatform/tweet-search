@@ -26,11 +26,12 @@ $(document).ready(function(){
 
 <h3>Step 1: Enter a topic</h3>
 
-<p>Enter 2 or 3 keywords about a topic you want reviews for.</p>
+<p>Enter keywords about a topic you want reviews for. For tips on query syntax, follow the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a>.</p>
 
 <div class="row">
-  <div class="col-md-4">
-    <input type="text" class="form-control col-xs-6" name="query" id="query" placeholder="Search Term" value="{{query}}">
+  <div class="col-md-6">
+    <input type="text" class="form-control" name="query" id="query" placeholder="Search Term" value="{{query}}">
+    <p class="help-block">Example: (Walking Dead) OR #WalkingDead OR #TheWalkingDead</p>
   </div>
   <div class="col-md-3">
     <button type="submit" class="btn btn-primary">Search</button>
@@ -118,28 +119,66 @@ $(document).ready(function(){
 
 {% if not tweets %}
 
-	<p>After searching on a topic, you can view overall sentiment and curate the top Tweets to display in your Web, iOS or Android integration.</p>
+	<p>Specify minimum criteria to filter and curate the top Tweets to display in your Web, iOS or Android integration.</p>
 	
-	{% if query %}
+{% endif %}
 
-	<form class="form-horizontal" role="form" method="GET" action="/">
-	  <input type="hidden" name="query" value="{{query}}">
-	  <div class="form-group">
-	    <label for="english" class="col-sm-2 control-label">English Only</label>
-	    <div class="col-sm-2">
-	      <input type="checkbox" class="form-control" name="english" id="english" CHECKED>
-	    </div>
-	  </div>
-	  <div class="form-group">
-	    <div class="xcol-sm-offset-2 col-sm-10">
-	      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">View Sentiment and Top Tweets</button>
-	    </div>
-	  </div>
-	</form>
+{% if query %}
 	
-	{% endif %}
+<form class="form-horizontal" role="form" method="GET" action="/">
+  <input type="hidden" name="query" value="{{query}}">
+  
+  <div class="form-group">
+    <label for="followers" class="col-sm-2 control-label">Followers</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="followersCount" id="followersCount" value="{% if request.REQUEST.followersCount %}{{request.REQUEST.followersCount}}{% else %}25{% endif %}">
+    </div>
+    <label for="queryCount" class="col-sm-2 control-label">Query Count</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="queryCount" id="queryCount" value="{% if request.REQUEST.queryCount %}{{request.REQUEST.queryCount}}{% else %}{{queryCount}}{% endif %}">
+      <p class="help-block">Max 500 tweets</p>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="friendsCount" class="col-sm-2 control-label">Friends</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="friendsCount" id="friendsCount" value="{% if request.REQUEST.friendsCount %}{{request.REQUEST.friendsCount}}{% else %}25{% endif %}">
+    </div>
+    <label for="english" class="col-sm-2 control-label">English Only</label>
+    <div class="col-sm-2">
+      <input type="checkbox" name="english" id="english" {% if not request.REQUEST.english or request.REQUEST.english == 'on' %}CHECKED{% endif %}>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="statusesCount" class="col-sm-2 control-label">Tweets</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="statusesCount" id="statusesCount" value="{% if request.REQUEST.statusesCount %}{{request.REQUEST.statusesCount}}{% else %}25{% endif %}">
+    </div>
+    <label for="english" class="col-sm-2 control-label">Include Retweets</label>
+    <div class="col-sm-2">
+      <input type="checkbox" name="retweets" id="retweets" {% if request.REQUEST.retweets %}CHECKED{% endif %}>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="favoritesCount" class="col-sm-2 control-label">Favorites</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" name="favoritesCount" id="favoritesCount" value="{% if request.REQUEST.favoritesCount %}{{request.REQUEST.favoritesCount}}{% else %}10{% endif %}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">View Sentiment and Top Tweets</button>
+    </div>
+  </div>
+</form>
 
-{% else %}
+{% endif %}
+
+{% if tweets %}
 
 <p>Based on the last {{tweets.count}} Tweets, the sentiment for <em>{{query}}</em> on Twitter is:</p>
 
