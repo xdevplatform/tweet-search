@@ -47,29 +47,32 @@ def home(request):
         frequency = sorted(frequency, key=lambda f: -f[3]) 
         context["frequency"] = frequency
         
-#         print g.get_repr(query, 100, "rate")
-#         print g.get_rate()
-#         print g.get_repr(query, 50)
-#         print g.query_api(query, 10, "json")
-#         print g.get_frequency_list(10)
-#         print g.query_api(query, use_case = "timeline")
-#         print g.get_repr(query, 10, "users")
-#         print g.get_rate()
-#         print g.get_repr(query, 10, "links")
-#         print g.query_api(query, query=True)
+        # c3 data format for timeseries (http://c3js.org/samples/timeseries.html)
+        #     data: {
+        #         x: 'x',
+        # //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+        #         columns: [
+        #             ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+        # //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+        #             ['data2', 130, 340, 200, 500, 250, 350]
+        #         ]
+        #     },
 
         # counts over time
         query_nrt = query
         timeline = g.query_api(query_nrt, 0, "timeline")
+        x = ['x']
+        series = ['series']
+
         count = 0
         for t in timeline:
-            count = count + t["count"]
-            t["timePeriod"] = t["timePeriod"][0:8]
-        timeline = {
-            "count": count,
-            "series": json.dumps(timeline)
-        }
-        context["timeline"] = timeline
+            t_count = t["count"]
+            day = t["timePeriod"][0:8]
+            day = str(day[0:4] + "-" + day[4:6] + "-" + day[6:8])
+            series.append(t_count)
+            x.append(day)
+            count = count + t_count 
+        context["columns"] = [x, series]
         
     tweets = request.REQUEST.get("tweets", "")
     if query and tweets: 

@@ -20,6 +20,16 @@
     <button type="submit" class="btn {% if classifier == "tp"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="tp">{% if classifier == "tp"%}In Use{% else %}Use This{% endif %}</button>
   </div>
   <div class="col-md-4">
+	<h4>Sementria</h4>
+	<p>Use <a href="https://semantria.com/" target="_target">Sementria</a>, a sentiment analysis API that is pre-tuned to tweets. Fees <a href="https://www.mashape.com/japerk/text-processing/Pricing" target="_target">may apply</a>.</p>
+    <button type="submit" class="btn {% if classifier == "sementria"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="sementria">{% if classifier == "sementria"%}In Use{% else %}Use This{% endif %}</button>
+  </div>
+  <div class="col-md-4">
+	<h4>Alchemy</h4>
+	<p><a href="http://text-processing.com/demo/sentiment/" target="_target">Alchemy API</a> provides the natural language processing service via an SaaS API. . Fees <a href="https://www.mashape.com/japerk/text-processing/Pricing" target="_target">may apply</a>.</p>
+    <button type="submit" class="btn {% if classifier == "alchemy"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="alchemy">{% if classifier == "alchemy"%}In Use{% else %}Use This{% endif %}</button>
+  </div>
+  <div class="col-md-4">
 	<h4>NLTK Movie Corpus</h4>
 	<p>Implement the NLTK library's default Movie Corpus example to experiment with sentiment analysis locally.</p>
     <button type="submit" class="btn {% if classifier == "movies"%}btn-primary{% else %}btn-default{% endif %}" name="corpus" value="movies">{% if classifier == "movies"%}In Use{% else %}Use This{% endif %}</button>

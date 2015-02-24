@@ -10,10 +10,27 @@
 
 $(document).ready(function(){
 
-{% if timeline.series %}
+{% if columns %}
 {% autoescape off %}
-	var lineData = {{timeline.series}};
-	Graph.init(lineData);
+
+var args = {
+    bindto: '#chart',
+    data: {
+        x: 'x',
+//        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+        columns: {{columns}}
+    },
+    axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        }
+    }
+};
+var chart = c3.generate(args);
+
 {% endautoescape %}
 {% endif %} 
 	
@@ -106,9 +123,7 @@ $(document).ready(function(){
 <div class="row volume">
 
 	<div class="col-md-12">
-		<div>
-			<svg id="visualisation" width="1000" height="300"></svg>
-		</div>
+		<div id="chart">Please select a data source and click "Submit".</div>
 	</div>
 
 </div>
@@ -117,11 +132,7 @@ $(document).ready(function(){
 
 <h3>Step 3: View Sentiment and Top Tweets</h3>
 
-{% if not tweets %}
-
-	<p>Specify minimum criteria to filter and curate the top Tweets to display in your Web, iOS or Android integration.</p>
-	
-{% endif %}
+<p>Specify criteria to filter and curate the top Tweets to display in your Web, iOS or Android integration.</p>
 
 {% if query %}
 	
