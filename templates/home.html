@@ -9,7 +9,13 @@
 <div class="row">
 <div class="col-md-offset-2 col-md-8">
 
-<div class="row top-buffer">
+<div id="buffer">
+	<div class="top-buffer">
+		&nbsp;
+	</div>
+</div>
+
+<div class="row">
   <div class="col-md-10">
     <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
     <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
@@ -23,7 +29,7 @@
 
 <h3>Activity Volume</h3>
 
-<p class="help-block">Tweet count: {{total|intcomma}}</p>
+<p class="help-block">Tweet count: <span id="total"></span></p>
 
 <div class="row volume">
 

@@ -1,20 +1,8 @@
 $(document).ready(function(){
 	
-	$("#activity_volume").hide();
-	$("#activity_tweets").hide();
+	Page.init();
 
-	$("#search").click(function(){
-		
-		$("#activity_volume").hide();
-		$("#activity_tweets").hide();
-		
-		var query = $("#query").val();
-		
-		Page.loadChart(query);
-		Page.loadTweets(query);
-		
 
-	});
 		
 });
 
@@ -25,6 +13,43 @@ var Page = {
 
 	init : function() {
 
+		Page.clear();
+		$('#buffer').collapse('show');
+		
+		$('#query').bind("propertychange change click keyup input paste", function (e) {
+			
+			  if (e.which == 13) {
+				  $("#search").click();
+			  }
+			  
+			  var query = $("#query").val();
+			  console.log(query);
+			  if (!query || query == ''){
+				  Page.clear();
+				  $('#buffer').collapse('show');
+			  }
+			  
+			});
+		
+		$("#search").click(function(){
+
+			var query = $("#query").val();
+			if (query){
+				
+				Page.clear();
+				$('#buffer').collapse('hide');
+				Page.loadChart(query);
+				Page.loadTweets(query);
+			}
+			
+		});
+		
+	},
+	
+	clear : function(){
+		$("#activity_volume").hide();
+		$("#activity_tweets").hide();
+		$("#tweets").html("");
 	},
 
 	loadChart : function(query) {
@@ -56,6 +81,7 @@ var Page = {
 						};
 					var chart = c3.generate(args);
 					
+					$("#total").html(response.total);
 					$("#activity_volume").fadeIn();
 														
 				},
