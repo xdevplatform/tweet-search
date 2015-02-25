@@ -41,6 +41,24 @@ var Page = {
 			
 		});
 		
+		$(document.body).on('click', '.term', function(){
+			var query = $("#query").val();
+			var val = $(this).val();
+			var newTerm = " OR (" + val + ")";
+			var finalTerm = ""
+			if ($(this).is(':checked')){
+				if (query.indexOf("OR") < 0){
+					query = "(" + query + ")"
+				}
+				finalTerm = query + newTerm
+			} else {
+				if (query.indexOf(newTerm) >= 0){
+					finalTerm = query.replace(newTerm, "");
+				}
+			}
+			$("#query").val(finalTerm);
+		});
+		
 	},
 	
 	clear : function(){
@@ -78,8 +96,28 @@ var Page = {
 						};
 					var chart = c3.generate(args);
 					
-					$("#total").html(response.total);
+					$("#total").html(Utils.integerFormat(response.total));
 					$("#activity_volume").fadeIn();
+					
+					template = $("#templateFrequency").html();
+					Mustache.parse(template);
+					
+					var frequency = response.frequency;
+					for (var i = 0; i < frequency.length; i++){
+						
+						var f = frequency[i];
+						f.mentionPercent = function(){
+							return Math.round(this[1] * 100) + "%" 
+						}
+						f.activityPercent = function(){
+							return Math.round(this[3] * 100) + "%" 
+						}
+						
+						
+						var output = Mustache.render(template, f);
+						$("#frequency").append(output);
+
+					}
 														
 				},
 				error : function(xhr, errorType, exception) {
@@ -111,10 +149,6 @@ var Page = {
 						var output = Mustache.render(template, tweet);
 						$("#tweets").append(output);
 
-						console.log(template);
-						console.log(tweet);
-						console.log(output);
-
 					}
 					
 					window.twttr.widgets.load()
@@ -133,6 +167,10 @@ var Page = {
 
 Utils = {
 
+	integerFormat : function(x) {
+		    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	},
+		
 	qs: function(obj) {
       var str = [];
       for(var p in obj){
