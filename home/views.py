@@ -16,6 +16,7 @@ from engine.models import Classifier
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
 TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
 DEFAULT_TIMEFRAME = 14              # 2 weeks lookback default
+DATE_FORMAT = "%Y-%m-%d %H:%M"
 
 def login(request):
     
@@ -46,7 +47,10 @@ def query_chart(request):
         if not start or not end:
             end = datetime.datetime.now()
             start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
-
+        else:
+            end = datetime.datetime.strptime(end, DATE_FORMAT)
+            start = datetime.datetime.strptime(start, DATE_FORMAT)
+            
         g = get_gnip(request.user)
 
         g.get_repr(query)
@@ -73,8 +77,8 @@ def query_chart(request):
         query_nrt = query
         
         days = (end-start).days
-        start = start.strftime("%Y-%m-%d %H:%M")
-        end = end.strftime("%Y-%m-%d %H:%M")
+        start = start.strftime(DATE_FORMAT)
+        end = end.strftime(DATE_FORMAT)
         
         timeline = g.query_api(query_nrt, 0, "timeline", start=start, end=end, count_bucket="hour")
         x = ['x']

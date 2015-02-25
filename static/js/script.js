@@ -161,12 +161,12 @@ var Page = {
 	
 	},
 	
-	loadTweets : function(query) {
+	loadTweets : function(query, start, end) {
 		
 		 $.ajax({
 				type : "GET",
 				url : "/query/tweets",
-				data : {"query" : query},
+				data : {"query" : query, "start": start, "end": end},
 				dataType : "json",
 				success : function(response) {
 					
