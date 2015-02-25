@@ -1,8 +1,6 @@
 $(document).ready(function(){
 	
 	Page.init();
-
-
 		
 });
 
@@ -11,6 +9,11 @@ var Page = {
 
 	init : function() {
 
+		$('.datetimepicker').datetimepicker({
+	    	format: 'YYYY-MM-DD HH:mm',
+	    	pickTime: true
+		});
+		
 		Page.clear();
 		$('#buffer').collapse('show');
 		
@@ -33,10 +36,14 @@ var Page = {
 			var query = $("#query").val();
 			if (query){
 				
+				var now = "";
+				var start = $("#start").val();
+				var end = $("#end").val();
+				
 				Page.clear();
 				$('#buffer').collapse('hide');
-				Page.loadChart(query);
-				Page.loadTweets(query);
+				Page.loadChart(query, start, end);
+				Page.loadTweets(query, start, end);
 			}
 			
 		});
@@ -44,12 +51,24 @@ var Page = {
 		$(document.body).on('click', '.term', function(){
 			var query = $("#query").val();
 			var val = $(this).val();
-			var newTerm = " OR (" + val + ")";
+			var newTerm = " (" + val + ")";
 			var finalTerm = ""
 			if ($(this).is(':checked')){
-				if (query.indexOf("OR") < 0){
-					query = "(" + query + ")"
+				finalTerm = query + newTerm
+			} else {
+				if (query.indexOf(newTerm) >= 0){
+					finalTerm = query.replace(newTerm, "");
 				}
+			}
+			$("#query").val(finalTerm);
+		});
+		
+		$(document.body).on('click', '#media', function(){
+			var query = $("#query").val();
+			var val = $(this).val();
+			var newTerm = " (has:media)";
+			var finalTerm = ""
+			if ($(this).is(':checked')){
 				finalTerm = query + newTerm
 			} else {
 				if (query.indexOf(newTerm) >= 0){
@@ -64,19 +83,20 @@ var Page = {
 	clear : function(){
 		$("#activity_volume").hide();
 		$("#activity_tweets").hide();
+		$("#chart").html("");
 		$("#tweets").html("");
 	},
 
-	loadChart : function(query) {
+	loadChart : function(query, start, end) {
 
 		 $.ajax({
 				type : "GET",
 				url : "/query/chart",
-				data : {"query" : query},
+				data : {"query" : query, "start": start, "end": end},
 				dataType : "json",
 				success : function(response) {
 					
-					console.log(response);
+					// console.log(response);
 					
 					var args = {
 						    bindto: '#chart',
@@ -96,9 +116,9 @@ var Page = {
 //						            type: 'timeseries',
 						            tick: {
 						            	culling: true,
-						            	count: 14,
+						            	count: response.days,
 						            	format: function (x) {
-						            		console.log(x);
+						            		// console.log(x);
 					            			return x; 
 				            			}
 //						                format: '%Y-%m-%d'
@@ -113,6 +133,8 @@ var Page = {
 					
 					template = $("#templateFrequency").html();
 					Mustache.parse(template);
+					
+					$("#frequency").find("tr:gt(0)").remove();
 					
 					var frequency = response.frequency;
 					for (var i = 0; i < frequency.length; i++){

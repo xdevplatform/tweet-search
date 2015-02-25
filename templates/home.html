@@ -15,47 +15,59 @@
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row top-buffer">
 	  <div class="col-md-10">
 	    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
-	    <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
+	    <p class="help-block pull-right small">
+	    	<a href="#" data-toggle="collapse" data-target="#collapseTwo">advanced options</a>
+	    	<span id="related">
+	    		| <a href="#" data-toggle="collapse" data-target="#collapseOne">related terms</a>
+    		</a>
+    	</p>
 	  </div>
 	  <div class="col-md-2">
 	    <button type="submit" class="btn btn-primary" id="search">Search</button>
 	  </div>
 	</div>
 
-</div>
-</div>
+    <div id="collapseTwo" class="accordion-body xcollapse">
+      <div class="accordion-inner">
 
-<div class="row">
-<div class="col-md-offset-1 col-md-10">
+		<form class="form-horizontal row">
+		  <div class="form-group form-group-sm">
+		    <label for="inputEmail3" class="col-sm-2 control-label">Start date</label>
+		    <div class="col-sm-3 input-group date datetimepicker">
+		      <input type="email" class="form-control input-sm" id="inputEmail3" placeholder="">
+		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+		    </div>
+		  </div>
+		  <div class="form-group form-group-sm">
+		    <label for="inputPassword3" class="col-sm-2 control-label">End date</label>
+		    <div class="col-sm-3 input-group date datetimepicker">
+		      <input type="email" class="form-control input-sm" id="inputEmail3" placeholder="">
+		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+		    </div>
+		  </div>
+		  <div class="form-group form-group-sm">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <div class="checkbox">
+		        <label>
+		          <input type="checkbox" id="media"> Has media
+		        </label>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="form-group form-group-sm">
+		    <label for="inputPassword3" class="col-sm-2 control-label"></label>
+		    <div class="col-sm-8 input-group date datetimepicker">
+          	    <p class="help-block">For advanced query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a>.</p>
+		    </div>
+		  </div>
+		</form>
 
-<div id="activity_volume">
+      </div>
+    </div>
 
-<h3>Activity Volume</h3>
-
-<p class="help-block">Tweet count: <span id="total"></span></p>
-
-<div class="row volume">
-
-	<div class="col-md-12">
-		<div id="chart">Please select a data source and click "Submit".</div>
-	</div>
-
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-
-	<p class="pull-right">Expand your search by adding <a href="#" data-toggle="collapse" data-target="#collapseOne">related terms</a>.
-	</p>
-
-  </div>
-</div>
-
-<div class="accordion" id="accordion2">
-  <div class="accordion-group">
     <div id="collapseOne" class="accordion-body collapse">
       <div class="accordion-inner">
 
@@ -75,10 +87,29 @@
 
       </div>
     </div>
-  </div>
 </div>
 
 </div>
+</div>
+
+<div class="row">
+<div class="col-md-offset-1 col-md-10">
+
+	<div id="activity_volume">
+	
+	<h3>Activity Volume</h3>
+	
+	<p class="help-block">Tweet count: <span id="total"></span></p>
+	
+	<div class="row volume">
+	
+		<div class="col-md-12">
+			<div id="chart">Please select a data source and click "Submit".</div>
+		</div>
+	
+	</div>
+	
+	</div>
 
 </div>
 </div>
