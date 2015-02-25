@@ -24,18 +24,19 @@ def login(request):
 @login_required
 def home(request):
     
-#     global Classifier.CLASSIFIER_TYPE
-#     if not Classifier.CLASSIFIER_TYPE:
-#         return redirect("/settings")
-    
     context = {"request": request}
     tweets = []
+
+    return render_to_response('home.html', context, context_instance=RequestContext(request))
+
+@login_required
+def query_chart(request):
+
+    response_data = {}
 
     query = request.REQUEST.get("query", "")
     if query:
 
-        context["query"] = query
-        
         g = get_gnip(request.user)
 
         g.get_repr(query)
@@ -45,7 +46,7 @@ def home(request):
             if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
                 frequency.append(f)
         frequency = sorted(frequency, key=lambda f: -f[3]) 
-        context["frequency"] = frequency
+        response_data["frequency"] = frequency
         
         # c3 data format for timeseries (http://c3js.org/samples/timeseries.html)
         #     data: {
@@ -64,25 +65,38 @@ def home(request):
         x = ['x']
         series = ['series']
 
-        count = 0
+        total = 0
         for t in timeline:
             t_count = t["count"]
             day = t["timePeriod"][0:8]
             day = str(day[0:4] + "-" + day[4:6] + "-" + day[6:8])
             series.append(t_count)
             x.append(day)
-            count = count + t_count 
-        context["columns"] = [x, series]
-        context["total"] = count
+            total = total + t_count
+            
+        response_data['columns'] = [x, series]
+        response_data['total'] = total
         
-        queryCount = int(request.REQUEST.get("queryCount", TWEET_QUERY_COUNT))
-        followersCount = int(request.REQUEST.get("followersCount", 0))
-        friendsCount = int(request.REQUEST.get("friendsCount", 0))
-        statusesCount = int(request.REQUEST.get("statusesCount", 0))
-        favoritesCount = int(request.REQUEST.get("favoritesCount", 0))
-        retweets = int(request.REQUEST.get("retweets", 0))
-        english = request.REQUEST.get("english", 0)
-        klout_score = request.REQUEST.get("klout_score", 0)
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+        
+@login_required
+def query_tweets(request):
+
+    response_data = {}
+
+    queryCount = int(request.REQUEST.get("queryCount", TWEET_QUERY_COUNT))
+    followersCount = int(request.REQUEST.get("followersCount", 0))
+    friendsCount = int(request.REQUEST.get("friendsCount", 0))
+    statusesCount = int(request.REQUEST.get("statusesCount", 0))
+    favoritesCount = int(request.REQUEST.get("favoritesCount", 0))
+    retweets = int(request.REQUEST.get("retweets", 0))
+    english = request.REQUEST.get("english", 0)
+    klout_score = request.REQUEST.get("klout_score", 0)
+
+    query = request.REQUEST.get("query", "")
+    if query:
+
+        g = get_gnip(request.user)
 
         query_nrt = query
 
@@ -119,13 +133,11 @@ def home(request):
             print "query paging: %s " % tc  
             
         for i in range(len(tweets)):
-            
-            tweet = json.loads(tweets[i])
-            tweets[i] = tweet
+            tweets[i] = json.loads(tweets[i])
 
-        context["tweets"] = tweets
+        response_data['tweets'] = tweets
         
-    return render_to_response('home.html', context, context_instance=RequestContext(request))
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def get_sentiment(query, body):
 
@@ -142,16 +154,6 @@ def get_sentiment(query, body):
         body = body.replace(q, "")
 
     return Classifier.get_sentiment(body)
-
-from django.contrib.auth import logout as auth_logout
-def settingsp(request):
-
-    type = request.REQUEST.get("corpus", None)
-    if type:
-        Classifier.set_classifier(type)
-    
-    context = {"request": request, "classifier": Classifier.CLASSIFIER_TYPE}
-    return render_to_response('settings.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout
 def logout(request):

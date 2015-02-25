@@ -2,45 +2,12 @@
 {% load tags %}
 {% load humanize %}
 
-{% block title %}Twitter Reviews{% endblock %}
+{% block title %}Twitter Search{% endblock %}
 
 {% block content %}
 
-<script language="JavaScript1.2">
-
-$(document).ready(function(){
-
-{% if columns %}
-{% autoescape off %}
-
-var args = {
-    bindto: '#chart',
-    data: {
-        x: 'x',
-//        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-        columns: {{columns}}
-    },
-    axis: {
-        x: {
-            type: 'timeseries',
-            tick: {
-                format: '%Y-%m-%d'
-            }
-        }
-    }
-};
-var chart = c3.generate(args);
-
-{% endautoescape %}
-{% endif %} 
-
-});
-</script>
-
 <div class="row">
 <div class="col-md-offset-2 col-md-8">
-
-<form method="GET" action="/">
 
 <div class="row top-buffer">
   <div class="col-md-10">
@@ -48,13 +15,11 @@ var chart = c3.generate(args);
     <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
   </div>
   <div class="col-md-2">
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary" id="search">Search</button>
   </div>
 </div>
 
-</form>
-
-{% if query %}
+<div id="activity_volume">
 
 <h3>Activity Volume</h3>
 
@@ -112,15 +77,13 @@ var chart = c3.generate(args);
   </div>
 </div>
 
-{% endif %}
+</div>
 
 </div>
 </div>
 
-<div class="row">
+<div class="row" id="activity_tweets">
 <div class="col-md-offset-1 col-md-10">
-
-{% if tweets %}
 
 <h3>Activity</h3>
 
@@ -128,18 +91,7 @@ var chart = c3.generate(args);
 
 <div id="tweets">
 
-{% for t in tweets %}
-
-<article class="white-panel">
-	<blockquote class="twitter-tweet" lang="en"><p>{{t.body}}</p>&mdash;{{t.actor.displayName}} ({{t.actor.preferredUsername}})<a href="https://twitter.com/{{t.object.link}}">{{t.object.postedTime}}</a></blockquote>
-</article>
-
-{% endfor %}
-
 </div>
-
-{% endif %}
-
 
 </div>
 </div>
