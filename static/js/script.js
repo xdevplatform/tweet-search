@@ -80,16 +80,28 @@ var Page = {
 					
 					var args = {
 						    bindto: '#chart',
+						    point: {
+					    	  show: false
+					    	},
 						    data: {
-						        x: 'x',
-						        // xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-						        columns: response.columns
+//						        x: 'x',
+//						        xFormat: '%Y-%m-%d', // 'xFormat' can be used as custom format of 'x'
+						        columns: response.columns,
+							    colors: {
+						            count: '#4099FF'
+						        }
 						    },
 						    axis: {
 						        x: {
-						            type: 'timeseries',
+//						            type: 'timeseries',
 						            tick: {
-						                format: '%Y-%m-%d'
+						            	culling: true,
+						            	count: 14,
+						            	format: function (x) {
+						            		console.log(x);
+					            			return x; 
+				            			}
+//						                format: '%Y-%m-%d'
 						            }
 						        }
 						    }

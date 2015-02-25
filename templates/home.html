@@ -9,21 +9,27 @@
 <div class="row">
 <div class="col-md-offset-2 col-md-8">
 
-<div id="buffer">
-	<div class="top-buffer">
-		&nbsp;
+	<div id="buffer">
+		<div class="top-buffer">
+			&nbsp;
+		</div>
 	</div>
+	
+	<div class="row">
+	  <div class="col-md-10">
+	    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
+	    <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
+	  </div>
+	  <div class="col-md-2">
+	    <button type="submit" class="btn btn-primary" id="search">Search</button>
+	  </div>
+	</div>
+
+</div>
 </div>
 
 <div class="row">
-  <div class="col-md-10">
-    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
-    <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
-  </div>
-  <div class="col-md-2">
-    <button type="submit" class="btn btn-primary" id="search">Search</button>
-  </div>
-</div>
+<div class="col-md-offset-1 col-md-10">
 
 <div id="activity_volume">
 

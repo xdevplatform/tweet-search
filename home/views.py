@@ -1,3 +1,4 @@
+import datetime
 import random
 import json
 
@@ -13,7 +14,7 @@ from engine.models import Classifier
 # import twitter
 
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
-TWEET_QUERY_COUNT = 25              # For real identification, > 100. Max of 500 via Search API.
+TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
 
 def login(request):
     
@@ -60,18 +61,26 @@ def query_chart(request):
 
         # counts over time
         query_nrt = query
-        timeline = g.query_api(query_nrt, 0, "timeline")
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=7)
+        
+        start = start.strftime("%Y-%m-%d %H:%M")
+        end = end.strftime("%Y-%m-%d %H:%M")
+        
+        timeline = g.query_api(query_nrt, 0, "timeline", start=start, end=end, count_bucket="hour")
         x = ['x']
-        series = ['series']
+        series = ['count']
 
         total = 0
         for t in timeline:
+            
             t_count = t["count"]
-            day = t["timePeriod"][0:8]
-            day = str(day[0:4] + "-" + day[4:6] + "-" + day[6:8])
             series.append(t_count)
-            x.append(day)
             total = total + t_count
+
+            tp = t["timePeriod"]
+            day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
+            x.append(day)
             
         response_data['columns'] = [x, series]
         response_data['total'] = total
