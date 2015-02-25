@@ -2,6 +2,10 @@ body {
   padding-top: 30px;
 }
 
+.navbar {
+  background-color:rgba(64, 153, 255, 0.02)
+}
+
 .starter-template {
   padding: 40px 15px;
   text-align: left;

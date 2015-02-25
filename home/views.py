@@ -13,7 +13,7 @@ from engine.models import Classifier
 # import twitter
 
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
-TWEET_QUERY_COUNT = 40              # For real identification, > 100. Max of 500 via Search API.
+TWEET_QUERY_COUNT = 25              # For real identification, > 100. Max of 500 via Search API.
 
 def login(request):
     

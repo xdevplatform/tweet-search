@@ -55,7 +55,7 @@
 
 		<br>
 		
-		<table class="table table-striped table-condensed">
+		<table class="table table-striped table-condensed" id="frequency">
 		<tr>
 		<th></th>
 		<th>Term</th>
@@ -64,17 +64,6 @@
 		<th>Activities (100)</th>
 		<th>Activities %</th>
 		</tr>
-		
-		{% for f in frequency %}
-		<tr>
-		<td><input type="checkbox" value="{{f.4}}" class="term"></td>
-		<td>{{f.4}}</td>
-		<td>{{f.0}}</td>
-		<td>{{f.1|percentage}}</td>
-		<td>{{f.2}}</td>
-		<td>{{f.3|percentage}}</td>
-		</tr>
-		{% endfor %}
 		
 		</table>
 
@@ -101,6 +90,29 @@
 
 </div>
 </div>
+
+{% verbatim %}
+<script id="templateTweet" type="text/template">
+<article class="white-panel">
+	<blockquote class="twitter-tweet" lang="en">
+		<p>{{body}}</p>
+		&mdash;
+		{{actor.displayName}} ({{actor.preferredUsername}})<a href="{{object.link}}">{{object.postedTime}}</a>
+	</blockquote>
+</article>
+</script>
+
+<script id="templateFrequency" type="text/template">
+<tr>
+	<td><input type="checkbox" value="{{4}}" class="term"></td>
+	<td>{{4}}</td>
+	<td>{{0}}</td>
+	<td>{{1}}</td>
+	<td>{{2}}</td>
+	<td>{{3}}</td>
+</tr>
+</script>
+{% endverbatim %}
 
 <script>
 

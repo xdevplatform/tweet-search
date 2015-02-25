@@ -9,8 +9,6 @@ $(document).ready(function(){
 
 var Page = {
 
-	EMBED_TEMPLATE : '<article class="white-panel"><blockquote class="twitter-tweet" lang="en"><p>{{body}}</p>&mdash;{{actor.displayName}} ({{actor.preferredUsername}})<a href="{{object.link}}">{{object.postedTime}}</a></blockquote></article>',
-
 	init : function() {
 
 		Page.clear();
@@ -23,7 +21,6 @@ var Page = {
 			  }
 			  
 			  var query = $("#query").val();
-			  console.log(query);
 			  if (!query || query == ''){
 				  Page.clear();
 				  $('#buffer').collapse('show');
@@ -103,13 +100,21 @@ var Page = {
 					
 					console.log(response);
 					
+					template = $("#templateTweet").html();
+					Mustache.parse(template);
+					
 					tweets = response.tweets;
 					for (var i = 0; i < tweets.length; i++){
 						
-						var tweet = tweets[i]
-						var output = Mustache.render(Page.EMBED_TEMPLATE, tweet);
-						$("#tweets").append(output);
+						var tweet = tweets[i];
 						
+						var output = Mustache.render(template, tweet);
+						$("#tweets").append(output);
+
+						console.log(template);
+						console.log(tweet);
+						console.log(output);
+
 					}
 					
 					window.twttr.widgets.load()
