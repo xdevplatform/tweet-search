@@ -33,41 +33,45 @@ var chart = c3.generate(args);
 
 {% endautoescape %}
 {% endif %} 
-	
+
 });
 </script>
 
+<div class="row">
+<div class="col-md-offset-2 col-md-8">
+
 <form method="GET" action="/">
 
-<h1>Twitter Reviews</h1>
-
-<h3>Step 1: Enter a topic</h3>
-
-<p>Enter keywords about a topic you want reviews for. For tips on query syntax, follow the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a>.</p>
-
-<div class="row">
-  <div class="col-md-6">
-    <input type="text" class="form-control" name="query" id="query" placeholder="Search Term" value="{{query}}">
-    <p class="help-block">Example: (Walking Dead) OR #WalkingDead OR #TheWalkingDead</p>
+<div class="row top-buffer">
+  <div class="col-md-10">
+    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
+    <p class="help-block">For query syntax, read the <a href="http://support.gnip.com/apis/powertrack/rules.html" target="_target">GNIP Search API Reference</a></p>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-2">
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
 </div>
 
 </form>
 
-{% if frequency %}
+{% if query %}
 
-<br>
+<h3>Activity Volume</h3>
+
+<p class="help-block">Tweet count: {{total|intcomma}}</p>
+
+<div class="row volume">
+
+	<div class="col-md-12">
+		<div id="chart">Please select a data source and click "Submit".</div>
+	</div>
+
+</div>
 
 <div class="row">
   <div class="col-md-12">
 
-	<p>Add relevant search terms to expand or refine your sentiments, and re-run your search.
-		<a href="#" data-toggle="collapse" data-target="#collapseOne">
-		  See Related Terms.
-		</a>
+	<p class="pull-right">Expand your search by adding <a href="#" data-toggle="collapse" data-target="#collapseOne">related terms</a>.
 	</p>
 
   </div>
@@ -78,30 +82,30 @@ var chart = c3.generate(args);
     <div id="collapseOne" class="accordion-body collapse">
       <div class="accordion-inner">
 
-<br>
-
-<table class="table table-striped table-condensed">
-<tr>
-<th></th>
-<th>Term</th>
-<th>Mentions (100)</th>
-<th>Mentions %</th>
-<th>Activities (100)</th>
-<th>Activities %</th>
-</tr>
-
-{% for f in frequency %}
-<tr>
-<td><input type="checkbox" value="{{f.4}}" class="term"></td>
-<td>{{f.4}}</td>
-<td>{{f.0}}</td>
-<td>{{f.1|percentage}}</td>
-<td>{{f.2}}</td>
-<td>{{f.3|percentage}}</td>
-</tr>
-{% endfor %}
-
-</table>
+		<br>
+		
+		<table class="table table-striped table-condensed">
+		<tr>
+		<th></th>
+		<th>Term</th>
+		<th>Mentions (100)</th>
+		<th>Mentions %</th>
+		<th>Activities (100)</th>
+		<th>Activities %</th>
+		</tr>
+		
+		{% for f in frequency %}
+		<tr>
+		<td><input type="checkbox" value="{{f.4}}" class="term"></td>
+		<td>{{f.4}}</td>
+		<td>{{f.0}}</td>
+		<td>{{f.1|percentage}}</td>
+		<td>{{f.2}}</td>
+		<td>{{f.3|percentage}}</td>
+		</tr>
+		{% endfor %}
+		
+		</table>
 
       </div>
     </div>
@@ -110,247 +114,63 @@ var chart = c3.generate(args);
 
 {% endif %}
 
-<h3>Step 2: View Volume</h3>
-
-{% if not query %}
-
-<p>After searching on a topic, the volume for that topic over the last 30 days will appear here.</p>
-
-{% else %}
-
-<p>Based on {{timeline.count|intcomma}} Tweets over the last 30 days, here is the volume for <em>{{query}}</em> on Twitter.</p>
-
-<div class="row volume">
-
-	<div class="col-md-12">
-		<div id="chart">Please select a data source and click "Submit".</div>
-	</div>
-
+</div>
 </div>
 
-{% endif %}
-
-<h3>Step 3: View Sentiment and Top Tweets</h3>
-
-<p>Specify criteria to filter and curate the top Tweets to display in your Web, iOS or Android integration.</p>
-
-{% if query %}
-	
-<form class="form-horizontal" role="form" method="GET" action="/">
-  <input type="hidden" name="query" value="{{query}}">
-  
-  <div class="form-group">
-    <label for="followers" class="col-sm-2 control-label">Followers</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="followersCount" id="followersCount" value="{% if request.REQUEST.followersCount %}{{request.REQUEST.followersCount}}{% else %}25{% endif %}">
-    </div>
-    <label for="queryCount" class="col-sm-2 control-label">Query Count</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="queryCount" id="queryCount" value="{% if request.REQUEST.queryCount %}{{request.REQUEST.queryCount}}{% else %}{{queryCount}}{% endif %}">
-      <p class="help-block">Max 500 tweets</p>
-    </div>
-  </div>
-  
-  <div class="form-group">
-    <label for="friendsCount" class="col-sm-2 control-label">Friends</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="friendsCount" id="friendsCount" value="{% if request.REQUEST.friendsCount %}{{request.REQUEST.friendsCount}}{% else %}25{% endif %}">
-    </div>
-    <label for="english" class="col-sm-2 control-label">English Only</label>
-    <div class="col-sm-2">
-      <input type="checkbox" name="english" id="english" {% if not request.REQUEST.english or request.REQUEST.english == 'on' %}CHECKED{% endif %}>
-    </div>
-  </div>
-  
-  <div class="form-group">
-    <label for="statusesCount" class="col-sm-2 control-label">Tweets</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="statusesCount" id="statusesCount" value="{% if request.REQUEST.statusesCount %}{{request.REQUEST.statusesCount}}{% else %}25{% endif %}">
-    </div>
-    <label for="english" class="col-sm-2 control-label">Include Retweets</label>
-    <div class="col-sm-2">
-      <input type="checkbox" name="retweets" id="retweets" {% if request.REQUEST.retweets %}CHECKED{% endif %}>
-    </div>
-  </div>
-  
-  <div class="form-group">
-    <label for="favoritesCount" class="col-sm-2 control-label">Favorites</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" name="favoritesCount" id="favoritesCount" value="{% if request.REQUEST.favoritesCount %}{{request.REQUEST.favoritesCount}}{% else %}10{% endif %}">
-    </div>
-  </div>
-  
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-primary btn-small" id="show_tweets" name="tweets" value="1">View Sentiment and Top Tweets</button>
-    </div>
-  </div>
-</form>
-
-{% endif %}
+<div class="row">
+<div class="col-md-offset-1 col-md-10">
 
 {% if tweets %}
 
-<p>Based on the last {{tweets.count}} Tweets, the sentiment for <em>{{query}}</em> on Twitter is:</p>
+<h3>Activity</h3>
 
-<div class="row sentiment">
+<p class="help-block">Last {{tweets|length}}</p>
 
-	<div class="col-md-4">
-		<div>
-			<span class="sentiment_score sentiment_score_positive">
-				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
-				{{tweets.positive}}%
-			</span>
-		</div>
-	</div>
+<div id="tweets">
 
-	<div class="col-md-4">
-		<div>
-			<span class="sentiment_score sentiment_score_neutral">
-				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
-				{{tweets.neutral}}%
-			</span>
-		</div>
-	</div>
+{% for t in tweets %}
 
-	<div class="col-md-4">
-		<div>
-			<span class="sentiment_score sentiment_score_negative">
-				<img src="{{STATIC_URL}}images/bird.png" class="sentiment_img">
-				{{tweets.negative}}%
-			</span>
-		</div>
-	</div>
-
-</div>
-
-<br>
-
-<p>Now, select the top Tweets to show in your integration.</p>
-
-<div class="row">
-
-<div class="col-md-6">
-
-<h4 class="alert alert-success">Positive Tweets</h4>
-
-{% for t in tweets.top %}
-
-<div class="row">
-	<div class="col-md-3 tweet_label tweet_label_positive">
-		{{t.sentiment|percentage}}
-		<br>
-		<button type="submit" class="btn btn-default btn-xs tweet-save">Select</button>
-	</div>
-	<div class="col-md-9">
-		<blockquote class="tweet">
-		  <img src="{{t.actor.image}}" class="pull-left">
-		  <footer>{{t.actor.displayName}} <cite title="">(<a href="{{t.actor.link}}" target="_target">@{{t.actor.preferredUsername}})</a></cite></footer>
-		  <p>{{ t.body }}</p>
-		</blockquote>
-	</div>
-</div>
+<article class="white-panel">
+	<blockquote class="twitter-tweet" lang="en"><p>{{t.body}}</p>&mdash;{{t.actor.displayName}} ({{t.actor.preferredUsername}})<a href="https://twitter.com/{{t.object.link}}">{{t.object.postedTime}}</a></blockquote>
+</article>
 
 {% endfor %}
 
 </div>
 
-<div class="col-md-6">
-
-<h4 class="alert alert-danger">Negative Tweets</h4>
-
-{% for t in tweets.bottom %}
-
-<div class="row">
-	<div class="col-md-3 tweet_label tweet_label_negative">
-		{{t.sentiment|percentage}}
-		<br>
-		<button type="submit" class="btn btn-default btn-xs tweet-save">Select</button>
-	</div>
-	<blockquote class="tweet col-md-8">
-	  <img src="{{t.actor.image}}" class="pull-left">
-	  <footer>{{t.actor.displayName}} <cite title="">(<a href="{{t.actor.link}}" target="_target">@{{t.actor.preferredUsername}})</a></cite></footer>
-	  <p>{{ t.body }}</p>
-	</blockquote>
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
 {% endif %}
 
-{% if integration %}
-
-<h3>Step 4: Integrate</h3>
-
-{% if not tweets %}
-
-<p>After curating Tweets above, you will be given the option to integrate the sentiment and reviews into your website, iOS and Android apps.</p>
-
-{% else %}
-
-<p>After curating Tweets above, click on the button below to generate endpoints and code samples to save your sentiments.</p>
-
-<button type="submit" class="btn btn-primary btn-small" id="generate_endpoints">Generate Endpoints</button>
-
-{% endif %}
-
-<br><br>
-
-<div id="endpoints">
-
-<h4>JSON</h4>
-
-<div>
-	<div class="zero-clipboard">
-		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.json }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-	</div>
-	<pre class="code">{{ integration.json }}</pre>
-</div>
-
-<h4>Reviews Endpoint</h4>
-
-<div>
-	<div class="zero-clipboard">
-		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.endpoint }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-	</div>
-	<pre class="code">{{ integration.endpoint }}</pre>
-</div>
-
-<h4>Web Plugin</h4>
-
-<div>
-	<div class="zero-clipboard">
-		<span class="btn-clipboard copy-button" data-clipboard-text="{{ integration.web }}" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-	</div>
-	<pre class="code">{{ integration.web|escape }}</pre>
-	<a href="#">Click here</a> to view.
 
 </div>
-
-<h4>iOS Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h4>
-
-<div>
-	<div class="zero-clipboard">
-		<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-	</div>
-	<pre class="code">{{ integration.ios|escape }}</pre>
 </div>
 
-<h4>Android Code (Use with <a href="https://dev.twitter.com/products/fabric" target="_target">Fabric</a>)</h4>
+<script>
 
-<div>
-	<div class="zero-clipboard">
-		<span class="btn-clipboard copy-button" data-clipboard-text="https://twitter.com/intent/tweet?text=This%is%20a%20tweet%20quote&amp;url=http%3A%2F%2Fdev.twitter.com&amp;via=twitterdev" data-toggle="tooltip" data-placement="top" title="Copied">Copy</span>
-	</div>
-	<pre class="code">{{ integration.android|escape }}</pre>
-</div>	
+window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+ 
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+ 
+  return t;
+}(document, "script", "twitter-wjs"));
 
-</div>
+$('#tweets').pinterest_grid({
+	no_columns: 3,
+	padding_x: 10,
+	padding_y: 10,
+	margin_bottom: 50,
+	single_column_breakpoint: 700
+});
 
-{% endif %}
+</script>
 
 {% endblock %}

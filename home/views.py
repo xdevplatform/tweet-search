@@ -73,10 +73,8 @@ def home(request):
             x.append(day)
             count = count + t_count 
         context["columns"] = [x, series]
+        context["total"] = count
         
-    tweets = request.REQUEST.get("tweets", "")
-    if query and tweets: 
-
         queryCount = int(request.REQUEST.get("queryCount", TWEET_QUERY_COUNT))
         followersCount = int(request.REQUEST.get("followersCount", 0))
         friendsCount = int(request.REQUEST.get("friendsCount", 0))
@@ -119,90 +117,14 @@ def home(request):
             tweets = tweets + tweets_cursor
             tc = len(tweets)
             print "query paging: %s " % tc  
-        positive = 0
-        neutral = 0
-        negative = 0
-        count = 0
-
+            
         for i in range(len(tweets)):
             
             tweet = json.loads(tweets[i])
             tweets[i] = tweet
-            
-            if followersCount and tweet["actor"]["followersCount"] < followersCount:
-                print "pass followersCount %s" % tweet["actor"]["followersCount"]
-                continue
 
-            if friendsCount and tweet["actor"]["friendsCount"] < friendsCount:
-                print "pass friendsCount %s" % tweet["actor"]["friendsCount"]
-                continue
-
-            if statusesCount and tweet["actor"]["statusesCount"] < statusesCount:
-                print "pass statusesCount %s" % tweet["actor"]["statusesCount"]
-                continue
-
-            if favoritesCount and tweet["actor"]["favoritesCount"] < favoritesCount:
-                print "pass favoritesCount %s" % tweet["actor"]["favoritesCount"]
-                continue
-            
-            body = tweet["body"]
-            response = get_sentiment(query, body)
-            if response:
-                
-                count = count + 1
-
-                # top-level sentiment                
-                label = response["label"]
-                if label == "pos":
-                    positive = positive + 1
-                elif label == "neg":
-                    negative = negative + 1
-                else:
-                    neutral = neutral + 1
-
-                # pre-curate best/worst tweets
-                sentiment = response["probability"][label]
-                if sentiment >= SENTIMENT_THRESHOLD:
-                    tweet["sentiment"] = sentiment
-                    if label == "pos":
-                        top.append(tweet)
-                    elif label == "neg":
-                        bottom.append(tweet)
-                        
-#                 print label, sentiment, body, json.dumps(tweet)
-            
-        top = sorted(top, key=lambda t: -t["sentiment"])
-        if len(top) > 10:
-            top = top[0:10]
-            
-        bottom = sorted(bottom, key=lambda t: -t["sentiment"])
-        if len(bottom) > 10:
-            bottom = bottom[0:10]
+        context["tweets"] = tweets
         
-        context["tweets"] = {
-             "count": count,
-             "positive": int(positive*100/count) if count > 0 else 0,
-             "neutral": int(neutral*100/count) if count > 0 else 0,
-             "negative": int(negative*100/count) if count > 0 else 0,
-             "top" : top,
-             "bottom": bottom
-         }
-        
-    integration = {
-        "endpoint": "http://localhost:9000/aQ13s4/sentiment",
-        "json": "{sentiment: 55%}",
-        "web" : "<iframe></iframe>",
-        "ios" : "<SOME IOS CODE>",
-        "android" : "<SOME ANDROID CODE>",
-    }
-    context["integration"] = integration
-
-    results = {
-       "count" : len(tweets)
-    }
-    context["results"] = results
-    context["queryCount"] = TWEET_QUERY_COUNT
-    
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 def get_sentiment(query, body):

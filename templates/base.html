@@ -28,6 +28,7 @@
     <script src="{{STATIC_URL}}js/jquery.cookie.js"></script>
     <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL}}js/bootstrap-datetimepicker.min.js"></script>
+    <script src="{{STATIC_URL}}js/pinterest_grid.js"></script>
 	<script src="{{STATIC_URL}}js/d3.js"></script>
 	<script src="{{STATIC_URL}}js/c3.js"></script>
     <script src="{{STATIC_URL}}js/script.js"></script>
@@ -35,7 +36,7 @@
 </HEAD>
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -45,12 +46,9 @@
             <span class="icon-bar"></span>
           </button>
           <img src="{{STATIC_URL}}/images/bird.png" height="45" class="navbar-brand">
-          <a class="navbar-brand" href="/">Twitter Reviews</a>
+          <a class="navbar-brand" href="/">Twitter Search</a>
         </div>
         <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-              <li><a href="/settings">Settings</a></li>
-          </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if request.user.is_authenticated %}
             <li class="dropdown">
@@ -76,7 +74,6 @@
       </div>
 
     </div><!-- /.container -->
-
-
+    
   </body>
 </html>

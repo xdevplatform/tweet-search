@@ -21,6 +21,10 @@ body {
 	box-shadow: 2px 2px 2px #999;
 }
 
+.top-buffer { 
+	margin-top:80px; 
+}
+
 blockquote img {
   margin-right: 15px;
 }
@@ -134,3 +138,14 @@ h4 .alert {
         font-weight:bold;
 	font-size:20px;
       }
+      
+#demo {
+position: relative;
+max-width: 100%;
+width: 100%;
+}
+
+.white-panel {
+position: absolute;
+background: white;
+}
