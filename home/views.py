@@ -117,7 +117,7 @@ def query_tweets(request):
 
     response_data = {}
 
-    queryCount = int(request.REQUEST.get("queryCount", TWEET_QUERY_COUNT))
+    queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     followersCount = int(request.REQUEST.get("followersCount", 0))
     friendsCount = int(request.REQUEST.get("friendsCount", 0))
     statusesCount = int(request.REQUEST.get("statusesCount", 0))

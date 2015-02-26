@@ -62,20 +62,20 @@ var Page = {
 			$("#query").val(finalTerm);
 		});
 		
-		$(document.body).bind("click", ".term", function(){
-			var query = $("#query").val();
-			var val = $(this).val();
-			var newTerm = " (" + val + ")";
-			var finalTerm = ""
-			if ($(this).is(':checked')){
-				finalTerm = query + newTerm
-			} else {
-				if (query.indexOf(newTerm) >= 0){
-					finalTerm = query.replace(newTerm, "");
-				}
-			}
-			$("#query").val(finalTerm);
-		});
+//		$(document.body).bind("click", ".term", function(){
+//			var query = $("#query").val();
+//			var val = $(this).val();
+//			var newTerm = " (" + val + ")";
+//			var finalTerm = ""
+//			if ($(this).is(':checked')){
+//				finalTerm = query + newTerm
+//			} else {
+//				if (query.indexOf(newTerm) >= 0){
+//					finalTerm = query.replace(newTerm, "");
+//				}
+//			}
+//			$("#query").val(finalTerm);
+//		});
 		
 	},
 	
@@ -93,11 +93,12 @@ var Page = {
 			var now = "";
 			var start = $("#start").val();
 			var end = $("#end").val();
+			var embedCount = $("#embedCount").val();
 			
 			Page.clear();
 			$('#buffer').collapse('hide');
 			Page.loadChart(query, start, end);
-			Page.loadTweets(query, start, end);
+			Page.loadTweets(query, start, end, embedCount);
 		}
 	},
 
@@ -185,12 +186,12 @@ var Page = {
 	
 	},
 	
-	loadTweets : function(query, start, end) {
+	loadTweets : function(query, start, end, embedCount) {
 		
 		 $.ajax({
 				type : "GET",
 				url : "/query/tweets",
-				data : {"query" : query, "start": start, "end": end},
+				data : {"query" : query, "start": start, "end": end, "embedCount": embedCount},
 				dataType : "json",
 				success : function(response) {
 					
