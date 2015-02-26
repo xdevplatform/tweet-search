@@ -1,64 +1,61 @@
-Twitter Reviews Everywhere
+Tweet Search
 =================
 
-Sample Django App using Twitter to power reviews on almost any subject. Uses the GNIP API 
-for historical data, with a few options on sentiment analysis for discovery of best/worst 
-tweets about a subject.
+This sample uses GNIP search to show the activity volume and latest tweets on any given topic. It also renders tweets using Twitter's widgets.js.
 
-Large portions of this sample code are based on this great starter on 
-Twitter + NLTK: http://ravikiranj.net/drupal/201205/code/machine-learning/how-build-twitter-sentiment-analyzer
-
+<img src="screenshot.png" style="width: 70%;"/>
 
 Requirements
 ============
 
-To run this sample code, you'll need to install the following libraries:
+To run this sample code, you can install the required libraries with:
 
-- `pip install south` (http://south.aeracode.org/)
-- `pip install fabric` (http://www.fabfile.org/)
-- `pip install gapi` (https://github.com/DrSkippy/Gnip-Python-Search-API-Utilities)
-` `pip install nltk` (http://www.nltk.org/)
-
-After installing nltk, run the following in the command line to download the test
-corpus of movie reviews (used for sentiment analysis of Tweets):
-
-	import nltk
-	nltk.download()
-	d movie_reviews
+	`pip install -r requirements.txt`
 
 Getting Started
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
 
-- Specify your GNIP credentials in app/settings.py under the following section:
+- Specify your API and GNIP credentials in app/settings.py under the following section:
 
-    GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
-    GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
-    GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
+	GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
+	GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
+	GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
 
-- To initialize your database, run the from the `reviews-everywhere` directory:
+- To initialize your database, run the from the `tweet-search` directory:
 
-  python manage.py syncdb
+  `python manage.py syncdb`
 
-- To start the server, run the following from the `reviews-everywhere` directory:
+- To start the server, run the following from the `tweet-search` directory:
 
-  fab start
+  `fab start`
   
 - Open a browser and go to http://localhost:9000
 
-Notes
-============
-If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the requst and the Twitter server.
-
-Use NTP to sync time on your server to compensate for the drift.
-
-If you are getting this error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
-
-Additional Reading
+Sample Queries
 ============
 
-http://streamhacker.com/2010/05/10/text-classification-sentiment-analysis-naive-bayes-classifier/
-http://streamhacker.com/2010/05/17/text-classification-sentiment-analysis-precision-recall/
-https://snippetsofcode.wordpress.com/2014/04/28/fast-tutorial-to-nltk-using-python/
-http://andybromberg.com/sentiment-analysis-python/
+Some sample queries to run:
+
+- Hashtag search (default AND): `#MLB #SFGiants`
+- Mention search, no retweets: `@TwitterDev -(is:retweet)`
+- Search with images/videos: `walking dead (has:media)`
+
+Advanced Options
+============
+
+In the UI, there is a link to show advanced options. Specifically:
+
+- Start/end dates. GNIP search allows a variable timeframe to search, with a maximum of 30 days ago.
+- Has media. This appends `(has:media)` to your query 
+
+<img src="advanced.png" style="width: 70%;"/>
+
+Related Terms
+============
+
+The GNIP search can also suggest additional related terms to add to your query. Click on the 'related terms' 
+link and a drop-down will appear to suggest (and add) additional terms to your query:
+
+<img src="terms.png" style="width: 70%;"/>

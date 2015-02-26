@@ -31,7 +31,19 @@ var Page = {
 			  
 			});
 		
-		$("#search").click(function(){
+		
+		$(document.body).bind("click", "#scrolltop", function(){
+
+//			Page.clear();
+//			$('#query').val('');
+//			$('#buffer').collapse('show');
+
+			window.scrollTo(0, 0);
+			
+			return false;
+		});
+		
+		$(document.body).bind("click", "#search", function(){
 
 			var query = $("#query").val();
 			if (query){
@@ -97,6 +109,7 @@ var Page = {
 				success : function(response) {
 					
 					// console.log(response);
+					var start = response.start;
 					
 					var args = {
 						    bindto: '#chart',
@@ -104,6 +117,7 @@ var Page = {
 					    	  show: false
 					    	},
 						    data: {
+						    	labels: false,
 //						        x: 'x',
 //						        xFormat: '%Y-%m-%d', // 'xFormat' can be used as custom format of 'x'
 						        columns: response.columns,
@@ -116,16 +130,24 @@ var Page = {
 //						            type: 'timeseries',
 						            tick: {
 						            	culling: true,
-						            	count: response.days,
+						            	count: response.days + 1,
 						            	format: function (x) {
-						            		// console.log(x);
-					            			return x; 
+						            		var days = x / 24;
+
+						            		var date = new Date(start.valueOf());
+						            	    date.setDate(date.getDate() + days);
+
+						            	    var dateStr = (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear()
+//					            			console.log(dateStr);
+					            			return dateStr;
 				            			}
 //						                format: '%Y-%m-%d'
 						            }
 						        }
 						    }
 						};
+					
+					console.log(args);
 					var chart = c3.generate(args);
 					
 					$("#total").html(Utils.integerFormat(response.total));
@@ -170,7 +192,7 @@ var Page = {
 				dataType : "json",
 				success : function(response) {
 					
-					console.log(response);
+//					console.log(response);
 					
 					template = $("#templateTweet").html();
 					Mustache.parse(template);

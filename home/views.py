@@ -17,6 +17,7 @@ KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
 TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
 DEFAULT_TIMEFRAME = 14              # 2 weeks lookback default
 DATE_FORMAT = "%Y-%m-%d %H:%M"
+DATE_FORMAT_JSON = '%Y-%m-%dT%H:%M:%S'
 
 def login(request):
     
@@ -44,12 +45,21 @@ def query_chart(request):
         end = request.REQUEST.get("end", "")
         days = DEFAULT_TIMEFRAME
         
-        if not start or not end:
+        # ensure end always exists
+        if not end:
             end = datetime.datetime.now()
-            start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
         else:
             end = datetime.datetime.strptime(end, DATE_FORMAT)
+
+        # ensure start always exists        
+        if not start:
+            start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+        else:
             start = datetime.datetime.strptime(start, DATE_FORMAT)
+
+        # if dates wrong, use default            
+        if start > end:
+            start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
             
         g = get_gnip(request.user)
 
@@ -76,11 +86,11 @@ def query_chart(request):
         # counts over time
         query_nrt = query
         
-        days = (end-start).days
-        start = start.strftime(DATE_FORMAT)
-        end = end.strftime(DATE_FORMAT)
+        days = (end-start).days 
+        start_str = start.strftime(DATE_FORMAT)
+        end_str = end.strftime(DATE_FORMAT)
         
-        timeline = g.query_api(query_nrt, 0, "timeline", start=start, end=end, count_bucket="hour")
+        timeline = g.query_api(query_nrt, 0, "timeline", start=start_str, end=end_str, count_bucket="hour")
         x = ['x']
         series = ['count']
 
@@ -98,6 +108,7 @@ def query_chart(request):
         response_data['columns'] = [x, series]
         response_data['total'] = total
         response_data['days'] = days
+        response_data['start'] = start.strftime(DATE_FORMAT_JSON)
         
     return HttpResponse(json.dumps(response_data), content_type="application/json")
         
