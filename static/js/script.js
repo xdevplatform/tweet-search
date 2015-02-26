@@ -20,7 +20,7 @@ var Page = {
 		$('#query').bind("propertychange change click keyup input paste", function (e) {
 			
 			  if (e.which == 13) {
-				  $("#search").click();
+				  Page.search();
 			  }
 			  
 			  var query = $("#query").val();
@@ -29,38 +29,25 @@ var Page = {
 				  $('#buffer').collapse('show');
 			  }
 			  
+			  return true;
+			  
 			});
 		
 		
 		$(document.body).bind("click", "#scrolltop", function(){
 
-//			Page.clear();
-//			$('#query').val('');
-//			$('#buffer').collapse('show');
-
 			window.scrollTo(0, 0);
-			
 			return false;
+			
 		});
 		
 		$(document.body).bind("click", "#search", function(){
 
-			var query = $("#query").val();
-			if (query){
-				
-				var now = "";
-				var start = $("#start").val();
-				var end = $("#end").val();
-				
-				Page.clear();
-				$('#buffer').collapse('hide');
-				Page.loadChart(query, start, end);
-				Page.loadTweets(query, start, end);
-			}
+			Page.search();
 			
 		});
 		
-		$(document.body).on('click', '.term', function(){
+		$(document.body).bind('click', '.term', function(){
 			var query = $("#query").val();
 			var val = $(this).val();
 			var newTerm = " (" + val + ")";
@@ -75,7 +62,7 @@ var Page = {
 			$("#query").val(finalTerm);
 		});
 		
-		$(document.body).on('click', '#media', function(){
+		$(document.body).bind('click', '#media', function(){
 			var query = $("#query").val();
 			var val = $(this).val();
 			var newTerm = " (has:media)";
@@ -97,6 +84,21 @@ var Page = {
 		$("#activity_tweets").hide();
 		$("#chart").html("");
 		$("#tweets").html("");
+	},
+	
+	search : function(){
+		var query = $("#query").val();
+		if (query){
+			
+			var now = "";
+			var start = $("#start").val();
+			var end = $("#end").val();
+			
+			Page.clear();
+			$('#buffer').collapse('hide');
+			Page.loadChart(query, start, end);
+			Page.loadTweets(query, start, end);
+		}
 	},
 
 	loadChart : function(query, start, end) {
