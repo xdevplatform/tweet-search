@@ -17,7 +17,7 @@ var Page = {
 		Page.clear();
 		$('#buffer').collapse('show');
 		
-		$('#query').bind("propertychange change click keyup input paste", function (e) {
+		$(document.body).bind("propertychange change click keyup input paste", "#query", function (e) {
 			
 			  if (e.which == 13) {
 				  Page.search();
@@ -34,23 +34,23 @@ var Page = {
 			});
 		
 		
-		$(document.body).bind("click", "#scrolltop", function(){
+		$("#scrolltop").on("click", function(){
 
 			window.scrollTo(0, 0);
 			return false;
 			
 		});
 		
-		$(document.body).bind("click", "#search", function(){
+		$("#search").on("click", function(){
 
 			Page.search();
 			
 		});
 		
-		$(document.body).bind('click', '.term', function(){
+		$('#media').on("click", function(){
 			var query = $("#query").val();
 			var val = $(this).val();
-			var newTerm = " (" + val + ")";
+			var newTerm = " (has:media)";
 			var finalTerm = ""
 			if ($(this).is(':checked')){
 				finalTerm = query + newTerm
@@ -62,10 +62,10 @@ var Page = {
 			$("#query").val(finalTerm);
 		});
 		
-		$(document.body).bind('click', '#media', function(){
+		$(document.body).bind("click", ".term", function(){
 			var query = $("#query").val();
 			var val = $(this).val();
-			var newTerm = " (has:media)";
+			var newTerm = " (" + val + ")";
 			var finalTerm = ""
 			if ($(this).is(':checked')){
 				finalTerm = query + newTerm
