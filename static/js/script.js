@@ -17,7 +17,7 @@ var Page = {
 		Page.clear();
 		$('#buffer').collapse('show');
 		
-		$(document.body).bind("propertychange change click keyup input paste", "#query", function (e) {
+		$("#query").on("propertychange change click keyup input paste", function (e) {
 			
 			  if (e.which == 13) {
 				  Page.search();
@@ -62,20 +62,20 @@ var Page = {
 			$("#query").val(finalTerm);
 		});
 		
-//		$(document.body).bind("click", ".term", function(){
-//			var query = $("#query").val();
-//			var val = $(this).val();
-//			var newTerm = " (" + val + ")";
-//			var finalTerm = ""
-//			if ($(this).is(':checked')){
-//				finalTerm = query + newTerm
-//			} else {
-//				if (query.indexOf(newTerm) >= 0){
-//					finalTerm = query.replace(newTerm, "");
-//				}
-//			}
-//			$("#query").val(finalTerm);
-//		});
+		$(document).on("click", ".term", function(){
+			var query = $("#query").val();
+			var val = $(this).val();
+			var newTerm = " (" + val + ")";
+			var finalTerm = ""
+			if ($(this).is(':checked')){
+				finalTerm = query + newTerm
+			} else {
+				if (query.indexOf(newTerm) >= 0){
+					finalTerm = query.replace(newTerm, "");
+				}
+			}
+			$("#query").val(finalTerm);
+		});
 		
 	},
 	
