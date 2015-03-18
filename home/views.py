@@ -157,21 +157,29 @@ def query_tweets(request):
         top = []
         bottom = []
         tweets = []
+        tweets_cursor = None
         tc = 0
         
         if queryCount > 500:
             g.paged = True
             
-        while tc < queryCount:
-            tweets_cursor = g.query_api(query_nrt, queryCount)
-            tweets = tweets + tweets_cursor
-            tc = len(tweets)
-            print "query paging: %s " % tc  
-            if len(tweets_cursor) < queryCount:
-                break
+        try:
             
-        for i in range(len(tweets)):
-            tweets[i] = json.loads(tweets[i])
+            while tc < queryCount:
+                tweets_cursor = g.query_api(query_nrt, queryCount)
+                
+                tweets = tweets + tweets_cursor
+                tc = len(tweets)
+                print "query paging: %s " % tc  
+                if len(tweets_cursor) < queryCount:
+                    break
+                
+            for i in range(len(tweets)):
+                tweets[i] = json.loads(tweets[i])
+        
+        except Error, e:
+            print "Error"
+            print tweets_cursor
 
         response_data['tweets'] = tweets
         

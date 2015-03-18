@@ -101,8 +101,14 @@ var Page = {
 			
 			Page.clear();
 			$('#buffer').collapse('hide');
-			Page.loadChart(query, start, end);
-			Page.loadTweets(query, start, end, embedCount);
+			
+			if ($("#results_chart").is(':checked')){
+				Page.loadChart(query, start, end);
+			}
+			
+			if ($("#results_tweets").is(':checked')){
+				Page.loadTweets(query, start, end, embedCount);
+			}
 		}
 	},
 
