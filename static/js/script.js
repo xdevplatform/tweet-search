@@ -48,35 +48,39 @@ var Page = {
 		});
 		
 		$('#media').on("click", function(){
-			var query = $("#query").val();
-			var val = $(this).val();
-			var newTerm = " (has:media)";
-			var finalTerm = ""
+			Page.toggleTerm("(has:media)", $(this).is(':checked'));
+		});
+		
+		$("#retweet_help").hide();
+		$('#retweet').on("click", function(){
+			Page.toggleTerm("(is:retweet)", $(this).is(':checked'));
 			if ($(this).is(':checked')){
-				finalTerm = query + newTerm
+				$("#retweet_help").fadeIn();
 			} else {
-				if (query.indexOf(newTerm) >= 0){
-					finalTerm = query.replace(newTerm, "");
-				}
+				$("#retweet_help").fadeOut();
 			}
-			$("#query").val(finalTerm);
 		});
 		
 		$(document).on("click", ".term", function(){
-			var query = $("#query").val();
 			var val = $(this).val();
-			var newTerm = " (" + val + ")";
-			var finalTerm = ""
-			if ($(this).is(':checked')){
-				finalTerm = query + newTerm
-			} else {
-				if (query.indexOf(newTerm) >= 0){
-					finalTerm = query.replace(newTerm, "");
-				}
-			}
-			$("#query").val(finalTerm);
+			var newTerm = "(" + val + ")";
+			Page.toggleTerm(newTerm, $(this).is(':checked'));
 		});
 		
+	},
+	
+	toggleTerm : function(term, checked){
+		var query = $("#query").val();
+		var newTerm = " " + term;
+		var finalTerm = ""
+		if (checked){
+			finalTerm = query + newTerm
+		} else {
+			if (query.indexOf(newTerm) >= 0){
+				finalTerm = query.replace(newTerm, "");
+			}
+		}
+		$("#query").val(finalTerm);
 	},
 	
 	clear : function(){

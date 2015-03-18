@@ -91,6 +91,9 @@ def query_chart(request):
         end_str = end.strftime(DATE_FORMAT)
         
         timeline = g.query_api(query_nrt, 0, "timeline", start=start_str, end=end_str, count_bucket="hour")
+        
+#         print timeline
+        
         x = ['x']
         series = ['count']
 
@@ -141,12 +144,12 @@ def query_tweets(request):
 #             query_nrt = query_nrt + " (statuses_count:%s)" % statusesCount
 #         if favoritesCount:
 #             query_nrt = query_nrt + " (favorites_count:%s)" % favoritesCount
-        if not retweets:
-            query_nrt = query_nrt + " -(is:retweet)"
-        if english:
-            query_nrt = query_nrt + " (lang:en)" 
-        if klout_score:
-            query_nrt = query_nrt + " klout_score:%s" % klout_score
+#         if not retweets:
+#             query_nrt = query_nrt + " -(is:retweet)"
+#         if english:
+#             query_nrt = query_nrt + " (lang:en)" 
+#         if klout_score:
+#             query_nrt = query_nrt + " klout_score:%s" % klout_score
     
         print "%s (%s)" % (query_nrt, queryCount)
     
@@ -164,6 +167,8 @@ def query_tweets(request):
             tweets = tweets + tweets_cursor
             tc = len(tweets)
             print "query paging: %s " % tc  
+            if len(tweets_cursor) < queryCount:
+                break
             
         for i in range(len(tweets)):
             tweets[i] = json.loads(tweets[i])
