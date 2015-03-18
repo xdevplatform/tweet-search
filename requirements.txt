@@ -6,3 +6,5 @@ python-social-auth
 South==1.0.2
 Fabric==1.7.0
 gnacs
+-e git://github.com/DrSkippy/Simple-n-grams.git@bbfd782614b39e2d0a1bc01fc6a75cc5df235e3e#egg=Simple-n-grams
+
