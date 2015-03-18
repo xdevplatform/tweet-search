@@ -1,0 +1,59 @@
+{
+	"name":"tweet-search",
+	"description":"Sample code showing tweet activity volume using GNIP search API. Built with Django, Tweet embeds and C3.",
+	"repository":"https://github.com/twitterdev/tweet-search",
+	"addons": ["heroku-postgresql:hobby-dev"],
+	"keywords":[
+		"python",
+		"django",
+		"gnip",
+		"twitter",
+		"template",
+		"skeleton"
+	],
+	"env":{
+		"DJANGO_SECRET_KEY":{
+			"description":"A randomly generated secret to secure your Django installation",
+			"generator":"secret"
+		},
+		"CONSUMER_KEY":{
+			"description":"Twitter API consumer key (Visit http://apps.twitter.com)",
+			"value":"",
+			"required":true
+		},
+		"CONSUMER_SECRET":{
+			"description":"Twitter API consumer secret",
+			"value":"",
+			"required":true
+		},
+		"ACCESS_TOKEN":{
+			"description":"Twitter API access token",
+			"value":"",
+			"required":true
+		},
+		"ACCESS_TOKEN_SECRET":{
+			"description":"Twitter API access token secret",
+			"value":"",
+			"required":true
+		},
+		"GNIP_USERNAME":{
+			"description":"Gnip username",
+			"value":"",
+			"required":true
+		},
+		"GNIP_PASSWORD":{
+			"description":"Gnip password",
+			"value":"",
+			"required":true
+		},
+		"GNIP_SEARCH_ENDPOINT":{
+			"description":"Gnip search endpoint",
+			"value":"",
+			"required":true
+		}
+
+	},
+	"scripts":{
+		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput"
+	}
+}

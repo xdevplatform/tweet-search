@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os import environ
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = True
@@ -29,7 +31,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -119,17 +120,21 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(ROOT_PATH, "media")
 MEDIA_URL = '/media/'
 
-# Get your Twitter key/secret from https://apps.twitter.com/
-SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_API_KEY'
-SOCIAL_AUTH_TWITTER_SECRET = 'YOUR_TWITTER_API_SECRET'
-
-TWITTER_ACCESS_TOKEN = 'YOUR_TWITTER_ACCESS_TOKEN'
-TWITTER_ACCESS_TOKEN_SECRET = 'YOUR_TWITTER_ACCESS_TOKEN_SECRET'
-
-MASHAPE_KEY = "MASHAPE_KEY"
-
 SOCIAL_AUTH_LOGIN_URL          = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
 LOGIN_URL = '/login/twitter'
+
+# Get your Twitter key/secret from https://apps.twitter.com/
+SOCIAL_AUTH_TWITTER_KEY = environ.get('CONSUMER_KEY')               # Twitter API Consumer Key
+SOCIAL_AUTH_TWITTER_SECRET = environ.get('CONSUMER_SECRET')         # Twitter API Consumer Secret
+
+TWITTER_ACCESS_TOKEN = environ.get('ACCESS_TOKEN')                  # Twitter API Access Token
+TWITTER_ACCESS_TOKEN_SECRET = environ.get('ACCESS_TOKEN_SECRET')    # Twitter API Access Secret
+
+GNIP_USERNAME = environ.get('GNIP_USERNAME')                         # Gnip username
+GNIP_PASSWORD = environ.get('GNIP_PASSWORD')                         # Gnip password
+GNIP_SEARCH_ENDPOINT = environ.get('GNIP_SEARCH_ENDPOINT')                  # Gnip search endpoint
+
+
