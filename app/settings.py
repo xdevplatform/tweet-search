@@ -110,6 +110,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -120,7 +121,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-SOCIAL_AUTH_LOGIN_URL          = '/'
+SOCIAL_AUTH_LOGIN_URL          = '/login'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
