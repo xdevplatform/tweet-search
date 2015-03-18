@@ -196,7 +196,7 @@ def logout(request):
     
     """Logs out user"""
     auth_logout(request)
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/')
 
 def get_gnip(user):
     

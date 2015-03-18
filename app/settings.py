@@ -14,11 +14,6 @@ from os import environ
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-ROOT_PATH = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -80,7 +75,6 @@ ROOT_URLCONF = 'app.urls'
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -96,6 +90,9 @@ import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(default='sqlite://tweet-search.db')
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -121,13 +118,10 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(ROOT_PATH, "static"),
+    os.path.join(BASE_DIR, "static"),
 )
 
-MEDIA_ROOT = os.path.join(ROOT_PATH, "media")
-MEDIA_URL = '/media/'
-
-SOCIAL_AUTH_LOGIN_URL          = '/login'
+SOCIAL_AUTH_LOGIN_URL          = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
