@@ -156,6 +156,8 @@ def query_tweets(request):
     
         print "%s (%s)" % (query_nrt, queryCount)
     
+        if queryCount > 500:
+            g.paged = True
         tweets = g.query_api(query_nrt, queryCount, use_case="tweets")
         tc = len(tweets)
 
