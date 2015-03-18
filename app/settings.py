@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'social.apps.django_app.default',
     'south',
+    'tags',
     'app',
     'home',
     'gnip_search'

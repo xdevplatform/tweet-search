@@ -63,14 +63,14 @@ def query_chart(request):
             
         g = get_gnip(request.user)
 
-        g.get_repr(query)
-        result = g.get_frequency_list(25)
-        frequency = []
-        for f in result:
-            if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
-                frequency.append(f)
-        frequency = sorted(frequency, key=lambda f: -f[3]) 
-        response_data["frequency"] = frequency
+#         g.get_repr(query, False)
+#         result = g.get_frequency_list(25)
+#         frequency = []
+#         for f in result:
+#             if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
+#                 frequency.append(f)
+#         frequency = sorted(frequency, key=lambda f: -f[3]) 
+#         response_data["frequency"] = frequency
         
         # c3 data format for timeseries (http://c3js.org/samples/timeseries.html)
         #     data: {
@@ -90,15 +90,16 @@ def query_chart(request):
         start_str = start.strftime(DATE_FORMAT)
         end_str = end.strftime(DATE_FORMAT)
         
-        timeline = g.query_api(query_nrt, 0, "timeline", start=start_str, end=end_str, count_bucket="hour")
+        timeline = g.query_api(query_nrt, 0, use_case="timeline", start=start_str, end=end_str, count_bucket="hour", csv_flag=False)
+        timeline = json.loads(timeline)
         
-#         print timeline
+        print timeline
         
         x = ['x']
         series = ['count']
 
         total = 0
-        for t in timeline:
+        for t in timeline['results']:
             
             t_count = t["count"]
             series.append(t_count)

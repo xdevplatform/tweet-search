@@ -9,6 +9,9 @@ var Page = {
 
 	init : function() {
 
+		$("#chart_loading").hide();
+		$("#tweets_loading").hide();
+		
 		$('.datetimepicker').datetimepicker({
 	    	format: 'YYYY-MM-DD HH:mm',
 	    	pickTime: true
@@ -118,6 +121,8 @@ var Page = {
 
 	loadChart : function(query, start, end) {
 
+		 $("#chart_loading").show();
+
 		 $.ajax({
 				type : "GET",
 				url : "/query/chart",
@@ -169,6 +174,7 @@ var Page = {
 					
 					$("#total").html(Utils.integerFormat(response.total));
 					$("#activity_volume").fadeIn();
+					$("#chart_loading").hide();
 					
 					template = $("#templateFrequency").html();
 					Mustache.parse(template);
@@ -186,12 +192,11 @@ var Page = {
 							return Math.round(this[3] * 100) + "%" 
 						}
 						
-						
 						var output = Mustache.render(template, f);
 						$("#frequency").append(output);
 
 					}
-														
+					
 				},
 				error : function(xhr, errorType, exception) {
 					console.log('Error occured');
@@ -201,6 +206,8 @@ var Page = {
 	},
 	
 	loadTweets : function(query, start, end, embedCount) {
+		
+		 $("#tweets_loading").show();
 		
 		 $.ajax({
 				type : "GET",
@@ -227,6 +234,8 @@ var Page = {
 					window.twttr.widgets.load()
 					
 					$("#activity_tweets").fadeIn();
+					
+					$("#tweets_loading").hide();
 														
 				},
 				error : function(xhr, errorType, exception) {

@@ -64,7 +64,7 @@ class GnipSearchAPI(object):
             char_upper_cutoff=100
             space_tokenizer = True
 #         self.freq = SimpleNGrams(charUpperCutoff=char_upper_cutoff, space_tokenizer=space_tokenizer)
-        self.freq = SimpleNGrams(char_upper_cutoff=100, tokenizer="space")
+        self.freq = SimpleNGrams(char_upper_cutoff=char_upper_cutoff, tokenizer="space")
         if use_case.startswith("user"):
             self.index = USER_NAME_INDEX
         elif use_case.startswith("wordc"):

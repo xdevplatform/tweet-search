@@ -98,7 +98,7 @@
 
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" id="results_export"> Export
+		          <input type="checkbox" id="results_export"> CSV
 		        </label>
 		      </div>
 
@@ -162,6 +162,8 @@
 
 </div>
 </div>
+<div id="chart_loading" class="loading"><img src="{{STATIC_URL}}/images/spinner.gif"></div>
+
 
 <div class="row" id="activity_tweets">
 <div class="col-md-offset-1 col-md-10">
@@ -170,12 +172,11 @@
 
 <p class="help-block">Last {{tweets|length}}</p>
 
-<div id="tweets">
+<div id="tweets"></div>
 
 </div>
-
 </div>
-</div>
+<div id="tweets_loading" class="loading"><img src="{{STATIC_URL}}/images/spinner.gif"></div>
 
 {% verbatim %}
 <script id="templateTweet" type="text/template">
