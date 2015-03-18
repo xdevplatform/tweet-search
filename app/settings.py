@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'social.apps.django_app.default',
     'south',
+    'django_verbatim',
     'tags',
     'app',
     'home',
