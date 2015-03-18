@@ -1,5 +1,6 @@
 import datetime
 import random
+import csv
 import json
 
 from django.shortcuts import *
@@ -119,16 +120,17 @@ def query_chart(request):
 def query_tweets(request):
 
     response_data = {}
-
     queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
-    followersCount = int(request.REQUEST.get("followersCount", 0))
-    friendsCount = int(request.REQUEST.get("friendsCount", 0))
-    statusesCount = int(request.REQUEST.get("statusesCount", 0))
-    favoritesCount = int(request.REQUEST.get("favoritesCount", 0))
-    retweets = int(request.REQUEST.get("retweets", 0))
-    english = request.REQUEST.get("english", 0)
-    klout_score = request.REQUEST.get("klout_score", 0)
+    
+#     followersCount = int(request.REQUEST.get("followersCount", 0))
+#     friendsCount = int(request.REQUEST.get("friendsCount", 0))
+#     statusesCount = int(request.REQUEST.get("statusesCount", 0))
+#     favoritesCount = int(request.REQUEST.get("favoritesCount", 0))
+#     retweets = int(request.REQUEST.get("retweets", 0))
+#     english = request.REQUEST.get("english", 0)
+#     klout_score = request.REQUEST.get("klout_score", 0)
 
+    export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
     if query:
 
@@ -183,7 +185,30 @@ def query_tweets(request):
 
         response_data['tweets'] = tweets
         
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    if export == "csv":
+        
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="export.csv"'
+    
+        writer = csv.writer(response)
+        writer.writerow(['count','time','id','user_screen_name','user_id','status','retweet_count','favorite_count','is_retweet','in_reply_to_tweet_id','in_reply_to_screen_name'])
+        
+        count = 0;
+        for t in tweets:
+            count = count + 1
+            body = t['body'].encode('ascii', 'replace')
+            status_id = t['id']
+            status_id = status_id[status_id.rfind(':')+1:]
+            user_id = t['actor']['id']
+            user_id = user_id[user_id.rfind(':')+1:]
+            writer.writerow([count, t['postedTime'], status_id, t['actor']['preferredUsername'], user_id, body, t['retweetCount'], t['favoritesCount'], 'X', 'X', 'X'])
+            
+    
+        return response
+        
+    else:
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def get_sentiment(query, body):
 

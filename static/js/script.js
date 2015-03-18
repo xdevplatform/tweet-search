@@ -109,7 +109,11 @@ var Page = {
 			if ($("#results_tweets").is(':checked')){
 				Page.loadTweets(query, start, end, embedCount);
 			}
-		}
+
+			if ($("#results_export").is(':checked')){
+				Page.loadExport(query, start, end, embedCount);
+			}
+}
 	},
 
 	loadChart : function(query, start, end) {
@@ -230,6 +234,15 @@ var Page = {
 				}
 			});
 		 
+	},
+	
+	loadExport : function(query, start, end, embedCount) {
+		
+		data = {"query" : query, "start": start, "end": end, "embedCount": embedCount, "export": "csv"};
+		url = "/query/tweets?" + Utils.qs(data); 
+			
+		window.open(url);
+		
 	},
 	
 }
