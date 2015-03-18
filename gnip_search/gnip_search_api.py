@@ -145,7 +145,7 @@ class GnipSearchAPI(object):
                 print >> sys.stderr, "Error, results not parsable"
                 print >> sys.stderr, doc
                 sys.exit()
-            # 
+
             repeat = False
             if self.paged:
                 if len(acs) > 0:
@@ -216,7 +216,6 @@ class GnipSearchAPI(object):
             self.res_cnt += 1
             if use_case.startswith("rate"):
                 t_str = self.twitter_parser.procRecordToList(rec)[self.index]
-                print t_str
                 t = datetime.datetime.strptime(t_str,"%Y-%m-%dT%H:%M:%S.000Z")
                 if t < self.oldest_t:
                     self.oldest_t = t
@@ -251,7 +250,8 @@ class GnipSearchAPI(object):
             elif use_case.startswith("time"):
                 self.doc.append(rec)
             else:
-                self.freq.add(self.twitter_parser.procRecordToList(rec)[self.index])
+                thing = self.twitter_parser.procRecordToList(rec)[self.index]
+                self.freq.add(thing)
         return self.get_repr(pt_filter, csv_flag)
 
     def get_repr(self, pt_filter, csv_flag):
