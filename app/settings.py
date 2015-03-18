@@ -43,11 +43,9 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'social.apps.django_app.default',
     'south',
-    'gnip_search',
-    'nltk',
-    'tags',
     'app',
-    'home'
+    'home',
+    'gnip_search'
 )
 
 MIDDLEWARE_CLASSES = (

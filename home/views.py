@@ -10,7 +10,6 @@ from django.conf import settings
 from social.apps.django_app.default.models import UserSocialAuth
 
 from gnip_search import gnip_search_api
-from engine.models import Classifier
 
 # import twitter
 
@@ -156,34 +155,16 @@ def query_tweets(request):
         print "%s (%s)" % (query_nrt, queryCount)
     
         # last N tweets, categorized by sentiment
-        top = []
-        bottom = []
-        tweets = []
-        tweets_cursor = None
-        tc = 0
-        
         if queryCount > 500:
             g.paged = True
             
-        try:
-            
-            while tc < queryCount:
-                tweets_cursor = g.query_api(query_nrt, queryCount)
-                
-                tweets = tweets + tweets_cursor
-                tc = len(tweets)
-                print "query paging: %s " % tc  
-                if len(tweets_cursor) < queryCount:
-                    break
-                
-            for i in range(len(tweets)):
-                tweets[i] = json.loads(tweets[i])
-        
-        except Error, e:
-            print "Error"
-            print tweets_cursor
+        tweets = g.query_api(query_nrt, queryCount, use_case="tweets")
+        tc = len(tweets)
 
-        response_data['tweets'] = tweets
+        print "total size: %s " % tc  
+
+#         for i in range(len(tweets)):
+#             tweets[i] = json.loads(tweets[i])
         
     if export == "csv":
         
@@ -208,23 +189,9 @@ def query_tweets(request):
         return response
         
     else:
+        
+        response_data['tweets'] = tweets
         return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-def get_sentiment(query, body):
-
-    query = query.lower()
-    body = body.lower()
-    
-    # scrub query from body
-    query = query.replace("(", "")
-    query = query.replace(")", "")
-    query = query.replace(" or ", " ")
-    query = query.split(" ")
-    
-    for q in query:
-        body = body.replace(q, "")
-
-    return Classifier.get_sentiment(body)
 
 from django.contrib.auth import logout as auth_logout
 def logout(request):
