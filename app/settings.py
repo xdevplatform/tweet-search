@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 from os import environ
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
