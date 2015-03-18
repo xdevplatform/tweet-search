@@ -127,8 +127,8 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(ROOT_PATH, "media")
 MEDIA_URL = '/media/'
 
-SOCIAL_AUTH_LOGIN_URL          = '/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_URL          = '/login'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
 LOGIN_URL = '/login/twitter'

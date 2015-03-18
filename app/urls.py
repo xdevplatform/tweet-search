@@ -7,10 +7,11 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^$', 'home.views.home', name='home'),
+    url(r'^home$', 'home.views.home', name='home'),
     url(r'^query/chart', 'home.views.query_chart', name='query_chart'),
     url(r'^query/tweets', 'home.views.query_tweets', name='query_tweets'),
     url(r'^logout$', 'home.views.logout', name='logout'),
+    url(r'^login$', 'home.views.login', name='login'),
 
     url(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/bird.ico')),
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt')),
