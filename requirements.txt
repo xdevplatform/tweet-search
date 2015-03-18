@@ -1,4 +1,7 @@
-django>=1.4
-south
-fabric
-
+Django==1.4
+dj-database-url==0.3.0
+gunicorn==19.1.1
+psycopg2==2.5.1
+python-social-auth
+South==1.0.2
+Fabric==1.7.0
