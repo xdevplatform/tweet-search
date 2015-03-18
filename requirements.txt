@@ -5,4 +5,4 @@ psycopg2==2.5.1
 python-social-auth
 South==1.0.2
 Fabric==1.7.0
-acscsv
+gnacs
