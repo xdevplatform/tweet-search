@@ -138,6 +138,9 @@ var Page = {
 						    point: {
 					    	  show: false
 					    	},
+					    	interaction: {
+				    		  enabled: false
+				    		},
 						    data: {
 						    	labels: false,
 //						        x: 'x',
