@@ -6,6 +6,8 @@ $(document).ready(function(){
 
 
 var Page = {
+		
+	maxQueries : 4,
 
 	init : function() {
 
@@ -40,7 +42,7 @@ var Page = {
 		
 		$("#queryAdd").on("click", function(){
 			
-			for (var i = 0; i < 4; i++){
+			for (var i = 1; i < Page.maxQueries; i++){
 				var id = "#query" + i + "_holder";  
 				if ($(id).is(':hidden')){
 					$(id).fadeIn();
@@ -113,8 +115,9 @@ var Page = {
 	},
 	
 	search : function(){
-		var query = $("#query").val();
-		if (query){
+		var singleQuery = true;
+		var query0 = $("#query0").val();
+		if (query0){
 			
 			var now = "";
 			var start = $("#start").val();
@@ -124,28 +127,46 @@ var Page = {
 			Page.clear();
 			$('#buffer').collapse('hide');
 			
-			if ($("#results_chart").is(':checked')){
-				Page.loadChart(query, start, end);
+			var queries = [query0];
+			for (var i = 1; i < Page.maxQueries; i++){
+				var query = $("#query" + i).val();
+				if (query){
+					queries.add(query);
+				}
 			}
 			
-			if ($("#results_tweets").is(':checked')){
-				Page.loadTweets(query, start, end, embedCount);
+			if ($("#results_chart").is(':checked')){
+				Page.loadChart(queries, start, end);
 			}
+			
+			if (singleQuery){
+				if ($("#results_tweets").is(':checked')){
+					Page.loadTweets(query0, start, end, embedCount);
+				}
 
-			if ($("#results_export").is(':checked')){
-				Page.loadExport(query, start, end, embedCount);
+				if ($("#results_export").is(':checked')){
+					Page.loadExport(query0, start, end, embedCount);
+				}
+			} else {
 			}
 }
 	},
 
-	loadChart : function(query, start, end) {
+	loadChart : function(queries, start, end) {
 
 		 $("#chart_loading").show();
 
+	 	 var data = {"start": start, "end": end};
+	 	 if (queries.length == 1){
+	 		 data["query"] = queries[0]; 
+	 	 } else {
+	 		data["queries"] = queries;
+	 	 }
+		 
 		 $.ajax({
 				type : "GET",
 				url : "/query/chart",
-				data : {"query" : query, "start": start, "end": end},
+				data : data,
 				dataType : "json",
 				success : function(response) {
 					

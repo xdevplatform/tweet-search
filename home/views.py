@@ -37,31 +37,31 @@ def query_chart(request):
 
     response_data = {}
 
+    start = request.REQUEST.get("start", "")
+    end = request.REQUEST.get("end", "")
+    days = DEFAULT_TIMEFRAME
+    
+    # ensure end always exists
+    if not end:
+        end = datetime.datetime.now()
+    else:
+        end = datetime.datetime.strptime(end, DATE_FORMAT)
+
+    # ensure start always exists        
+    if not start:
+        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+    else:
+        start = datetime.datetime.strptime(start, DATE_FORMAT)
+
+    # if dates wrong, use default            
+    if start > end:
+        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+
     query = request.REQUEST.get("query", "")
+    queries = request.REQUEST.get("queries", "")
     
     if query:
 
-        start = request.REQUEST.get("start", "")
-        end = request.REQUEST.get("end", "")
-        days = DEFAULT_TIMEFRAME
-        
-        # ensure end always exists
-        if not end:
-            end = datetime.datetime.now()
-        else:
-            end = datetime.datetime.strptime(end, DATE_FORMAT)
-
-        # ensure start always exists        
-        if not start:
-            start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
-        else:
-            start = datetime.datetime.strptime(start, DATE_FORMAT)
-
-        # if dates wrong, use default            
-        if start > end:
-            start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
-            
-            
         # New gnip client with fresh endpoint (this one sets to counts.json)
         g = get_gnip(request.user)
         
@@ -85,6 +85,8 @@ def query_chart(request):
         #             ['data2', 130, 340, 200, 500, 250, 350]
         #         ]
         #     },
+        
+    if not queries:
 
         # New gnip client with fresh endpoint
         g = get_gnip(request.user)
