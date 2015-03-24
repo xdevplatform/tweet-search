@@ -56,11 +56,78 @@ def query_chart(request):
     # if dates wrong, use default            
     if start > end:
         start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+        
+    days = (end-start).days 
+    start_str = start.strftime(DATE_FORMAT)
+    end_str = end.strftime(DATE_FORMAT)
+    
+    response_data['days'] = days
+    response_data['start'] = start.strftime(DATE_FORMAT_JSON)
 
     query = request.REQUEST.get("query", "")
-    queries = request.REQUEST.get("queries", "")
+    queries = request.REQUEST.getlist("queries[]")
     
+        # c3 data format for timeseries (http://c3js.org/samples/timeseries.html)
+        #     data: {
+        #         x: 'x',
+        # //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+        #         columns: [
+        #             ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+        # //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+        #             ['data2', 130, 340, 200, 500, 250, 350]
+        #         ]
+        #     },
+
+    # New gnip client with fresh endpoint
+    g = get_gnip(request.user)
+        
     if query:
+        queries = [query]
+        
+    total = 0
+    queryCount = 0
+    xAxis = None
+    columns = []
+    
+    for q in queries:
+
+        queryTotal = 0
+        queryCount = queryCount + 1
+
+        timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket="hour", csv_flag=False)
+        timeline = json.loads(timeline)
+    
+
+        series = [] 
+        for t in timeline['results']:
+            
+            t_count = t["count"]
+            series.append(t_count)
+            queryTotal = queryTotal + t_count
+            
+        label = q[0:30]
+        if len(q) > 30:
+            label = label + "..."
+        label = label + " (" + str(queryTotal) + ")"
+        series.insert(0, label)
+        columns.append(series)
+        
+        total = total + queryTotal
+
+        # only build timetable xAxis once
+        if not xAxis:      
+            xAxis = ['']
+            for t in timeline['results']:
+                tp = t["timePeriod"]
+                day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
+                xAxis.append(day)
+                columns.insert(0, xAxis)
+                
+    response_data['columns'] = columns
+    response_data['total'] = total
+        
+    # frequencies for single-query call
+    if not queries:
 
         # New gnip client with fresh endpoint (this one sets to counts.json)
         g = get_gnip(request.user)
@@ -74,48 +141,6 @@ def query_chart(request):
                 frequency.append(f)
         frequency = sorted(frequency, key=lambda f: -f[3]) 
         response_data["frequency"] = frequency
-        
-        # c3 data format for timeseries (http://c3js.org/samples/timeseries.html)
-        #     data: {
-        #         x: 'x',
-        # //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-        #         columns: [
-        #             ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
-        # //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
-        #             ['data2', 130, 340, 200, 500, 250, 350]
-        #         ]
-        #     },
-        
-    if not queries:
-
-        # New gnip client with fresh endpoint
-        g = get_gnip(request.user)
-
-        days = (end-start).days 
-        start_str = start.strftime(DATE_FORMAT)
-        end_str = end.strftime(DATE_FORMAT)
-        
-        timeline = g.query_api(query, 0, use_case="timeline", start=start_str, end=end_str, count_bucket="hour", csv_flag=False)
-        timeline = json.loads(timeline)
-        
-        x = ['x']
-        series = ['count']
-
-        total = 0
-        for t in timeline['results']:
-            
-            t_count = t["count"]
-            series.append(t_count)
-            total = total + t_count
-
-            tp = t["timePeriod"]
-            day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
-            x.append(day)
-            
-        response_data['columns'] = [x, series]
-        response_data['total'] = total
-        response_data['days'] = days
-        response_data['start'] = start.strftime(DATE_FORMAT_JSON)
         
     return HttpResponse(json.dumps(response_data), content_type="application/json")
         

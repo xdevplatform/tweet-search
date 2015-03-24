@@ -131,7 +131,8 @@ var Page = {
 			for (var i = 1; i < Page.maxQueries; i++){
 				var query = $("#query" + i).val();
 				if (query){
-					queries.add(query);
+					queries.push(query);
+					singleQuery = false;
 				}
 			}
 			
@@ -148,6 +149,7 @@ var Page = {
 					Page.loadExport(query0, start, end, embedCount);
 				}
 			} else {
+				
 			}
 }
 	},
@@ -225,19 +227,21 @@ var Page = {
 					$("#frequency").find("tr:gt(0)").remove();
 					
 					var frequency = response.frequency;
-					for (var i = 0; i < frequency.length; i++){
-						
-						var f = frequency[i];
-						f.mentionPercent = function(){
-							return Math.round(this[1] * 100) + "%" 
-						}
-						f.activityPercent = function(){
-							return Math.round(this[3] * 100) + "%" 
-						}
-						
-						var output = Mustache.render(template, f);
-						$("#frequency").append(output);
+					if (frequency){
+						for (var i = 0; i < frequency.length; i++){
+							
+							var f = frequency[i];
+							f.mentionPercent = function(){
+								return Math.round(this[1] * 100) + "%" 
+							}
+							f.activityPercent = function(){
+								return Math.round(this[3] * 100) + "%" 
+							}
+							
+							var output = Mustache.render(template, f);
+							$("#frequency").append(output);
 
+						}
 					}
 					
 				},
