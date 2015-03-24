@@ -47,3 +47,8 @@ blockquote img {
 .loading img {
 	width: 40px;
 }
+
+.query-add {
+	margin-top: 12px;
+	margin-bottom: 4px;
+}

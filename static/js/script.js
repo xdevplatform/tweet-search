@@ -36,6 +36,25 @@ var Page = {
 			  
 			});
 		
+		$(".query-add").hide();
+		
+		$("#queryAdd").on("click", function(){
+			
+			for (var i = 0; i < 4; i++){
+				var id = "#query" + i + "_holder";  
+				if ($(id).is(':hidden')){
+					$(id).fadeIn();
+					break;
+				}
+			}
+		});
+		
+		$(".queryRemove").on("click", function(){
+			var id = $(this).data("id");
+			var id = "#" + id;
+			$(id).hide();
+			$(id).find("input").val("");
+		});
 		
 		$("#scrolltop").on("click", function(){
 

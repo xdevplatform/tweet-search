@@ -17,8 +17,38 @@
 	
 	<div class="row top-buffer">
 	  <div class="col-md-10">
-	    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
+    	<input type="text" class="form-control" name="query1" id="query0" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query1}}">
+
+	    <div class="input-group query-add" id="query1_holder">
+	    	<input type="text" class="form-control" name="query1" id="query1" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query2}}">
+	        <span class="input-group-btn">
+        		<button class="btn btn-default queryRemove" data-id="query1_holder" type="button">
+        			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        		</button>
+      		</span>
+  		</div>
+  		
+	    <div class="input-group query-add" id="query2_holder">
+		    <input type="text" class="form-control" name="query2" id="query2" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
+	        <span class="input-group-btn">
+        		<button class="btn btn-default queryRemove" data-id="query2_holder" type="button">
+        			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</button>
+      		</span>
+  		</div>
+
+	    <div class="input-group query-add" id="query3_holder">
+		    <input type="text" class="form-control" name="query3" id="query3" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
+	        <span class="input-group-btn">
+        		<button class="btn btn-default queryRemove" data-id="query3_holder" type="button">
+        			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</button>
+      		</span>
+  		</div>
+  		
 	    <p class="help-block pull-right small">
+	    	<a href="#" id="queryAdd">add query</a>
+	    	| 
 	    	<a href="#" data-toggle="collapse" data-target="#collapseOptions">advanced options</a>
     	</p>
 	  </div>
