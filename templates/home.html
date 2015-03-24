@@ -20,9 +20,6 @@
 	    <input type="text" class="form-control" name="query" id="query" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query}}">
 	    <p class="help-block pull-right small">
 	    	<a href="#" data-toggle="collapse" data-target="#collapseOptions">advanced options</a>
-	    	<span id="related">
-	    		| <a href="#" data-toggle="collapse" data-target="#collapseTerms">related terms</a>
-    		</a>
     	</p>
 	  </div>
 	  <div class="col-md-2">
@@ -35,27 +32,27 @@
 
 		<form class="form-horizontal row">
 		  <div class="form-group form-group-sm">
-		    <label for="inputEmail3" class="col-sm-2 control-label">Start date</label>
+		    <label for="inputEmail3" class="col-sm-3 control-label">Start date</label>
 		    <div class="col-sm-3 input-group date datetimepicker">
 		      <input type="email" class="form-control input-sm" id="start" placeholder="">
 		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <label for="inputPassword3" class="col-sm-2 control-label">End date</label>
+		    <label for="inputPassword3" class="col-sm-3 control-label">End date</label>
 		    <div class="col-sm-3 input-group date datetimepicker">
 		      <input type="email" class="form-control input-sm" id="end" placeholder="">
 		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <label for="inputPassword3" class="col-sm-2 control-label">Tweet count</label>
+		    <label for="inputPassword3" class="col-sm-3 control-label">Tweet count</label>
 		    <div class="col-sm-3 input-group">
-		      <input type="email" class="form-control input-sm" id="embedCount" value="20">
+		      <input type="email" class="form-control input-sm" id="embedCount" value="50">
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <div class="col-sm-offset-2 col-sm-10">
+		    <div class="col-sm-offset-3 col-sm-9">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" id="media"> Has media
@@ -64,7 +61,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <div class="col-sm-offset-2 col-sm-10">
+		    <div class="col-sm-offset-3 col-sm-9">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" id="retweet"> Is retweet
@@ -74,8 +71,8 @@
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <label for="inputPassword3" class="col-sm-2 control-label">Show results</label>
-		    <div class="col-sm-2">
+		    <label for="inputPassword3" class="col-sm-3 control-label">Show results</label>
+		    <div class="col-sm-3">
 
 		      <div class="checkbox">
 		        <label>
@@ -84,7 +81,7 @@
 		      </div>
 
 			</div>
-		    <div class="col-sm-2">
+		    <div class="col-sm-3">
 
 
 		      <div class="checkbox">
@@ -94,7 +91,7 @@
 		      </div>
 
 			</div>
-		    <div class="col-sm-2">
+		    <div class="col-sm-3">
 
 		      <div class="checkbox">
 		        <label>
@@ -114,13 +111,7 @@
 		  </div>
 		</form>
 
-      </div>
-    </div>
-
-    <div id="collapseTerms" class="accordion-body collapse">
-      <div class="accordion-inner">
-
-		<br>
+		<label>Related terms</label>
 		
 		<table class="table table-striped table-condensed" id="frequency">
 		<tr>
@@ -136,6 +127,7 @@
 
       </div>
     </div>
+
 </div>
 
 </div>
