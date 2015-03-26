@@ -79,12 +79,12 @@ var Page = {
 		});
 		
 		$('#media').on("click", function(){
-			Page.toggleTerm("(has:media)", $(this).is(':checked'));
+			Page.toggleTerm("(has:media)", $(this).is(':checked'), false);
 		});
 		
 		$("#retweet_help").hide();
 		$('#retweet').on("click", function(){
-			Page.toggleTerm("(is:retweet)", $(this).is(':checked'));
+			Page.toggleTerm("-(is:retweet)", $(this).is(':checked'), false);
 			if ($(this).is(':checked')){
 				$("#retweet_help").fadeIn();
 			} else {
@@ -95,17 +95,20 @@ var Page = {
 		$(document).on("click", ".term", function(){
 			var val = $(this).val();
 			var newTerm = "(" + val + ")";
-			Page.toggleTerm(newTerm, $(this).is(':checked'));
+			Page.toggleTerm(newTerm, $(this).is(':checked'), true);
 		});
 		
 	},
 	
-	toggleTerm : function(term, checked){
+	toggleTerm : function(term, checked, addIfEmpty){
 		$(".query-input").each(function(){
 			var query = $(this).val();
 			var newTerm = " " + term;
 			var finalTerm = ""
 			if (checked){
+				if (!query && !addIfEmpty){
+					return;
+				}
 				finalTerm = query + newTerm
 			} else {
 				if (query.indexOf(newTerm) >= 0){
@@ -161,24 +164,26 @@ var Page = {
 					singleQuery = false;
 				}
 			}
-			
+
 			if ($("#results_chart").is(':checked')){
 				Page.loadChart(queries, start, end);
 			}
+
+			var queryMashup = "(" + query0 + ")";
+			for (var i = 1; i < queries.length; i++){
+				if (queries[i]){
+					queryMashup = queryMashup + " OR (" + queries[i] + ")" 
+				}
+			}
 			
-			if (singleQuery){
+			Page.loadFrequency(queryMashup, start, end);
+			
+			if ($("#results_tweets").is(':checked')){
+				Page.loadTweets(queryMashup, start, end, embedCount);
+			}
 
-				Page.loadFrequency(query0, start, end);
-
-				if ($("#results_tweets").is(':checked')){
-					Page.loadTweets(query0, start, end, embedCount);
-				}
-
-				if ($("#results_export").is(':checked')){
-					Page.loadExport(query0, start, end, embedCount);
-				}
-			} else {
-				
+			if ($("#results_export").is(':checked')){
+				Page.loadExport(queryMashup, start, end, embedCount);
 			}
 }
 	},
