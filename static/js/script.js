@@ -24,23 +24,29 @@ var Page = {
 
 		$(".query-input").on("keydown", function (e) {
 
+			// on TAB, add query input 
 			if (e.which == 9) {
 				  Page.queryAdd();
-			  }
+				  console.log(".query-input keydown" + e.which);
+			}
 
+			return true;
 		});
 		
-		$(".query-input").on("propertychange change click keyup input paste", function (e) {
+		$(".query-input").on("keyup", function (e) {
 			
+			  // on ENTER, search
 			  if (e.which == 13) {
 				  Page.search();
 			  }
-
-			  var query = $("#query").val();
+			  
+			  var query = $("#query0").val();
 			  if (!query || query == ''){
 				  Page.clear();
 				  $('#buffer').collapse('show');
 			  }
+			  
+			  console.log(".query-input keyup" + e.which);
 			  
 			  return true;
 			  
@@ -95,17 +101,19 @@ var Page = {
 	},
 	
 	toggleTerm : function(term, checked){
-		var query = $("#query").val();
-		var newTerm = " " + term;
-		var finalTerm = ""
-		if (checked){
-			finalTerm = query + newTerm
-		} else {
-			if (query.indexOf(newTerm) >= 0){
-				finalTerm = query.replace(newTerm, "");
+		$(".query-input").each(function(){
+			var query = $(this).val();
+			var newTerm = " " + term;
+			var finalTerm = ""
+			if (checked){
+				finalTerm = query + newTerm
+			} else {
+				if (query.indexOf(newTerm) >= 0){
+					finalTerm = query.replace(newTerm, "");
+				}
 			}
-		}
-		$("#query").val(finalTerm);
+			$(this).val(finalTerm);
+		});
 	},
 	
 	clear : function(){
@@ -159,6 +167,9 @@ var Page = {
 			}
 			
 			if (singleQuery){
+
+				Page.loadFrequency(query0, start, end);
+
 				if ($("#results_tweets").is(':checked')){
 					Page.loadTweets(query0, start, end, embedCount);
 				}
@@ -239,13 +250,41 @@ var Page = {
 					$("#activity_volume").fadeIn();
 					$("#chart_loading").hide();
 					
-					template = $("#templateFrequency").html();
-					Mustache.parse(template);
+				},
+				error : function(xhr, errorType, exception) {
+					console.log('Error occured');
+				}
+			});
+	
+	},
+
+	loadFrequency : function(query, start, end) {
+
+	 	var data = {"start": start, "end": end, "query": query};
+	 	 
+	 	console.log(data);
+		 
+		$("#frequency").find("tr:gt(0)").remove();
+
+		templateLoading = $("#templateFrequencyLoading").html();
+		$("#frequency").append(templateLoading);
+			
+		 $.ajax({
+				type : "GET",
+				url : "/query/frequency",
+				data : data,
+				dataType : "json",
+				success : function(response) {
 					
 					$("#frequency").find("tr:gt(0)").remove();
 					
 					var frequency = response.frequency;
+					console.log(frequency)
 					if (frequency){
+						
+						template = $("#templateFrequency").html();
+						Mustache.parse(template);
+						
 						for (var i = 0; i < frequency.length; i++){
 							
 							var f = frequency[i];

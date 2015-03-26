@@ -20,7 +20,7 @@
     	<input type="text" class="form-control query-input" name="query0" id="query0" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query1}}">
 
 	    <div class="input-group query-input query-add" id="query1_holder">
-	    	<input type="text" class="form-control" name="query1" id="query1" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query2}}">
+	    	<input type="text" class="form-control query-input" name="query1" id="query1" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query2}}">
 	        <span class="input-group-btn">
         		<button tabindex="1" class="btn btn-default queryRemove" data-id="query1_holder" type="button">
         			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -29,7 +29,7 @@
   		</div>
   		
 	    <div class="input-group query-input query-add" id="query2_holder">
-		    <input type="text" class="form-control" name="query2" id="query2" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
+		    <input type="text" class="form-control query-input" name="query2" id="query2" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
 	        <span class="input-group-btn">
         		<button tabindex="2" class="btn btn-default queryRemove" data-id="query2_holder" type="button">
         			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -37,8 +37,8 @@
       		</span>
   		</div>
 
-	    <div class="input-group query-input query-add" id="query3_holder">
-		    <input type="text" class="form-control" name="query3" id="query3" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
+	    <div class="input-group query-add" id="query3_holder">
+		    <input type="text" class="form-control query-input" name="query3" id="query3" placeholder="(Walking Dead) OR #WalkingDead OR #TheWalkingDead has:media" value="{{query3}}">
 	        <span class="input-group-btn">
         		<button tabindex="3" class="btn btn-default queryRemove" data-id="query3_holder" type="button">
         			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -57,45 +57,43 @@
 	  </div>
 	</div>
 
-    <div id="collapseOptions" class="accordion-body collapse">
+    <div id="collapseOptions" class="accordion-body xcollapse">
       <div class="accordion-inner">
 
 		<form class="form-horizontal row">
 		  <div class="form-group form-group-sm">
 		    <label for="inputEmail3" class="col-sm-3 control-label">Start date</label>
 		    <div class="col-sm-3 input-group date datetimepicker">
-		      <input type="email" class="form-control input-sm" id="start" placeholder="">
+		      <input type="text" class="form-control input-sm" id="start" placeholder="">
 		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
 		    <label for="inputPassword3" class="col-sm-3 control-label">End date</label>
 		    <div class="col-sm-3 input-group date datetimepicker">
-		      <input type="email" class="form-control input-sm" id="end" placeholder="">
+		      <input type="text" class="form-control input-sm" id="end" placeholder="">
 		      <span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
 		    <label for="inputPassword3" class="col-sm-3 control-label">Tweet count</label>
 		    <div class="col-sm-3 input-group">
-		      <input type="email" class="form-control input-sm" id="embedCount" value="50">
+		      <input type="text" class="form-control input-sm" id="embedCount" value="50">
 		    </div>
 		  </div>
 		  <div class="form-group form-group-sm">
-		    <div class="col-sm-offset-3 col-sm-9">
+		    <div class="col-sm-offset-3 col-sm-3">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" id="media"> Has media
 		        </label>
 		      </div>
 		    </div>
-		  </div>
-		  <div class="form-group form-group-sm">
-		    <div class="col-sm-offset-3 col-sm-9">
+		    <div class="col-sm-3">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" id="retweet"> Is retweet
-		          <p class="help-block" id="retweet_help">Specify original tweet with (retweets_of_status_id:SOME_ID)</p>
+		          <p class="help-block" id="retweet_help">Specify original tweet: <i>(retweets_of_status_id:SOME_ID)</i></p>
 		        </label>
 		      </div>
 		    </div>
@@ -209,6 +207,12 @@
 		{{actor.displayName}} ({{actor.preferredUsername}})<a href="{{object.link}}">{{object.postedTime}}</a>
 	</blockquote>
 </article>
+</script>
+
+<script id="templateFrequencyLoading" type="text/template">
+<tr>
+	<td colspan="6"><div class="loading"><center><img src="/static/images/spinner.gif"></center></div></td>
+</tr>
 </script>
 
 <script id="templateFrequency" type="text/template">

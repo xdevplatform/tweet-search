@@ -97,7 +97,6 @@ def query_chart(request):
         timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket="hour", csv_flag=False)
         timeline = json.loads(timeline)
     
-
         series = [] 
         for t in timeline['results']:
             
@@ -125,9 +124,16 @@ def query_chart(request):
                 
     response_data['columns'] = columns
     response_data['total'] = total
+    
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
         
-    # frequencies for single-query call
-    if not queries:
+@login_required
+def query_frequency(request):
+
+    response_data = {}
+    
+    query = request.REQUEST.get("query", "")
+    if query:
 
         # New gnip client with fresh endpoint (this one sets to counts.json)
         g = get_gnip(request.user)
@@ -212,7 +218,6 @@ def query_tweets(request):
             user_id = user_id[user_id.rfind(':')+1:]
             writer.writerow([count, t['postedTime'], status_id, t['actor']['preferredUsername'], user_id, body, t['retweetCount'], t['favoritesCount'], 'X', 'X', 'X'])
             
-    
         return response
         
     else:
