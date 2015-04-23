@@ -1,6 +1,10 @@
 $(document).ready(function(){
 	
 	Page.init();
+	if (query0){
+		$("#query0").val(query0);
+		Page.search();
+	}
 		
 });
 
@@ -9,7 +13,7 @@ var Page = {
 		
 	maxQueries : 4,
 
-	init : function() {
+	init : function(query) {
 
 		$("#chart_loading").hide();
 		$("#tweets_loading").hide();

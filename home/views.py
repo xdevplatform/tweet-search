@@ -27,7 +27,8 @@ def login(request):
 @login_required
 def home(request):
     
-    context = {"request": request}
+    query = request.REQUEST.get("query", "")
+    context = {"request": request, "query0": query}
     tweets = []
 
     return render_to_response('home.html', context, context_instance=RequestContext(request))
