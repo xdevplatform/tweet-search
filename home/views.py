@@ -40,6 +40,7 @@ def query_chart(request):
 
     start = request.REQUEST.get("start", "")
     end = request.REQUEST.get("end", "")
+    interval = request.REQUEST.get("interval", "hour")
     days = DEFAULT_TIMEFRAME
     
     # ensure end always exists
@@ -95,7 +96,7 @@ def query_chart(request):
         queryTotal = 0
         queryCount = queryCount + 1
 
-        timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket="hour", csv_flag=False)
+        timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket=interval, csv_flag=False)
         timeline = json.loads(timeline)
     
         series = [] 
@@ -119,7 +120,9 @@ def query_chart(request):
             xAxis = ['']
             for t in timeline['results']:
                 tp = t["timePeriod"]
+                
                 day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
+                
                 xAxis.append(day)
                 columns.insert(0, xAxis)
                 
@@ -131,6 +134,7 @@ def query_chart(request):
 @login_required
 def query_frequency(request):
 
+    sample = 500
     response_data = {}
     
     query = request.REQUEST.get("query", "")
@@ -139,15 +143,17 @@ def query_frequency(request):
         # New gnip client with fresh endpoint (this one sets to counts.json)
         g = get_gnip(request.user)
         
-        timeline = g.query_api(query, 100, use_case="wordcount", csv_flag=False)
+        timeline = g.query_api(query, sample, use_case="wordcount", csv_flag=False)
         
         frequency = []
         result = g.freq.get_tokens(20)
         for f in result:
-            if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
-                frequency.append(f)
+            frequency.append(f)
+#             if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
+#                 frequency.append(f)
         frequency = sorted(frequency, key=lambda f: -f[3]) 
         response_data["frequency"] = frequency
+        response_data["sample"] = sample
         
     return HttpResponse(json.dumps(response_data), content_type="application/json")
         

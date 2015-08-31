@@ -17,6 +17,7 @@ var Page = {
 
 		$("#chart_loading").hide();
 		$("#tweets_loading").hide();
+		$("#frequency_loading").hide();
 		
 		$('.datetimepicker').datetimepicker({
 	    	format: 'YYYY-MM-DD HH:mm',
@@ -24,7 +25,6 @@ var Page = {
 		});
 		
 		Page.clear();
-		$('#buffer').collapse('show');
 
 		$(".query-input").on("keydown", function (e) {
 
@@ -126,6 +126,7 @@ var Page = {
 	clear : function(){
 		$("#activity_volume").hide();
 		$("#activity_tweets").hide();
+		$("#terms_frequency").hide();
 		$("#chart").html("");
 		$("#tweets").html("");
 	},
@@ -170,7 +171,8 @@ var Page = {
 			}
 
 			if ($("#results_chart").is(':checked')){
-				Page.loadChart(queries, start, end);
+				var interval = $("#chart_interval").val();
+				Page.loadChart(queries, start, end, interval);
 			}
 
 			var queryMashup = "(" + query0 + ")";
@@ -180,7 +182,9 @@ var Page = {
 				}
 			}
 			
-			Page.loadFrequency(queryMashup, start, end);
+			if ($("#results_frequency").is(':checked')){
+				Page.loadFrequency(queryMashup, start, end);
+			}
 			
 			if ($("#results_tweets").is(':checked')){
 				Page.loadTweets(queryMashup, start, end, embedCount);
@@ -192,11 +196,11 @@ var Page = {
 }
 	},
 
-	loadChart : function(queries, start, end) {
+	loadChart : function(queries, start, end, interval) {
 
 		 $("#chart_loading").show();
 
-	 	 var data = {"start": start, "end": end};
+	 	 var data = {"start": start, "end": end, "interval": interval};
 	 	 if (queries.length == 1){
 	 		 data["query"] = queries[0]; 
 	 	 } else {
@@ -237,10 +241,14 @@ var Page = {
 						            	culling: true,
 						            	count: response.days + 1,
 						            	format: function (x) {
-						            		var days = x / 24;
+						            		
+						            		var iv = x;
+						            		if (interval == "hour"){
+						            			iv = x / 24;
+						            		} 
 
 						            		var date = new Date(start.valueOf());
-						            	    date.setDate(date.getDate() + days);
+						            	    date.setDate(date.getDate() + iv);
 
 						            	    var dateStr = (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear()
 //					            			console.log(dateStr);
@@ -269,6 +277,9 @@ var Page = {
 
 	loadFrequency : function(query, start, end) {
 
+		$("#terms_frequency").hide();
+		$("#frequency_loading").show();
+		
 	 	var data = {"start": start, "end": end, "query": query};
 	 	 
 	 	console.log(data);
@@ -308,6 +319,12 @@ var Page = {
 							$("#frequency").append(output);
 
 						}
+
+						$(".frequency_sample").html(response.sample);
+						
+						$("#terms_frequency").show();
+						$("#frequency_loading").hide();
+
 					}
 					
 				},
