@@ -9,7 +9,7 @@ from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
 
-from gnip_search import gnip_search_api
+from gnip_search.gnip_search_api import *
 
 # import twitter
 
@@ -96,7 +96,12 @@ def query_chart(request):
         queryTotal = 0
         queryCount = queryCount + 1
 
-        timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket=interval, csv_flag=False)
+        timeline = None
+        try:
+            timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket=interval, csv_flag=False)
+        except QueryError as e:
+            return handleQueryError(e);
+
         timeline = json.loads(timeline)
     
         series = [] 
@@ -143,8 +148,12 @@ def query_frequency(request):
         # New gnip client with fresh endpoint (this one sets to counts.json)
         g = get_gnip(request.user)
         
-        timeline = g.query_api(query, sample, use_case="wordcount", csv_flag=False)
-        
+        timeline = None
+        try:
+            timeline = g.query_api(query, sample, use_case="wordcount", csv_flag=False)
+        except QueryError as e:
+            return handleQueryError(e);
+
         frequency = []
         result = g.freq.get_tokens(20)
         for f in result:
@@ -198,7 +207,14 @@ def query_tweets(request):
     
         if queryCount > 500:
             g.paged = True
-        tweets = g.query_api(query_nrt, queryCount, use_case="tweets")
+        
+        tweets = None
+
+        try:
+            tweets = g.query_api(query_nrt, queryCount, use_case="tweets")
+        except QueryError as e:
+            return handleQueryError(e);
+
         tc = len(tweets)
 
         print "total size: %s " % tc  
@@ -232,6 +248,18 @@ def query_tweets(request):
         response_data['tweets'] = tweets
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+def handleQueryError(e):
+    
+    response_data = {}
+    response_data['error'] = e.message
+    response_data['response'] = e.response
+    response_data['payload'] = e.payload
+    
+    print response_data
+    
+    return HttpResponse(json.dumps(response_data), status=400, content_type="application/json")
+
+
 from django.contrib.auth import logout as auth_logout
 def logout(request):
     
@@ -241,7 +269,7 @@ def logout(request):
 
 def get_gnip(user):
     
-    g = gnip_search_api.GnipSearchAPI(settings.GNIP_USERNAME,
+    g = GnipSearchAPI(settings.GNIP_USERNAME,
         settings.GNIP_PASSWORD,
         settings.GNIP_SEARCH_ENDPOINT)
 

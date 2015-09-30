@@ -6,6 +6,10 @@ body {
   background-color:rgba(64, 153, 255, 0.02)
 }
 
+div.container div.main {
+	margin-top: 40px;
+}
+
 .starter-template {
   padding: 40px 15px;
   text-align: left;

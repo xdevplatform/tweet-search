@@ -67,13 +67,31 @@
 
     <div class="container">
 
-      <div class="">
+      <div class="main">
       
 {% block content %}{% endblock %}
 
       </div>
 
     </div><!-- /.container -->
+
+{% verbatim %}
+<script id="temlateMessageError" type="text/template">
+<div class="alert-danger alert alert-dismissable text-center msg_error" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<div class="msg">{{message}}
+		{{#helper}}
+		<small>
+		<i>
+		<br><br> 
+		{{helper}}
+		</i>
+		</small>
+		{{/helper}}
+	</div>
+</div>
+</script>
+{% endverbatim %}
     
   </body>
 </html>

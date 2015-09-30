@@ -138,13 +138,17 @@ class GnipSearchAPI(object):
                 if "results" in tmp_response:
                     acs.extend(tmp_response["results"])
                 if "error" in tmp_response:
-                    print >> sys.stderr, "Error, invalid request"
-                    print >> sys.stderr, "Query: %s"%self.rule_payload
-                    print >> sys.stderr, "Response: %s"%doc
+                    print tmp_response
+                    raise QueryError(tmp_response.get("error").get("message"), self.rule_payload, tmp_response)
+#                     print >> sys.stderr, "Error, invalid request"
+#                     print >> sys.stderr, "Query: %s"%self.rule_payload
+#                     print >> sys.stderr, "Response: %s"%doc
             except ValueError:
-                print >> sys.stderr, "Error, results not parsable"
-                print >> sys.stderr, doc
-                sys.exit()
+                raise QueryError("No GNIP response", None, None)
+
+#                 print >> sys.stderr, "Error, results not parsable"
+#                 print >> sys.stderr, doc
+#                 sys.exit()
 
             repeat = False
             if self.paged:
@@ -307,6 +311,16 @@ class GnipSearchAPI(object):
                 res.append("%100s -- %4d  %5.2f%% %4d  %5.2f%%"%(x[4], x[0], x[1]*100., x[2], x[3]*100.))
             res.append("-"*WIDTH)
         return "\n".join(res)
+    
+class QueryError(Exception):
+    
+    def __init__(self, message, payload, response):
+        self.message = message
+        self.payload = payload
+        self.response = response
+        
+    def __str__(self):
+        return repr("%s (%s, %s)" % (self.message, self.payload, self.response))
 
 if __name__ == "__main__":
     g = GnipSearchAPI("USER"

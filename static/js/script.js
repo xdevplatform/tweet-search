@@ -15,9 +15,10 @@ var Page = {
 
 	init : function(query) {
 
-		$("#chart_loading").hide();
-		$("#tweets_loading").hide();
-		$("#frequency_loading").hide();
+		$("#msg_error").hide();
+		$("#msg_success").hide();
+		
+		$(".loading").hide();
 		
 		$('.datetimepicker').datetimepicker({
 	    	format: 'YYYY-MM-DD HH:mm',
@@ -85,7 +86,11 @@ var Page = {
 		$('#media').on("click", function(){
 			Page.toggleTerm("(has:media)", $(this).is(':checked'), false);
 		});
-		
+
+		$('#video').on("click", function(){
+			Page.toggleTerm("(url_contains:video.twitter.com)", $(this).is(':checked'), false);
+		});
+
 		$("#retweet_help").hide();
 		$('#retweet').on("click", function(){
 			Page.toggleTerm("-(is:retweet)", $(this).is(':checked'), false);
@@ -149,6 +154,9 @@ var Page = {
 	},
 	
 	search : function(){
+		
+		Page.hideError();
+		
 		var singleQuery = true;
 		var query0 = $("#query0").val();
 		if (query0){
@@ -269,12 +277,12 @@ var Page = {
 					
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 	
 	},
-
+	
 	loadFrequency : function(query, start, end) {
 
 		$("#terms_frequency").hide();
@@ -329,7 +337,7 @@ var Page = {
 					
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 	
@@ -369,7 +377,7 @@ var Page = {
 														
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 		 
@@ -384,6 +392,42 @@ var Page = {
 		
 	},
 	
+	showError : function (msg, small){
+		
+		template = $("#temlateMessageError").html();
+		Mustache.parse(template);
+		
+		var body = {"message": msg}
+		if (small){
+			body['helper'] = "Original query: '"+small+"'"  
+		}
+		var output = Mustache.render(template, body);
+	
+		$("div.container div.main").prepend(output);
+		$(".loading").hide();
+
+//		$("#msg_error div.msg").html(msg);
+//		$("#msg_error").fadeIn();
+	},
+
+	hideError : function (msg){
+		$(".msg_error").hide();
+	},
+
+	handleError : function(xhr, errorType, exception){
+		
+		console.log('Error occured');
+		console.log(xhr.responseJSON.error);
+		console.log(xhr.responseJSON.payload);
+		
+		var helper = "";
+		if (xhr.responseJSON.payload && xhr.responseJSON.payload.query){
+			helper = xhr.responseJSON.payload.query;
+		}
+		
+		Page.showError(xhr.responseJSON.error, helper);
+	},
+
 }
 
 Utils = {
