@@ -25,6 +25,7 @@ def login(request):
     return render_to_response('login.html', context, context_instance=RequestContext(request))
 
 @login_required
+@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def home(request):
     
     query = request.REQUEST.get("query", "")
@@ -45,7 +46,7 @@ def query_chart(request):
     
     # ensure end always exists
     if not end:
-        end = datetime.datetime.now()
+        end = datetime.datetime.now() - datetime.timedelta(minutes=1)
     else:
         end = datetime.datetime.strptime(end, DATE_FORMAT)
 
