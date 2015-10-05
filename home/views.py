@@ -188,6 +188,10 @@ def query_tweets(request):
         g = get_gnip(request.user)
 
         query_nrt = query
+        
+        not_rt = "-(is:retweet)"
+        if (not_rt not in query_nrt):
+            query_nrt = "%s %s" % (query_nrt, not_rt)  
 
 #         if followersCount:
 #             query_nrt = query_nrt + " (followers_count:%s)" % followersCount

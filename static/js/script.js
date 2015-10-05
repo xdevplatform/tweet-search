@@ -134,6 +134,15 @@ var Page = {
 		$("#terms_frequency").hide();
 		$("#chart").html("");
 		$("#tweets").html("");
+		
+		var collapseOptions = $("#collapseOptions.in");
+		console.log('collapseOptions: ' + collapseOptions.length);
+		
+		if (collapseOptions.length > 0){
+			console.log(collapseOptions);
+			$("#collapseOptions").collapse('hide');
+		}
+
 	},
 	
 	queryAdd : function(){
@@ -268,7 +277,7 @@ var Page = {
 						    }
 						};
 					
-					console.log(args);
+					// console.log(args);
 					var chart = c3.generate(args);
 					
 					$("#total").html(Utils.integerFormat(response.total));
@@ -290,7 +299,7 @@ var Page = {
 		
 	 	var data = {"start": start, "end": end, "query": query};
 	 	 
-	 	console.log(data);
+	 	// console.log(data);
 		 
 		$("#frequency").find("tr:gt(0)").remove();
 
@@ -307,7 +316,7 @@ var Page = {
 					$("#frequency").find("tr:gt(0)").remove();
 					
 					var frequency = response.frequency;
-					console.log(frequency)
+					// console.log(frequency)
 					if (frequency){
 						
 						template = $("#templateFrequency").html();
