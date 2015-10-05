@@ -39,33 +39,11 @@ def query_chart(request):
 
     response_data = {}
 
-    start = request.REQUEST.get("start", "")
-    end = request.REQUEST.get("end", "")
-    interval = request.REQUEST.get("interval", "hour")
-    days = DEFAULT_TIMEFRAME
-    
-    # ensure end always exists
-    if not end:
-        end = datetime.datetime.now() - datetime.timedelta(minutes=1)
-    else:
-        end = datetime.datetime.strptime(end, DATE_FORMAT)
-
-    # ensure start always exists        
-    if not start:
-        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
-    else:
-        start = datetime.datetime.strptime(start, DATE_FORMAT)
-
-    # if dates wrong, use default            
-    if start > end:
-        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+    (start, end, interval, days) = get_timeframe(request)
         
-    days = (end-start).days 
-    start_str = start.strftime(DATE_FORMAT)
-    end_str = end.strftime(DATE_FORMAT)
-    
     response_data['days'] = days
     response_data['start'] = start.strftime(DATE_FORMAT_JSON)
+    response_data['end'] = end.strftime(DATE_FORMAT_JSON)
 
     query = request.REQUEST.get("query", "")
     queries = request.REQUEST.getlist("queries[]")
@@ -99,7 +77,7 @@ def query_chart(request):
 
         timeline = None
         try:
-            timeline = g.query_api(q, 0, use_case="timeline", start=start_str, end=end_str, count_bucket=interval, csv_flag=False)
+            timeline = g.query_api(q, 0, use_case="timeline", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), count_bucket=interval, csv_flag=False)
         except QueryError as e:
             return handleQueryError(e);
 
@@ -143,6 +121,8 @@ def query_frequency(request):
     sample = 500
     response_data = {}
     
+    (start, end, interval, days) = get_timeframe(request)
+    
     query = request.REQUEST.get("query", "")
     if query:
 
@@ -151,7 +131,7 @@ def query_frequency(request):
         
         timeline = None
         try:
-            timeline = g.query_api(query, sample, use_case="wordcount", csv_flag=False)
+            timeline = g.query_api(query, sample, use_case="wordcount", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), csv_flag=False)
         except QueryError as e:
             return handleQueryError(e);
 
@@ -171,6 +151,9 @@ def query_frequency(request):
 def query_tweets(request):
 
     response_data = {}
+    
+    (start, end, interval, days) = get_timeframe(request)
+
     queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     
 #     followersCount = int(request.REQUEST.get("followersCount", 0))
@@ -189,8 +172,10 @@ def query_tweets(request):
 
         query_nrt = query
         
+        # scrub tweet display query for no retweets 
         not_rt = "-(is:retweet)"
         if (not_rt not in query_nrt):
+            query_nrt = query_nrt.replace("is:retweet", "")
             query_nrt = "%s %s" % (query_nrt, not_rt)  
 
 #         if followersCount:
@@ -216,7 +201,7 @@ def query_tweets(request):
         tweets = None
 
         try:
-            tweets = g.query_api(query_nrt, queryCount, use_case="tweets")
+            tweets = g.query_api(query_nrt, queryCount, use_case="tweets", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT))
         except QueryError as e:
             return handleQueryError(e);
 
@@ -252,6 +237,33 @@ def query_tweets(request):
         
         response_data['tweets'] = tweets
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def get_timeframe(request):
+
+    start = request.REQUEST.get("start", "")
+    end = request.REQUEST.get("end", "")
+    interval = request.REQUEST.get("interval", "hour")
+    days = DEFAULT_TIMEFRAME
+    
+    # ensure end always exists
+    if not end:
+        end = datetime.datetime.now() - datetime.timedelta(minutes=1)
+    else:
+        end = datetime.datetime.strptime(end, DATE_FORMAT)
+
+    # ensure start always exists        
+    if not start:
+        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+    else:
+        start = datetime.datetime.strptime(start, DATE_FORMAT)
+
+    # if dates wrong, use default            
+    if start > end:
+        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+
+    days = (end-start).days 
+        
+    return (start, end, interval, days)
 
 def handleQueryError(e):
     
