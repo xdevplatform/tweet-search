@@ -1,7 +1,7 @@
 Tweet Search
 =================
 
-This sample uses GNIP search to show the activity volume and latest tweets on any given topic. It also renders tweets using Twitter's widgets.js.
+This sample uses GNIP full archive search to show the activity volume and latest tweets on any given topic. It also renders tweets using Twitter's widgets.js.
 
 <img src="screenshot.png" style="width: 70%;"/>
 
@@ -27,6 +27,8 @@ Getting Started
 	GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
 	GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
 	GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
+	
+Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and is in the format `https://data-api.twitter.com/search/fullarchive/...`.
 
 - To initialize your database, run the from the `tweet-search` directory:
 
@@ -52,7 +54,7 @@ Advanced Options
 
 In the UI, there is a link to show advanced options. Specifically:
 
-- Start/end dates. GNIP search allows a variable timeframe to search, with a maximum of 30 days ago.
+- Start/end dates. GNIP search allows a variable timeframe to search. For optimal results, 30 days will return a response in a reasonable timeframe.
 - Has media. This appends `(has:media)` to your query 
 
 <img src="advanced.png" style="width: 70%;"/>
