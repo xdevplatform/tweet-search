@@ -153,6 +153,9 @@ def query_tweets(request):
     response_data = {}
     
     (start, end, interval, days) = get_timeframe(request)
+    
+    if start + datetime.timedelta(days=DEFAULT_TIMEFRAME) > end:
+        end = start + datetime.timedelta(days=DEFAULT_TIMEFRAME)
 
     queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     
