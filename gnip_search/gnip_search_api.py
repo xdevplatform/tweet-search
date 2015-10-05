@@ -196,8 +196,8 @@ class GnipSearchAPI(object):
             max_results = 500
         self.rule_payload = {
                                 'query': pt_filter
-                         , 'maxResults': int(max_results)
-                          , 'publisher': 'twitter'
+#                          , 'maxResults': int(max_results)
+#                           , 'publisher': 'twitter'
                             }
         if start:
             self.rule_payload["fromDate"] = self.fromDate
@@ -209,7 +209,9 @@ class GnipSearchAPI(object):
             print >>sys.stderr, "API query:"
             print >>sys.stderr, self.rule_payload
             sys.exit() 
-        #
+            
+        print self.rule_payload
+
         self.doc = []
         self.res_cnt = 0
         self.delta_t = 1    # keeps non-'rate' use-cases from crashing 
