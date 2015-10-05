@@ -194,11 +194,15 @@ class GnipSearchAPI(object):
         if self.paged:
             # avoid making many small requests
             max_results = 500
-        self.rule_payload = {
-                                'query': pt_filter
-#                          , 'maxResults': int(max_results)
-#                           , 'publisher': 'twitter'
-                            }
+        self.rule_payload = { 'query': pt_filter }
+        
+        # 30 DAY: to use 30 day search, replace the above line with the below updated rule payload                                                                
+        # self.rule_payload = {
+        #             'query': pt_filter,            
+        #             'maxResults': int(max_results),
+        #             'publisher': 'twitter'
+        #            }
+        
         if start:
             self.rule_payload["fromDate"] = self.fromDate
         if end:

@@ -28,8 +28,6 @@ Getting Started
 	GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
 	GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
 	
-Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and is in the format `https://data-api.twitter.com/search/fullarchive/...`.
-
 - To initialize your database, run the from the `tweet-search` directory:
 
   `python manage.py syncdb`
@@ -39,6 +37,10 @@ Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and 
   `fab start`
   
 - Open a browser and go to http://localhost:9000
+
+Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and is in the format `https://data-api.twitter.com/search/fullarchive/...`.
+If you want to use the 30-day search, open the `gnip_search_api.py` file, search for the term "30 DAY" and follow the instructions. (You also need to 
+use the 30-day search URL, and not the full arhive search URL.)
 
 Sample Queries
 ============
