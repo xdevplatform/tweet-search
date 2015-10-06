@@ -138,7 +138,6 @@ class GnipSearchAPI(object):
                 if "results" in tmp_response:
                     acs.extend(tmp_response["results"])
                 if "error" in tmp_response:
-                    print tmp_response
                     raise QueryError(tmp_response.get("error").get("message"), self.rule_payload, tmp_response)
 #                     print >> sys.stderr, "Error, invalid request"
 #                     print >> sys.stderr, "Query: %s"%self.rule_payload

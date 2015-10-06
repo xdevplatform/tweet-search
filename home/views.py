@@ -15,9 +15,12 @@ from gnip_search.gnip_search_api import *
 
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
 TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
-DEFAULT_TIMEFRAME = 14              # 2 weeks lookback default
+DEFAULT_TIMEFRAME = 90              # When not specified or needed to constrain, this # of days lookback
+TIMEDELTA_DEFAULT_TIMEFRAME = datetime.timedelta(days=DEFAULT_TIMEFRAME)
+TIMEDELTA_DEFAULT_30 = datetime.timedelta(days=30)
+
 DATE_FORMAT = "%Y-%m-%d %H:%M"
-DATE_FORMAT_JSON = '%Y-%m-%dT%H:%M:%S'
+DATE_FORMAT_JSON = "%Y-%m-%dT%H:%M:%S"
 
 def login(request):
     
@@ -40,7 +43,9 @@ def query_chart(request):
     response_data = {}
 
     (start, end, interval, days) = get_timeframe(request)
-        
+    if days > 30:
+        interval = "day"
+    
     response_data['days'] = days
     response_data['start'] = start.strftime(DATE_FORMAT_JSON)
     response_data['end'] = end.strftime(DATE_FORMAT_JSON)
@@ -60,7 +65,7 @@ def query_chart(request):
         #     },
 
     # New gnip client with fresh endpoint
-    g = get_gnip(request.user)
+    g = get_gnip(request.user, paged=True)
         
     if query:
         queries = [query]
@@ -82,11 +87,12 @@ def query_chart(request):
             return handleQueryError(e);
 
         timeline = json.loads(timeline)
-    
+
         series = [] 
         for t in timeline['results']:
             
             t_count = t["count"]
+ 
             series.append(t_count)
             queryTotal = queryTotal + t_count
             
@@ -154,8 +160,8 @@ def query_tweets(request):
     
     (start, end, interval, days) = get_timeframe(request)
     
-    if start + datetime.timedelta(days=DEFAULT_TIMEFRAME) > end:
-        end = start + datetime.timedelta(days=DEFAULT_TIMEFRAME)
+    if (start < datetime.datetime.now() - TIMEDELTA_DEFAULT_TIMEFRAME) and (start + TIMEDELTA_DEFAULT_TIMEFRAME > end):
+        end = start + TIMEDELTA_DEFAULT_TIMEFRAME
 
     queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     
@@ -256,13 +262,13 @@ def get_timeframe(request):
 
     # ensure start always exists        
     if not start:
-        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
     else:
         start = datetime.datetime.strptime(start, DATE_FORMAT)
 
     # if dates wrong, use default            
     if start > end:
-        start = end - datetime.timedelta(days=DEFAULT_TIMEFRAME)
+        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
 
     days = (end-start).days 
         
@@ -275,8 +281,6 @@ def handleQueryError(e):
     response_data['response'] = e.response
     response_data['payload'] = e.payload
     
-    print response_data
-    
     return HttpResponse(json.dumps(response_data), status=400, content_type="application/json")
 
 
@@ -287,10 +291,11 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/')
 
-def get_gnip(user):
+def get_gnip(user, paged=False):
     
     g = GnipSearchAPI(settings.GNIP_USERNAME,
         settings.GNIP_PASSWORD,
-        settings.GNIP_SEARCH_ENDPOINT)
+        settings.GNIP_SEARCH_ENDPOINT,
+        paged=paged)
 
     return g
