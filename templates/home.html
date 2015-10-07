@@ -88,7 +88,7 @@
 		    <div class="col-sm-3">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" id="video">Video embed
+		          <input type="checkbox" id="video">Has video
 		        </label>
 		      </div>
 		    </div>
@@ -237,7 +237,7 @@
 {% verbatim %}
 <script id="templateTweet" type="text/template">
 <article class="white-panel">
-	<blockquote class="twitter-tweet" lang="en">
+	<blockquote class="{{class}}" lang="en">
 		<p>{{body}}</p>
 		&mdash;
 		{{actor.displayName}} ({{actor.preferredUsername}})<a href="{{object.link}}">{{object.postedTime}}</a>

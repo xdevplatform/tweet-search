@@ -355,6 +355,7 @@ var Page = {
 	loadTweets : function(query, start, end, embedCount) {
 		
 		 $("#tweets_loading").show();
+		 var video = $("#video").is(':checked');
 		
 		 $.ajax({
 				type : "GET",
@@ -372,6 +373,14 @@ var Page = {
 					for (var i = 0; i < tweets.length; i++){
 						
 						var tweet = tweets[i];
+						tweet["class"] = "twitter-tweet";
+						
+						// uncomment for video tweets
+//						if (video){
+//							tweet["class"] = "twitter-video";
+//						} else {
+//							tweet["class"] = "twitter-tweet";
+//						}
 						
 						var output = Mustache.render(template, tweet);
 						$("#tweets").append(output);
