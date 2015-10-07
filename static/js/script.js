@@ -88,7 +88,7 @@ var Page = {
 		});
 
 		$('#video').on("click", function(){
-			Page.toggleTerm("(url_contains:video.twitter.com)", $(this).is(':checked'), false);
+			Page.toggleTerm("(has:videos)", $(this).is(':checked'), false);
 		});
 
 		$("#retweet_help").hide();
