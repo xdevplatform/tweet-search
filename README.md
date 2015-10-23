@@ -25,8 +25,10 @@ Getting Started
 - Specify your API and GNIP credentials in app/settings.py under the following section:
 
     `GNIP_USERNAME = 'YOUR_GNIP_USERNAME'`
+    
     `GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'`
-    `GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'`
+    
+    `GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_FULL_ARCHIVE_SEARCH_ENDPOINT'`
 	
 - To initialize your database, run the from the `tweet-search` directory:
 
