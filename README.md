@@ -22,7 +22,7 @@ Getting Started
 
 - Create a Twitter App (https://apps.twitter.com/). Also, ensure that the Callback URL is populated. This can point to http://localhost:9000 to start. If it is not included, you will get Client Authorization errors upon login.
 
-- Specify your API and GNIP credentials in app/settings.py under the following section:
+- Specify your API and GNIP credentials in app/settings_my.py under the following section:
 
     `GNIP_USERNAME = 'YOUR_GNIP_USERNAME'`
     
