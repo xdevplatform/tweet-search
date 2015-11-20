@@ -93,7 +93,7 @@ def query_chart(request):
             
             t_count = t["count"]
  
-            series.append(t_count)
+            series.insert(0, t_count)
             queryTotal = queryTotal + t_count
             
         label = q[0:30]
