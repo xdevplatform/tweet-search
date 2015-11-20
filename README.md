@@ -32,7 +32,7 @@ Getting Started
 	
 - To initialize your database, run the from the `tweet-search` directory:
 
-  `python manage.py syncdb`
+  `python manage.py syncdb --settings=app.settings_my`
   
   Then run:
   
