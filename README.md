@@ -20,17 +20,23 @@ To run this sample code, you can install the required libraries with:
 Getting Started
 ============
 
-- Create a Twitter App (https://apps.twitter.com/)
+- Create a Twitter App (https://apps.twitter.com/). Also, ensure that the Callback URL is populated. This can point to http://localhost:9000 to start. If it is not included, you will get Client Authorization errors upon login.
 
-- Specify your API and GNIP credentials in app/settings.py under the following section:
+- Specify your API and GNIP credentials in app/settings_my.py under the following section:
 
-	GNIP_USERNAME = 'YOUR_GNIP_USERNAME'
-	GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'
-	GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_SEARCH_ENDPOINT'
+    `GNIP_USERNAME = 'YOUR_GNIP_USERNAME'`
+    
+    `GNIP_PASSWORD = 'YOUR_GNIP_PASSWORD'`
+    
+    `GNIP_SEARCH_ENDPOINT = 'YOUR_GNIP_FULL_ARCHIVE_SEARCH_ENDPOINT'`
 	
 - To initialize your database, run the from the `tweet-search` directory:
 
   `python manage.py syncdb`
+  
+  Then run:
+  
+  `python manage.py migrate --settings=app.settings_my`
 
 - To start the server, run the following from the `tweet-search` directory:
 
