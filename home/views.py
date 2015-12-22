@@ -53,7 +53,7 @@ def query_chart(request):
     query = request.REQUEST.get("query", "")
     queries = request.REQUEST.getlist("queries[]")
     # New gnip client with fresh endpoint
-    g = get_gnip(request.user, paged=True)
+    g = get_gnip(paged=True)
     if query:
         queries = [query]
     total = 0
@@ -115,7 +115,7 @@ def query_frequency(request):
     if query:
 
         # New gnip client with fresh endpoint (this one sets to counts.json)
-        g = get_gnip(request.user)
+        g = get_gnip()
 
         timeline = None
         try:
@@ -162,7 +162,7 @@ def query_tweets(request):
     query = request.REQUEST.get("query", "")
     if query:
 
-        g = get_gnip(request.user)
+        g = get_gnip()
 
         query_nrt = query
 
@@ -273,7 +273,7 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/')
 
-def get_gnip(user, paged=False):
+def get_gnip(paged=False):
     """
     Returns Gnip Search API
     """
