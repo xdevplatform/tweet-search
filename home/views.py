@@ -3,6 +3,9 @@ import random
 import csv
 import json
 
+from timeframe import Timeframe
+from timeseries import Timeseries
+
 # TODO: Fix * imports
 from django.shortcuts import *
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -12,6 +15,7 @@ from django.conf import settings
 from social.apps.django_app.default.models import UserSocialAuth
 
 from gnip_search.gnip_search_api import GnipSearchAPI
+from gnip_search.gnip_search_api import QueryError as GNIPQueryError
 # import twitter
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
 TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
@@ -43,17 +47,23 @@ def query_chart(request):
     """
     Returns query chart for given request
     """
+
     response_data = {}
-    (start, end, interval, days) = get_timeframe(request)
-    if days > 30:
-        interval = "day"
-    response_data['days'] = days
-    response_data['start'] = start.strftime(DATE_FORMAT_JSON)
-    response_data['end'] = end.strftime(DATE_FORMAT_JSON)
+    request_timeframe = Timeframe(start=request.REQUEST.get("start", ""),
+                          end=request.REQUEST.get("end", ""),
+                          interval = request.REQUEST.get("interval", "hour"))
+
+    response_data['days'] = request_timeframe.days
+    response_data['start'] = request_timeframe.start.strftime(DATE_FORMAT_JSON)
+    response_data['end'] = request_timeframe.end.strftime(DATE_FORMAT_JSON)
+
     query = request.REQUEST.get("query", "")
     queries = request.REQUEST.getlist("queries[]")
+
     # New gnip client with fresh endpoint
     g = get_gnip(paged=True)
+
+    # Process single/multiple queries
     if query:
         queries = [query]
     total = 0
@@ -61,43 +71,18 @@ def query_chart(request):
     xAxis = None
     columns = []
     for q in queries:
-        queryTotal = 0
-        queryCount = queryCount + 1
         timeline = None
         try:
-            timeline = g.query_api(q, 0, use_case="timeline", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), count_bucket=interval, csv_flag=False)
-        except QueryError as e:
-            return handleQueryError(e);
-
-        timeline = json.loads(timeline)
-
-        series = []
-        for t in timeline['results']:
-
-            t_count = t["count"]
-
-            series.insert(0, t_count)
-            queryTotal = queryTotal + t_count
-
-        label = q[0:30]
-        if len(q) > 30:
-            label = label + "..."
-        label = label + " (" + str(queryTotal) + ")"
-        series.insert(0, label)
-        columns.append(series)
-
-        total = total + queryTotal
-
-        # only build timetable xAxis once
-        if not xAxis:
-            xAxis = ['']
-            for t in timeline['results']:
-                tp = t["timePeriod"]
-
-                day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
-
-                xAxis.append(day)
-                columns.insert(0, xAxis)
+            timeline = g.query_api(pt_filter = q,
+                        max_results = 0,
+                        use_case = "timeline",
+                        start = request_timeframe.start.strftime(DATE_FORMAT),
+                        end = request_timeframe.end.strftime(DATE_FORMAT),
+                        count_bucket = request_timeframe.interval,
+                        csv_flag = False)
+        except GNIPQueryError as e:
+            return handle_query_error(e);
+        (timeline, columns, total, xAxis) = Timeseries(query, timeline, columns, total, xAxis)
 
     response_data['columns'] = columns
     response_data['total'] = total
@@ -256,7 +241,7 @@ def get_timeframe(request):
     days = (end-start).days
     return (start, end, interval, days)
 
-def handleQueryError(e):
+def handle_query_error(e):
     """
     Returns HTTP response with an error
     """
