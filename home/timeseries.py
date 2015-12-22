@@ -6,7 +6,6 @@ class Timeseries:
     """
     Class to produce timeseries data
     """
-
     def __init__(self, query, timeline, columns, total, xAxis=None):
         self.columns = columns
         self.query = query
@@ -18,6 +17,9 @@ class Timeseries:
         self.xAxis = self.create_x_axis(xAxis)
 
     def create_series(self):
+        """
+        Returns a series based on `results` from timeline
+        """
         series = []
         for timeline_object in self.timeline['results']:
             count = timeline_object["count"]
@@ -31,6 +33,9 @@ class Timeseries:
         return series
 
     def create_x_axis(self, xAxis):
+        """
+        Returns xAxis for timeseries
+        """
         if not xAxis:
             xAxis = []
             for t in self.timeline['results']:
@@ -43,5 +48,9 @@ class Timeseries:
                 xAxis.append(day)
         return xAxis
 
-    def get(self):
-        return (self.timeline, self.columns, self.total, self.xAxis)
+if __name__ == "__main__":
+    ts = Timeseries(query="gareth",
+               timeline="""{"results": [{"count": 268477, "timePeriod": "201512220000"},  {"count": 316681, "timePeriod": "201512210000"}]}""",
+               columns=[],
+               total=0)
+    print ts.columns
