@@ -6,6 +6,7 @@ import json
 from chart import Chart
 from timeframe import Timeframe
 from frequency import Frequency
+from tweets import Tweets
 
 # TODO: Fix * imports
 from django.shortcuts import *
@@ -96,83 +97,22 @@ def query_tweets(request):
     """
     Returns tweet query
     """
+    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
+                                  end = request.REQUEST.get("end", None),
+                                  interval = request.REQUEST.get("interval", "hour"))
 
-    response_data = {}
-
-    (start, end, interval, days) = get_timeframe(request)
-
-    if (start < datetime.datetime.now() - TIMEDELTA_DEFAULT_TIMEFRAME) and (start + TIMEDELTA_DEFAULT_TIMEFRAME > end):
-        end = start + TIMEDELTA_DEFAULT_TIMEFRAME
-
-    queryCount = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
-
-#     followersCount = int(request.REQUEST.get("followersCount", 0))
-#     friendsCount = int(request.REQUEST.get("friendsCount", 0))
-#     statusesCount = int(request.REQUEST.get("statusesCount", 0))
-#     favoritesCount = int(request.REQUEST.get("favoritesCount", 0))
-#     retweets = int(request.REQUEST.get("retweets", 0))
-#     english = request.REQUEST.get("english", 0)
-#     klout_score = request.REQUEST.get("klout_score", 0)
-
+    query_count = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
-    if query:
-
-        g = get_gnip()
-
-        query_nrt = query
-
-        # scrub tweet display query for no retweets
-        not_rt = "-(is:retweet)"
-        if (not_rt not in query_nrt):
-            query_nrt = query_nrt.replace("is:retweet", "")
-            query_nrt = "%s %s" % (query_nrt, not_rt)
-
-#         if followersCount:
-#             query_nrt = query_nrt + " (followers_count:%s)" % followersCount
-#         if friendsCount:
-#             query_nrt = query_nrt + " (friends_count:%s)" % friendsCount
-#         if statusesCount:
-#             query_nrt = query_nrt + " (statuses_count:%s)" % statusesCount
-#         if favoritesCount:
-#             query_nrt = query_nrt + " (favorites_count:%s)" % favoritesCount
-#         if not retweets:
-#             query_nrt = query_nrt + " -(is:retweet)"
-#         if english:
-#             query_nrt = query_nrt + " (lang:en)"
-#         if klout_score:
-#             query_nrt = query_nrt + " klout_score:%s" % klout_score
-
-        print "%s (%s)" % (query_nrt, queryCount)
-
-        if queryCount > 500:
-            g.paged = True
-
-        tweets = None
-
-        try:
-            tweets = g.query_api(query_nrt, queryCount, use_case="tweets", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT))
-        except QueryError as e:
-            return handleQueryError(e);
-
-        tc = len(tweets)
-
-        print "total size: %s " % tc
-
-#         for i in range(len(tweets)):
-#             tweets[i] = json.loads(tweets[i])
-
+    tweets = Tweets(query=query, query_count=query_count, start=request_timeframe.start, end=request_timeframe.end, export=export)
+    response_data = {}
     if export == "csv":
-
-        # Create the HttpResponse object with the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="export.csv"'
-
         writer = csv.writer(response)
         writer.writerow(['count','time','id','user_screen_name','user_id','status','retweet_count','favorite_count','is_retweet','in_reply_to_tweet_id','in_reply_to_screen_name'])
-
         count = 0;
-        for t in tweets:
+        for t in tweets.get_data():
             count = count + 1
             body = t['body'].encode('ascii', 'replace')
             status_id = t['id']
@@ -180,13 +120,10 @@ def query_tweets(request):
             user_id = t['actor']['id']
             user_id = user_id[user_id.rfind(':')+1:]
             writer.writerow([count, t['postedTime'], status_id, t['actor']['preferredUsername'], user_id, body, t['retweetCount'], t['favoritesCount'], 'X', 'X', 'X'])
-
-        return response
-
+            return response
     else:
-
-        response_data['tweets'] = tweets
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        response_data['tweets'] = tweets.get_data()
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def get_timeframe(request):
     """
