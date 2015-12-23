@@ -3,8 +3,9 @@ import random
 import csv
 import json
 
+from chart import Chart
 from timeframe import Timeframe
-from timeseries import Timeseries
+from frequency import Frequency
 
 # TODO: Fix * imports
 from django.shortcuts import *
@@ -47,77 +48,47 @@ def query_chart(request):
     """
     Returns query chart for given request
     """
+    # TODO: Move this to one line e.g. queries to query
+    query = request.REQUEST.get("query", None)
+    queries = request.REQUEST.getlist("queries[]")
+    if query:
+        queries = [query]
+
+    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
+                                  end = request.REQUEST.get("end", None),
+                                  interval = request.REQUEST.get("interval", "hour"))
+
+    response_chart = Chart(queries = queries,
+                           start = request_timeframe.start,
+                           end = request_timeframe.end,
+                           interval = request_timeframe.interval)
 
     response_data = {}
-    request_timeframe = Timeframe(start=request.REQUEST.get("start", ""),
-                          end=request.REQUEST.get("end", ""),
-                          interval = request.REQUEST.get("interval", "hour"))
-
     response_data['days'] = request_timeframe.days
     response_data['start'] = request_timeframe.start.strftime(DATE_FORMAT_JSON)
     response_data['end'] = request_timeframe.end.strftime(DATE_FORMAT_JSON)
+    response_data['columns'] = response_chart.columns
+    response_data['total'] = response_chart.total
 
-    query = request.REQUEST.get("query", "")
-    queries = request.REQUEST.getlist("queries[]")
-
-    # New gnip client with fresh endpoint
-    g = get_gnip(paged=True)
-
-    # Process single/multiple queries
-    if query:
-        queries = [query]
-    total = 0
-    queryCount = 0
-    xAxis = None
-    columns = []
-    for q in queries:
-        timeline = None
-        try:
-            timeline = g.query_api(pt_filter = q,
-                        max_results = 0,
-                        use_case = "timeline",
-                        start = request_timeframe.start.strftime(DATE_FORMAT),
-                        end = request_timeframe.end.strftime(DATE_FORMAT),
-                        count_bucket = request_timeframe.interval,
-                        csv_flag = False)
-        except GNIPQueryError as e:
-            return handle_query_error(e);
-        (timeline, columns, total, xAxis) = Timeseries(query, timeline, columns, total, xAxis)
-
-    response_data['columns'] = columns
-    response_data['total'] = total
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
 def query_frequency(request):
-
-    sample = 500
+    query = request.REQUEST.get("query", None)
     response_data = {}
-
-    (start, end, interval, days) = get_timeframe(request)
-
-    query = request.REQUEST.get("query", "")
-    if query:
-
-        # New gnip client with fresh endpoint (this one sets to counts.json)
-        g = get_gnip()
-
-        timeline = None
-        try:
-            timeline = g.query_api(query, sample, use_case="wordcount", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), csv_flag=False)
-        except QueryError as e:
-            return handleQueryError(e);
-
-        frequency = []
-        result = g.freq.get_tokens(20)
-        for f in result:
-            frequency.append(f)
-#             if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
-#                 frequency.append(f)
-        frequency = sorted(frequency, key=lambda f: -f[3])
-        response_data["frequency"] = frequency
+    sample = 500
+    if query is not None:
+        # Get Timeframe e.g. process time from request
+        request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
+                                      end = request.REQUEST.get("end", None),
+                                      interval = request.REQUEST.get("interval", "hour"))
+        # Query GNIP and get frequency
+        data = Frequency(query = query,
+                              sample = sample,
+                              start = request_timeframe.start,
+                              end = request_timeframe.end)
+        response_data["frequency"] = data.freq
         response_data["sample"] = sample
-
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required

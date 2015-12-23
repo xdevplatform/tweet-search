@@ -2,6 +2,7 @@ import unittest
 import timeframe
 import timeseries
 import datetime
+import frequency
 #from django.test import TestCase
 
 # Create your tests here.
@@ -25,9 +26,16 @@ class Tests(unittest.TestCase):
         self.assertEqual(type(ts.columns), list)
 
     def test_chart(self):
+        # TODO: fix chart
         request_timeframe = timeframe.Timeframe(start = "", end = "", interval = "")
         queries = ["#TwitterDev"]
         self.assertEqual(type(queries), list)
+
+    def test_frequency(self):
+        # TODO: fix with GNIP
+        request_timeframe = timeframe.Timeframe(start = "", end = "", interval = "")
+        frequency = []
+        self.assertEqual(type(frequency), list)
 
 if __name__ == '__main__':
     unittest.main()
