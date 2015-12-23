@@ -6,7 +6,9 @@ import datetime
 
 # Create your tests here.
 class Tests(unittest.TestCase):
-
+    """
+    Class for tests
+    """
     def setUp(self):
         pass
 
@@ -21,6 +23,11 @@ class Tests(unittest.TestCase):
                    columns=[],
                    total=0)
         self.assertEqual(type(ts.columns), list)
+
+    def test_chart(self):
+        request_timeframe = timeframe.Timeframe(start = "", end = "", interval = "")
+        queries = ["#TwitterDev"]
+        self.assertEqual(type(queries), list)
 
 if __name__ == '__main__':
     unittest.main()
