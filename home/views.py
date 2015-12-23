@@ -3,6 +3,10 @@ import random
 import csv
 import json
 
+from chart import Chart
+from timeframe import Timeframe
+from frequency import Frequency
+
 # TODO: Fix * imports
 from django.shortcuts import *
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -12,6 +16,7 @@ from django.conf import settings
 from social.apps.django_app.default.models import UserSocialAuth
 
 from gnip_search.gnip_search_api import GnipSearchAPI
+from gnip_search.gnip_search_api import QueryError as GNIPQueryError
 # import twitter
 KEYWORD_RELEVANCE_THRESHOLD = .1    # Only show related terms if > 10%
 TWEET_QUERY_COUNT = 10              # For real identification, > 100. Max of 500 via Search API.
@@ -43,96 +48,47 @@ def query_chart(request):
     """
     Returns query chart for given request
     """
-    response_data = {}
-    (start, end, interval, days) = get_timeframe(request)
-    if days > 30:
-        interval = "day"
-    response_data['days'] = days
-    response_data['start'] = start.strftime(DATE_FORMAT_JSON)
-    response_data['end'] = end.strftime(DATE_FORMAT_JSON)
-    query = request.REQUEST.get("query", "")
+    # TODO: Move this to one line e.g. queries to query
+    query = request.REQUEST.get("query", None)
     queries = request.REQUEST.getlist("queries[]")
-    # New gnip client with fresh endpoint
-    g = get_gnip(request.user, paged=True)
     if query:
         queries = [query]
-    total = 0
-    queryCount = 0
-    xAxis = None
-    columns = []
-    for q in queries:
-        queryTotal = 0
-        queryCount = queryCount + 1
-        timeline = None
-        try:
-            timeline = g.query_api(q, 0, use_case="timeline", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), count_bucket=interval, csv_flag=False)
-        except QueryError as e:
-            return handleQueryError(e);
 
-        timeline = json.loads(timeline)
+    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
+                                  end = request.REQUEST.get("end", None),
+                                  interval = request.REQUEST.get("interval", "hour"))
 
-        series = []
-        for t in timeline['results']:
+    response_chart = Chart(queries = queries,
+                           start = request_timeframe.start,
+                           end = request_timeframe.end,
+                           interval = request_timeframe.interval)
 
-            t_count = t["count"]
+    response_data = {}
+    response_data['days'] = request_timeframe.days
+    response_data['start'] = request_timeframe.start.strftime(DATE_FORMAT_JSON)
+    response_data['end'] = request_timeframe.end.strftime(DATE_FORMAT_JSON)
+    response_data['columns'] = response_chart.columns
+    response_data['total'] = response_chart.total
 
-            series.insert(0, t_count)
-            queryTotal = queryTotal + t_count
-
-        label = q[0:30]
-        if len(q) > 30:
-            label = label + "..."
-        label = label + " (" + str(queryTotal) + ")"
-        series.insert(0, label)
-        columns.append(series)
-
-        total = total + queryTotal
-
-        # only build timetable xAxis once
-        if not xAxis:
-            xAxis = ['']
-            for t in timeline['results']:
-                tp = t["timePeriod"]
-
-                day = str(tp[0:4] + "-" + tp[4:6] + "-" + tp[6:8] + " " + tp[8:10] + ":" + "00:00")
-
-                xAxis.append(day)
-                columns.insert(0, xAxis)
-
-    response_data['columns'] = columns
-    response_data['total'] = total
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
 def query_frequency(request):
-
-    sample = 500
+    query = request.REQUEST.get("query", None)
     response_data = {}
-
-    (start, end, interval, days) = get_timeframe(request)
-
-    query = request.REQUEST.get("query", "")
-    if query:
-
-        # New gnip client with fresh endpoint (this one sets to counts.json)
-        g = get_gnip(request.user)
-
-        timeline = None
-        try:
-            timeline = g.query_api(query, sample, use_case="wordcount", start=start.strftime(DATE_FORMAT), end=end.strftime(DATE_FORMAT), csv_flag=False)
-        except QueryError as e:
-            return handleQueryError(e);
-
-        frequency = []
-        result = g.freq.get_tokens(20)
-        for f in result:
-            frequency.append(f)
-#             if float(f[3]) >= KEYWORD_RELEVANCE_THRESHOLD:
-#                 frequency.append(f)
-        frequency = sorted(frequency, key=lambda f: -f[3])
-        response_data["frequency"] = frequency
+    sample = 500
+    if query is not None:
+        # Get Timeframe e.g. process time from request
+        request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
+                                      end = request.REQUEST.get("end", None),
+                                      interval = request.REQUEST.get("interval", "hour"))
+        # Query GNIP and get frequency
+        data = Frequency(query = query,
+                              sample = sample,
+                              start = request_timeframe.start,
+                              end = request_timeframe.end)
+        response_data["frequency"] = data.freq
         response_data["sample"] = sample
-
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
@@ -162,7 +118,7 @@ def query_tweets(request):
     query = request.REQUEST.get("query", "")
     if query:
 
-        g = get_gnip(request.user)
+        g = get_gnip()
 
         query_nrt = query
 
@@ -256,7 +212,7 @@ def get_timeframe(request):
     days = (end-start).days
     return (start, end, interval, days)
 
-def handleQueryError(e):
+def handle_query_error(e):
     """
     Returns HTTP response with an error
     """
@@ -273,7 +229,7 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/')
 
-def get_gnip(user, paged=False):
+def get_gnip(paged=False):
     """
     Returns Gnip Search API
     """
