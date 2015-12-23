@@ -25,9 +25,9 @@ class Chart:
         """
         # New gnip client with fresh endpoint
         g = GnipSearchAPI(settings.GNIP_USERNAME,
-            settings.GNIP_PASSWORD,
-            settings.GNIP_SEARCH_ENDPOINT,
-            paged=True)
+                          settings.GNIP_PASSWORD,
+                          settings.GNIP_SEARCH_ENDPOINT,
+                          paged=True)
         columns = []
         for q in self.queries:
             timeline = None
