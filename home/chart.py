@@ -30,6 +30,7 @@ class Chart:
                           paged=True)
         columns = []
         for q in self.queries:
+
             timeline = None
             try:
                 timeline = g.query_api(pt_filter = str(q),

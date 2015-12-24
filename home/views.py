@@ -97,14 +97,11 @@ def query_tweets(request):
     """
     Returns tweet query
     """
-    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
-                                  end = request.REQUEST.get("end", None),
-                                  interval = request.REQUEST.get("interval", "hour"))
-
     query_count = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
-    tweets = Tweets(query=query, query_count=query_count, start=request_timeframe.start, end=request_timeframe.end, export=export)
+    tweets = Tweets(query=query, query_count=query_count, request=request)
+    
     response_data = {}
     if export == "csv":
         response = HttpResponse(content_type='text/csv')
