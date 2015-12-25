@@ -148,13 +148,3 @@ def logout(request):
     """
     auth_logout(request)
     return HttpResponseRedirect('/')
-
-def get_gnip(paged=False):
-    """
-    Returns Gnip Search API
-    """
-    g = GnipSearchAPI(settings.GNIP_USERNAME,
-        settings.GNIP_PASSWORD,
-        settings.GNIP_SEARCH_ENDPOINT,
-        paged=paged)
-    return g
