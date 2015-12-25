@@ -108,30 +108,6 @@ def query_tweets(request):
         response_data['tweets'] = tweets.get_data()
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-def get_timeframe(request):
-    """
-    Returns timeframe in format (start, end, interval,days)
-    """
-    start = request.REQUEST.get("start", "")
-    end = request.REQUEST.get("end", "")
-    interval = request.REQUEST.get("interval", "hour")
-    days = DEFAULT_TIMEFRAME
-    # ensure end always exists
-    if not end:
-        end = datetime.datetime.now() - datetime.timedelta(minutes=1)
-    else:
-        end = datetime.datetime.strptime(end, DATE_FORMAT)
-    # ensure start always exists
-    if not start:
-        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
-    else:
-        start = datetime.datetime.strptime(start, DATE_FORMAT)
-    # if dates wrong, use default
-    if start > end:
-        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
-    days = (end-start).days
-    return (start, end, interval, days)
-
 def handle_query_error(e):
     """
     Returns HTTP response with an error
