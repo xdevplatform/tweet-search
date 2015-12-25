@@ -12,13 +12,17 @@ class GNIP:
     DATE_FORMAT = "%Y-%m-%d %H:%M"
     TIMEDELTA_DEFAULT_TIMEFRAME = datetime.timedelta(days=DEFAULT_TIMEFRAME)
 
-    def __init__(self, request, query, query_count=None, interval=None):
+    def __init__(self, request, query, query_count=None):
         self.api_request = self.api()
         self.request = request
         self.timeframe = self.request_timeframe(self.request)
         self.query = query
         self.query_count = query_count
-        self.interval = interval
+        self.interval = self.request.REQUEST.get("interval", "hour")
+        #TODO: FIX THIS
+        self.days = self.timeframe.days
+        self.start = self.timeframe.start
+        self.end = self.timeframe.end
 
     def request_timeframe(self, request):
         """

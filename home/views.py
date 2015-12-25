@@ -55,23 +55,9 @@ def query_chart(request):
     if query:
         queries = [query]
 
-    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
-                                  end = request.REQUEST.get("end", None),
-                                  interval = request.REQUEST.get("interval", "hour"))
+    response_chart = Chart(queries = queries, request=request).data
 
-    response_chart = Chart(queries = queries,
-                           start = request_timeframe.start,
-                           end = request_timeframe.end,
-                           interval = request_timeframe.interval)
-
-    response_data = {}
-    response_data['days'] = request_timeframe.days
-    response_data['start'] = request_timeframe.start.strftime(DATE_FORMAT_JSON)
-    response_data['end'] = request_timeframe.end.strftime(DATE_FORMAT_JSON)
-    response_data['columns'] = response_chart.columns
-    response_data['total'] = response_chart.total
-
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return HttpResponse(json.dumps(response_chart), content_type="application/json")
 
 @login_required
 def query_frequency(request):
@@ -101,7 +87,7 @@ def query_tweets(request):
     export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
     tweets = Tweets(query=query, query_count=query_count, request=request)
-    
+
     response_data = {}
     if export == "csv":
         response = HttpResponse(content_type='text/csv')
