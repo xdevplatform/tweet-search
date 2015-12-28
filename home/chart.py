@@ -1,44 +1,44 @@
+#TODO: WRITE TESTS
 from timeseries import Timeseries
 from gnip_search.gnip_search_api import GnipSearchAPI
 from gnip_search.gnip_search_api import QueryError as GNIPQueryError
 from django.conf import settings
+import requests
 
 class Chart:
     """
     Class for creating line graph chart
     """
     DATE_FORMAT = "%Y-%m-%d %H:%M"
+    DATE_FORMAT_JSON = "%Y-%m-%dT%H:%M:%S"
 
-    def __init__(self, queries, start, end, interval):
+    def __init__(self, queries, request):
         self.queries = queries
-        self.start = start
-        self.end = end
-        self.interval = interval
+        self.request = request
         self.total = 0
         self.query_count = 0
         self.x_axis = None
-        self.columns = self.create()
+        self.data = self.create()
 
     def create(self):
         """
         Returns data in format {"columns": } used in UI
         """
-        # New gnip client with fresh endpoint
-        g = GnipSearchAPI(settings.GNIP_USERNAME,
-                          settings.GNIP_PASSWORD,
-                          settings.GNIP_SEARCH_ENDPOINT,
-                          paged=True)
+        data = {}
         columns = []
         for q in self.queries:
+
             timeline = None
             try:
-                timeline = g.query_api(pt_filter = str(q),
-                            max_results = 0,
-                            use_case = "timeline",
-                            start = self.start.strftime(self.DATE_FORMAT),
-                            end = self.end.strftime(self.DATE_FORMAT),
-                            count_bucket = self.interval,
-                            csv_flag = False)
+                request = requests.GNIP(request=self.request, query=q)
+                timeline = request.get_timeline()
+                if 'start' not in data:
+                    data['start'] = request.start.strftime(self.DATE_FORMAT_JSON)
+                if 'end' not in data:
+                    data['end'] = request.end.strftime(self.DATE_FORMAT_JSON)
+                if 'days' not in data:
+                    data['days'] = request.days
+
             except GNIPQueryError as e:
                 print e
 
@@ -53,4 +53,6 @@ class Chart:
             columns.append(time_series_data.series)
             self.total = time_series_data.total
 
-        return columns
+        data['columns'] = columns
+        data['total'] = self.total
+        return data

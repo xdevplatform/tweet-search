@@ -55,23 +55,9 @@ def query_chart(request):
     if query:
         queries = [query]
 
-    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
-                                  end = request.REQUEST.get("end", None),
-                                  interval = request.REQUEST.get("interval", "hour"))
+    response_chart = Chart(queries = queries, request=request).data
 
-    response_chart = Chart(queries = queries,
-                           start = request_timeframe.start,
-                           end = request_timeframe.end,
-                           interval = request_timeframe.interval)
-
-    response_data = {}
-    response_data['days'] = request_timeframe.days
-    response_data['start'] = request_timeframe.start.strftime(DATE_FORMAT_JSON)
-    response_data['end'] = request_timeframe.end.strftime(DATE_FORMAT_JSON)
-    response_data['columns'] = response_chart.columns
-    response_data['total'] = response_chart.total
-
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return HttpResponse(json.dumps(response_chart), content_type="application/json")
 
 @login_required
 def query_frequency(request):
@@ -97,14 +83,11 @@ def query_tweets(request):
     """
     Returns tweet query
     """
-    request_timeframe = Timeframe(start = request.REQUEST.get("start", None),
-                                  end = request.REQUEST.get("end", None),
-                                  interval = request.REQUEST.get("interval", "hour"))
-
     query_count = int(request.REQUEST.get("embedCount", TWEET_QUERY_COUNT))
     export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
-    tweets = Tweets(query=query, query_count=query_count, start=request_timeframe.start, end=request_timeframe.end, export=export)
+    tweets = Tweets(query=query, query_count=query_count, request=request)
+
     response_data = {}
     if export == "csv":
         response = HttpResponse(content_type='text/csv')
@@ -125,30 +108,6 @@ def query_tweets(request):
         response_data['tweets'] = tweets.get_data()
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-def get_timeframe(request):
-    """
-    Returns timeframe in format (start, end, interval,days)
-    """
-    start = request.REQUEST.get("start", "")
-    end = request.REQUEST.get("end", "")
-    interval = request.REQUEST.get("interval", "hour")
-    days = DEFAULT_TIMEFRAME
-    # ensure end always exists
-    if not end:
-        end = datetime.datetime.now() - datetime.timedelta(minutes=1)
-    else:
-        end = datetime.datetime.strptime(end, DATE_FORMAT)
-    # ensure start always exists
-    if not start:
-        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
-    else:
-        start = datetime.datetime.strptime(start, DATE_FORMAT)
-    # if dates wrong, use default
-    if start > end:
-        start = end - TIMEDELTA_DEFAULT_TIMEFRAME
-    days = (end-start).days
-    return (start, end, interval, days)
-
 def handle_query_error(e):
     """
     Returns HTTP response with an error
@@ -165,13 +124,3 @@ def logout(request):
     """
     auth_logout(request)
     return HttpResponseRedirect('/')
-
-def get_gnip(paged=False):
-    """
-    Returns Gnip Search API
-    """
-    g = GnipSearchAPI(settings.GNIP_USERNAME,
-        settings.GNIP_PASSWORD,
-        settings.GNIP_SEARCH_ENDPOINT,
-        paged=paged)
-    return g

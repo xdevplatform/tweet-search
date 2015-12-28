@@ -37,5 +37,11 @@ class Tests(unittest.TestCase):
         frequency = []
         self.assertEqual(type(frequency), list)
 
+    def test_tweets(self):
+        # TODO: fix with TWEETS
+        request_timeframe = timeframe.Timeframe(start = "", end = "", interval = "")
+        queries = ["#TwitterDev"]
+        self.assertEqual(type(queries), list)
+
 if __name__ == '__main__':
     unittest.main()
