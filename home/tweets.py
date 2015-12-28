@@ -3,6 +3,8 @@ import csv
 import requests
 from django.conf import settings
 
+#TODO: WRITE TESTS
+
 class Tweets:
     """
     Class container for tweets served to views.py

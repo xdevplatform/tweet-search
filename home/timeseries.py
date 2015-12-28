@@ -1,5 +1,5 @@
 import json
-
+#TODO: WRITE TESTS
 #TODO: Clean and place functions on each self instead of one huge statement
 
 class Timeseries:

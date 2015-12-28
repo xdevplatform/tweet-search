@@ -1,3 +1,4 @@
+#TODO: WRITE TESTS
 from django.conf import settings
 from gnip_search.gnip_search_api import GnipSearchAPI
 from gnip_search.gnip_search_api import QueryError as GNIPQueryError
