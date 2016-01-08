@@ -15,9 +15,9 @@ from os import environ
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-ROOT_PATH = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+# ROOT_PATH = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -27,8 +27,6 @@ SECRET_KEY = ')e-_u9#$xfu5(uw!izbq!yu+dtf1*ce5@7w42p^ro*i-+)$yy%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = [
     '.tweet-search2.herokuapp.com',  
@@ -72,7 +70,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(ROOT_PATH, "templates"),
+    os.path.join(BASE_DIR, "templates"),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -130,7 +128,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(ROOT_PATH, "static"),
+    os.path.join(BASE_DIR, "static"),
 )
 
 # security: http://django-secure.readthedocs.org/en/latest/index.html
