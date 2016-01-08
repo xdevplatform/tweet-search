@@ -15,8 +15,10 @@ var Page = {
 
 	init : function(query) {
 
-		$("#chart_loading").hide();
-		$("#tweets_loading").hide();
+		$("#msg_error").hide();
+		$("#msg_success").hide();
+		
+		$(".loading").hide();
 		
 		$('.datetimepicker').datetimepicker({
 	    	format: 'YYYY-MM-DD HH:mm',
@@ -24,7 +26,6 @@ var Page = {
 		});
 		
 		Page.clear();
-		$('#buffer').collapse('show');
 
 		$(".query-input").on("keydown", function (e) {
 
@@ -85,7 +86,11 @@ var Page = {
 		$('#media').on("click", function(){
 			Page.toggleTerm("(has:media)", $(this).is(':checked'), false);
 		});
-		
+
+		$('#video').on("click", function(){
+			Page.toggleTerm("(has:videos)", $(this).is(':checked'), false);
+		});
+
 		$("#retweet_help").hide();
 		$('#retweet').on("click", function(){
 			Page.toggleTerm("-(is:retweet)", $(this).is(':checked'), false);
@@ -126,8 +131,18 @@ var Page = {
 	clear : function(){
 		$("#activity_volume").hide();
 		$("#activity_tweets").hide();
+		$("#terms_frequency").hide();
 		$("#chart").html("");
 		$("#tweets").html("");
+		
+		var collapseOptions = $("#collapseOptions.in");
+		console.log('collapseOptions: ' + collapseOptions.length);
+		
+		if (collapseOptions.length > 0){
+			console.log(collapseOptions);
+			$("#collapseOptions").collapse('hide');
+		}
+
 	},
 	
 	queryAdd : function(){
@@ -148,6 +163,9 @@ var Page = {
 	},
 	
 	search : function(){
+		
+		Page.hideError();
+		
 		var singleQuery = true;
 		var query0 = $("#query0").val();
 		if (query0){
@@ -170,7 +188,8 @@ var Page = {
 			}
 
 			if ($("#results_chart").is(':checked')){
-				Page.loadChart(queries, start, end);
+				var interval = $("#chart_interval").val();
+				Page.loadChart(queries, start, end, interval);
 			}
 
 			var queryMashup = "(" + query0 + ")";
@@ -180,7 +199,9 @@ var Page = {
 				}
 			}
 			
-			Page.loadFrequency(queryMashup, start, end);
+			if ($("#results_frequency").is(':checked')){
+				Page.loadFrequency(queryMashup, start, end);
+			}
 			
 			if ($("#results_tweets").is(':checked')){
 				Page.loadTweets(queryMashup, start, end, embedCount);
@@ -192,11 +213,11 @@ var Page = {
 }
 	},
 
-	loadChart : function(queries, start, end) {
+	loadChart : function(queries, start, end, interval) {
 
 		 $("#chart_loading").show();
 
-	 	 var data = {"start": start, "end": end};
+	 	 var data = {"start": start, "end": end, "interval": interval};
 	 	 if (queries.length == 1){
 	 		 data["query"] = queries[0]; 
 	 	 } else {
@@ -237,10 +258,14 @@ var Page = {
 						            	culling: true,
 						            	count: response.days + 1,
 						            	format: function (x) {
-						            		var days = x / 24;
+						            		
+						            		var iv = x;
+						            		if (interval == "hour"){
+						            			iv = x / 24;
+						            		} 
 
 						            		var date = new Date(start.valueOf());
-						            	    date.setDate(date.getDate() + days);
+						            	    date.setDate(date.getDate() + iv);
 
 						            	    var dateStr = (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear()
 //					            			console.log(dateStr);
@@ -252,7 +277,7 @@ var Page = {
 						    }
 						};
 					
-					console.log(args);
+					// console.log(args);
 					var chart = c3.generate(args);
 					
 					$("#total").html(Utils.integerFormat(response.total));
@@ -261,17 +286,20 @@ var Page = {
 					
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 	
 	},
-
+	
 	loadFrequency : function(query, start, end) {
 
+		$("#terms_frequency").hide();
+		$("#frequency_loading").show();
+		
 	 	var data = {"start": start, "end": end, "query": query};
 	 	 
-	 	console.log(data);
+	 	// console.log(data);
 		 
 		$("#frequency").find("tr:gt(0)").remove();
 
@@ -288,7 +316,7 @@ var Page = {
 					$("#frequency").find("tr:gt(0)").remove();
 					
 					var frequency = response.frequency;
-					console.log(frequency)
+					// console.log(frequency)
 					if (frequency){
 						
 						template = $("#templateFrequency").html();
@@ -308,11 +336,17 @@ var Page = {
 							$("#frequency").append(output);
 
 						}
+
+						$(".frequency_sample").html(response.sample);
+						
+						$("#terms_frequency").show();
+						$("#frequency_loading").hide();
+
 					}
 					
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 	
@@ -321,6 +355,7 @@ var Page = {
 	loadTweets : function(query, start, end, embedCount) {
 		
 		 $("#tweets_loading").show();
+		 var video = $("#video").is(':checked');
 		
 		 $.ajax({
 				type : "GET",
@@ -338,6 +373,14 @@ var Page = {
 					for (var i = 0; i < tweets.length; i++){
 						
 						var tweet = tweets[i];
+						tweet["class"] = "twitter-tweet";
+						
+						// uncomment for video tweets
+//						if (video){
+//							tweet["class"] = "twitter-video";
+//						} else {
+//							tweet["class"] = "twitter-tweet";
+//						}
 						
 						var output = Mustache.render(template, tweet);
 						$("#tweets").append(output);
@@ -352,7 +395,7 @@ var Page = {
 														
 				},
 				error : function(xhr, errorType, exception) {
-					console.log('Error occured');
+					Page.handleError(xhr, errorType, exception);
 				}
 			});
 		 
@@ -367,6 +410,42 @@ var Page = {
 		
 	},
 	
+	showError : function (msg, small){
+		
+		template = $("#temlateMessageError").html();
+		Mustache.parse(template);
+		
+		var body = {"message": msg}
+		if (small){
+			body['helper'] = "Original query: '"+small+"'"  
+		}
+		var output = Mustache.render(template, body);
+	
+		$("div.container div.main").prepend(output);
+		$(".loading").hide();
+
+//		$("#msg_error div.msg").html(msg);
+//		$("#msg_error").fadeIn();
+	},
+
+	hideError : function (msg){
+		$(".msg_error").hide();
+	},
+
+	handleError : function(xhr, errorType, exception){
+		
+		console.log('Error occured');
+		console.log(xhr.responseJSON.error);
+		console.log(xhr.responseJSON.payload);
+		
+		var helper = "";
+		if (xhr.responseJSON.payload && xhr.responseJSON.payload.query){
+			helper = xhr.responseJSON.payload.query;
+		}
+		
+		Page.showError(xhr.responseJSON.error, helper);
+	},
+
 }
 
 Utils = {
