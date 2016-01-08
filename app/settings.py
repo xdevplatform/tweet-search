@@ -12,7 +12,12 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 from os import environ
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+ROOT_PATH = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -21,11 +26,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')e-_u9#$xfu5(uw!izbq!yu+dtf1*ce5@7w42p^ro*i-+)$yy%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '.tweet-search2.herokuapp.com',  
+    '127.0.0.1', 
+    'localhost', 
+]
 
 # Application definition
 
@@ -36,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangosecure',
     'django.contrib.humanize',
     'social.apps.django_app.default',
     'south',
@@ -46,6 +56,8 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'djangosecure.middleware.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,7 +72,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "templates"),
+    os.path.join(ROOT_PATH, "templates"),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -118,8 +130,23 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(ROOT_PATH, "static"),
 )
+
+# security: http://django-secure.readthedocs.org/en/latest/index.html
+SECURE_HSTS_SECONDS = 31536000 
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_FRAME_DENY = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+# security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'", 'www.google-analytics.com', )
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'www.google-analytics.com', 'ajax.googleapis.com', )
+CSP_FRAME_SRC = ("'self'", )
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'fonts.googleapis.com', )
+CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com', )
 
 SOCIAL_AUTH_LOGIN_URL          = '/login'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
