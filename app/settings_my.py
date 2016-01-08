@@ -3,6 +3,8 @@ try:
 except ImportError, exp:
     pass
 
+DEBUG = True
+
 SOCIAL_AUTH_TWITTER_KEY = ''
 SOCIAL_AUTH_TWITTER_SECRET = ''
 
