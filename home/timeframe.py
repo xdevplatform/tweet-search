@@ -18,7 +18,7 @@ class Timeframe:
 
         # if dates wrong, use default
         if self.start > self.end:
-            self.start = self.end - TIMEDELTA_DEFAULT_TIMEFRAME
+            self.start = self.end - self.TIMEDELTA_DEFAULT_TIMEFRAME
 
     def get_end(self, end):
         """
@@ -28,7 +28,7 @@ class Timeframe:
         if not end:
             end = datetime.datetime.now() - datetime.timedelta(minutes=1)
         else:
-            end = datetime.datetime.strptime(end, DATE_FORMAT)
+            end = datetime.datetime.strptime(end, self.DATE_FORMAT)
         return end
 
     def get_start(self, start):
@@ -39,7 +39,7 @@ class Timeframe:
         if not start:
             start = self.end - self.TIMEDELTA_DEFAULT_TIMEFRAME
         else:
-            start = datetime.datetime.strptime(start, DATE_FORMAT)
+            start = datetime.datetime.strptime(start, self.DATE_FORMAT)
         return start
 
 if __name__ == "__main__":
