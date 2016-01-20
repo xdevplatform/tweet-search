@@ -21,7 +21,7 @@ class Tweets:
         g = GnipSearchAPI(settings.GNIP_USERNAME,
                           settings.GNIP_PASSWORD,
                           settings.GNIP_SEARCH_ENDPOINT,
-                          paged=True)
+                          paged=False)
 
         if (self.start < datetime.datetime.now() - self.TIMEDELTA_DEFAULT_TIMEFRAME) and (self.start + self.TIMEDELTA_DEFAULT_TIMEFRAME > self.end):
             end = self.start + self.TIMEDELTA_DEFAULT_TIMEFRAME
