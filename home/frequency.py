@@ -24,7 +24,7 @@ class Frequency:
         g = GnipSearchAPI(settings.GNIP_USERNAME,
                           settings.GNIP_PASSWORD,
                           settings.GNIP_SEARCH_ENDPOINT,
-                          paged=True)
+                          paged=False)
         timeline = None
         try:
             timeline = g.query_api(self.query, self.sample, use_case="wordcount", start=self.start.strftime(self.DATE_FORMAT), end=self.end.strftime(self.DATE_FORMAT), csv_flag=False)
