@@ -105,6 +105,7 @@ def query_tweets(request):
     export = request.REQUEST.get("export", None)
     query = request.REQUEST.get("query", "")
     tweets = Tweets(query=query, query_count=query_count, start=request_timeframe.start, end=request_timeframe.end, export=export)
+    
     response_data = {}
     if export == "csv":
         response = HttpResponse(content_type='text/csv')
@@ -120,7 +121,7 @@ def query_tweets(request):
             user_id = t['actor']['id']
             user_id = user_id[user_id.rfind(':')+1:]
             writer.writerow([count, t['postedTime'], status_id, t['actor']['preferredUsername'], user_id, body, t['retweetCount'], t['favoritesCount'], 'X', 'X', 'X'])
-            return response
+        return response
     else:
         response_data['tweets'] = tweets.get_data()
     return HttpResponse(json.dumps(response_data), content_type="application/json")
