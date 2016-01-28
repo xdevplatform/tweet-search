@@ -48,6 +48,34 @@ Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and 
 If you want to use the 30-day search, open the `gnip_search_api.py` file, search for the term "30 DAY" and follow the instructions. (You also need to 
 use the 30-day search URL, and not the full arhive search URL.)
 
+Deploying to Heroku
+============
+
+Deploying to Heroku is even easier.  
+
+- Create a Twitter App (https://apps.twitter.com/)
+- Click on the Heroku button below
+- When prompted during the Heroku install, specify your:
+
+	- CONSUMER_KEY
+	- CONSUMER_SECRET
+	- ACCESS_TOKEN
+	- ACCESS_TOKEN_SECRET
+	
+- After deploying, in the Twitter App config, ensure the Callback URL is `http://your-app-name.herokuapp.com/complete/twitter`
+
+- To sync the database, use the Heroku CLI and run the following:
+
+	`heroku run python manage.py migrate --app your-app-name`
+	
+- Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
+
+- To create an admin user, use the following Heroku CLI command:
+
+	`heroku run python manage.py createsuperuser --username=USERNAME --email=EMAIL --app your-app-name`
+	
+Then log in via the Admin console and update your initial Twitter login user accordingly. 
+
 Sample Queries
 ============
 
