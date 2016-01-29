@@ -137,7 +137,7 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
-CSP_DEFAULT_SRC = ("'self'",)
+CSP_DEFAULT_SRC = ("'self'", 'https://*.twitter.com',)
 CSP_IMG_SRC = ("'self'", 'https://www.google-analytics.com', )
 CSP_SCRIPT_SRC = ("'self'", 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FRAME_SRC = ("'self'", )
