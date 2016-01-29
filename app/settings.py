@@ -138,11 +138,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
 CSP_DEFAULT_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'", 'https://syndication.twitter.com', 'https://www.google-analytics.com', )
+CSP_IMG_SRC = ("'self'", 'https://platform.twitter.com', 'https://syndication.twitter.com', 'https://www.google-analytics.com', )
 CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'https://platform.twitter.com', 'https://syndication.twitter.com', 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
-CSP_FRAME_SRC = ("'self'", 'https://syndication.twitter.com', )
+CSP_FRAME_SRC = ("'self'", 'https://platform.twitter.com', 'https://syndication.twitter.com', )
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_MEDIA_SRC = ("'self'", 'https://pbs.twimg.com', )
 CSP_OBJECT_SRC = ("'none'", )
 
 SOCIAL_AUTH_LOGIN_URL          = '/login'
