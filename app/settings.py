@@ -139,7 +139,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'", 'https://www.google-analytics.com', )
-CSP_SCRIPT_SRC = ("'self'", 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FRAME_SRC = ("'self'", )
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
