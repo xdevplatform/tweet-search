@@ -1,6 +1,8 @@
 $(document).ready(function(){
 	
 	Page.init();
+	
+	var query0 = location.search.split('query=')[1]
 	if (query0){
 		$("#query0").val(query0);
 		Page.search();
@@ -14,6 +16,14 @@ var Page = {
 	maxQueries : 4,
 
 	init : function(query) {
+		
+		$('#tweets').pinterest_grid({
+			no_columns: 3,
+			padding_x: 10,
+			padding_y: 10,
+			margin_bottom: 50,
+			single_column_breakpoint: 700
+		});
 
 		$("#msg_error").hide();
 		$("#msg_success").hide();

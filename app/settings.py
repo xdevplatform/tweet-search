@@ -138,10 +138,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
 CSP_DEFAULT_SRC = ("'self'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://*.vine.co',)
-CSP_IMG_SRC = ("'self'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://www.google-analytics.com', )
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
-CSP_FONT_SRC = ("'self'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_IMG_SRC = CSP_DEFAULT_SRC + ('data:', 'https://www.google-analytics.com', )
+CSP_SCRIPT_SRC = CSP_DEFAULT_SRC + ('https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_STYLE_SRC = CSP_DEFAULT_SRC + ("'unsafe-inline'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_FONT_SRC = CSP_DEFAULT_SRC + ('https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_OBJECT_SRC = ("'none'", )
 
 SOCIAL_AUTH_LOGIN_URL          = '/login'
