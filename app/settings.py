@@ -142,7 +142,7 @@ CSP_IMG_SRC = ("'self'", 'https://*.twitter.com', 'https://*.twimg.com', 'https:
 CSP_MEDIA_SRC = ("'self'", 'https://*.twitter.com', 'https://*.twimg.com', )
 CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'https://*.twitter.com', 'https://*.twimg.com', 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FRAME_SRC = ("'self'", 'https://*.twitter.com', 'https://*.twimg.com', )
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'https://*.twitter.com', 'https://*.twimg.com', 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_OBJECT_SRC = ("'none'", )
 
