@@ -48,6 +48,18 @@ Note that the GNIP_SEARCH_ENDPOINT is a URL to the full archive search URL, and 
 If you want to use the 30-day search, open the `gnip_search_api.py` file, search for the term "30 DAY" and follow the instructions. (You also need to 
 use the 30-day search URL, and not the full arhive search URL.)
 
+Invalidate Twitter tokens 
+--------
+
+For security, this code sample has a batch process to clear out Twitter auth tokens for users that either:
+
+- Have a login of greater than 30 days ago, or 
+- Have never logged in and joined greater than 30 days ago
+
+To run the process, simply execute:
+
+	`fab invalidate'
+
 Deploying to Heroku
 ============
 
@@ -75,6 +87,23 @@ Deploying to Heroku is even easier.
 	`heroku run python manage.py createsuperuser --username=USERNAME --email=EMAIL --app your-app-name`
 	
 Then log in via the Admin console and update your initial Twitter login user accordingly. 
+
+Invalidating Twitter tokens on Heroku
+--------
+
+To ensure the token invalidation script works properly on Heroku, run the following from your machine: 
+
+	`heroku run fab invalidate --app=MY_APP_NAME'
+	
+If this runs properly, follow the below steps to run it as a scheduled job on Heroku:
+
+- Run `heroku addons:add scheduler:standard --app=MY_APP_NAME`
+- Log into heroku.com, open your app and go to "Resources"
+- Click on "Heroku Scheduler" and then "Add a New Job"
+- Type in `fab invalidate`
+
+Confirm successful execution by viewing the output in the Heroku app logs.
+
 
 Sample Queries
 ============
