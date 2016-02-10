@@ -3,7 +3,7 @@ from __future__ import with_statement
 import os
 import django
 
-SETTINGS_FILE = "app.settings_my"
+SETTINGS_FILE = "app.settings"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", SETTINGS_FILE)
 django.setup()
 
