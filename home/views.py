@@ -111,7 +111,7 @@ def query_tweets(request):
     if export == "csv":
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="export.csv"'
-        writer = csv.writer(response)
+        writer = csv.writer(response, delimiter=',', quotechar="'", quoting=csv.QUOTE_ALL)
         writer.writerow(['count','time','id','user_screen_name','user_id','status','retweet_count','favorite_count','is_retweet','in_reply_to_tweet_id','in_reply_to_screen_name'])
         count = 0;
         for t in tweets.get_data():
