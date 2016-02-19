@@ -1,7 +1,7 @@
 from timeseries import Timeseries
-from gnip_search.gnip_search_api import GnipSearchAPI
-from gnip_search.gnip_search_api import QueryError as GNIPQueryError
 from django.conf import settings
+
+from home.utils import *
 
 class Chart:
     """
@@ -24,23 +24,17 @@ class Chart:
         Returns data in format {"columns": } used in UI
         """
         # New gnip client with fresh endpoint
-        g = GnipSearchAPI(settings.GNIP_USERNAME,
-                          settings.GNIP_PASSWORD,
-                          settings.GNIP_SEARCH_ENDPOINT,
-                          paged=True)
+        g = get_gnip(False)
+        
         columns = []
         for q in self.queries:
-            timeline = None
-            try:
-                timeline = g.query_api(pt_filter = str(q),
-                            max_results = 0,
-                            use_case = "timeline",
-                            start = self.start.strftime(self.DATE_FORMAT),
-                            end = self.end.strftime(self.DATE_FORMAT),
-                            count_bucket = self.interval,
-                            csv_flag = False)
-            except GNIPQueryError as e:
-                print e
+            timeline = g.query_api(pt_filter = str(q),
+                        max_results = 0,
+                        use_case = "timeline",
+                        start = self.start.strftime(self.DATE_FORMAT),
+                        end = self.end.strftime(self.DATE_FORMAT),
+                        count_bucket = self.interval,
+                        csv_flag = False)
 
             # Process timeseries on the GNIP Data
             time_series_data = Timeseries(q, timeline, columns, self.total, self.x_axis)

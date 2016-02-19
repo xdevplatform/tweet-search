@@ -1,7 +1,5 @@
 import json
 
-#TODO: Clean and place functions on each self instead of one huge statement
-
 class Timeseries:
     """
     Class to produce timeseries data

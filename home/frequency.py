@@ -1,6 +1,6 @@
 from django.conf import settings
-from gnip_search.gnip_search_api import GnipSearchAPI
-from gnip_search.gnip_search_api import QueryError as GNIPQueryError
+
+from home.utils import *
 
 class Frequency:
     """
@@ -20,16 +20,9 @@ class Frequency:
         Returns data for frequency in list view
         """
         # New gnip client with fresh endpoint (this one sets to counts.json)
+        g = get_gnip(False)
 
-        g = GnipSearchAPI(settings.GNIP_USERNAME,
-                          settings.GNIP_PASSWORD,
-                          settings.GNIP_SEARCH_ENDPOINT,
-                          paged=False)
-        timeline = None
-        try:
-            timeline = g.query_api(self.query, self.sample, use_case="wordcount", start=self.start.strftime(self.DATE_FORMAT), end=self.end.strftime(self.DATE_FORMAT), csv_flag=False)
-        except GNIPQueryError as e:
-            print(e);
+        timeline = g.query_api(self.query, self.sample, use_case="wordcount", start=self.start.strftime(self.DATE_FORMAT), end=self.end.strftime(self.DATE_FORMAT), csv_flag=False)
 
         result = g.freq.get_tokens(20)
         return result
