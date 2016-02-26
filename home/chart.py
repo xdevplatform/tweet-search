@@ -24,7 +24,7 @@ class Chart:
         Returns data in format {"columns": } used in UI
         """
         # New gnip client with fresh endpoint
-        g = get_gnip(False)
+        g = get_gnip(True)
         
         columns = []
         for q in self.queries:
